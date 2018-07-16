@@ -12,12 +12,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using Emgu.CV;
+    using Emgu.CV.Structure;
+    using Emgu.CV.Util;
     using Microsoft.Kinect;
     using Microsoft.Samples.Kinect.SkeletonBasics.Helpers;
-    using OpenCV;
 
     public partial class MainWindow : Window
     {
+        Rect rect;
         private const float RenderWidth = 640.0f;
 
         private const float RenderHeight = 480.0f;
@@ -148,13 +151,47 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
 
+            Hsv lowerLimit = new Hsv(40, 100, 100);
+            Hsv upperLimit = new Hsv(80, 255, 255);
+
             using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
             {
+
                 if(colorFrame != null)
                 {
                     if (colorFrame != null)
                     {
+
+
+                        System.Drawing.Bitmap bmp = Helper.ImageToBitmap(colorFrame);
+                        Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
                         // Copy the pixel data from the image to a temporary array
+
+                        Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
+
+                        Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
+                        //imageHSVDest.Erode(200);
+                        VectorOfVectorOfPoint vectorOfPoint = Helper.FindContours(imageHSVDest);
+                        //VectorOfPointF vf = new VectorOfPointF();
+                        for (int i = 0; i < vectorOfPoint.Size; i++)
+                        {
+                            var contour = vectorOfPoint[i];
+                            var area = CvInvoke.ContourArea(contour);
+                            if (area > 100)
+                            {
+
+                                System.Drawing.Rectangle rec = CvInvoke.BoundingRectangle(contour);
+                                Point p1 = new Point(rec.X, rec.Y);
+                                Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
+                                rect = new Rect(p1, p2);
+                                
+                                //currentFrame.Draw(rec, new Bgr(0, double.MaxValue, 0), 3);
+
+                            }
+                        }
+
+
+
                         colorFrame.CopyPixelDataTo(this.colorPixels);
                         // Write the pixel data into our bitmap
                         this.colorBitmap.WritePixels(
@@ -241,6 +278,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                         }
                         string setDistanceHands;
+                       
+                            dc.DrawRectangle(Brushes.Red, null, rect);
+                        
                         setDistanceHands = "" + DistanceHelper.ObtenerDistancia(handLeft, handRight);
                         if(setDistanceHands != "0")
                             DistanceHandHand.Text = setDistanceHands;

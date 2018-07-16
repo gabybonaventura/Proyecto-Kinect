@@ -1,0 +1,13 @@
+﻿<Window x:Class="EmguCV_ColorTracking.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EmguCV_ColorTracking"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <Image Name="image1" Stretch="Fill" Margin="0,0,403.6,287.4" />
+        <Image x:Name="image2" Stretch="Fill" RenderTransformOrigin="0.968,0.393" Margin="390,283,-0.4,0.4" />
+    </Grid>
+</Window>
