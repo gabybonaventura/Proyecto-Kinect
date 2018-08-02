@@ -31,7 +31,7 @@ void loop(){
        do
        {
           incoming = Serial.read();
-       }while(incoming != '@');
+       }while(incoming != 255);
        
        CodoPosicion = Serial.read();
        HombroArribaAbajoPosicion = Serial.read();
