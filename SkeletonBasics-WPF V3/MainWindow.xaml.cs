@@ -184,7 +184,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 Point p1 = new Point(rec.X, rec.Y);
                                 Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
                                 rect = new Rect(p1, p2);
-                                
+                                Console.WriteLine($"x: {(p1.X + p2.X) / 2} y: {(p1.Y + p2.Y) / 2}");
                                 //currentFrame.Draw(rec, new Bgr(0, double.MaxValue, 0), 3);
 
                             }
@@ -284,7 +284,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         setDistanceHands = "" + DistanceHelper.ObtenerDistancia(handLeft, handRight);
                         if(setDistanceHands != "0")
                             DistanceHandHand.Text = setDistanceHands;
-                        Console.WriteLine("La distancia es:" + setDistanceHands);
+                        //Console.WriteLine("La distancia es:" + setDistanceHands);
 
                     }
                 }
