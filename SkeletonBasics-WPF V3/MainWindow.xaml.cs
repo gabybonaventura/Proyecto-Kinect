@@ -272,7 +272,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             //double x = 320;
                             //double y = 240;
                             //640x480
-                            dc.DrawText(formattedText, new Point(x,y));
+
+                            //dc.DrawText(formattedText, new Point(x,y));
                             Console.WriteLine("x" + x.ToString());
                             Console.WriteLine("y" + y.ToString());
 
