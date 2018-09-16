@@ -399,27 +399,55 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             BodyCenterThickness);
                         }
 
-                        // Toma de Mediciones
-                        Joint elbowLeft = skel.Joints[JointType.ElbowLeft];
-                        Joint handLeft = skel.Joints[JointType.HandLeft];
-                        Joint shoulderLeft = skel.Joints[JointType.ShoulderLeft];
-
-                        Joint shoulderCenter = skel.Joints[JointType.ShoulderCenter];
-
-                        Joint HipRight = skel.Joints[JointType.HipRight];
-                        Joint shoulderRight = skel.Joints[JointType.ShoulderRight];
-                        Joint elbowRight = skel.Joints[JointType.ElbowRight];
+                        //Toma de mediciones de mano, hombro y codo derecho:
                         Joint handRight = skel.Joints[JointType.HandRight];
+                        Joint munecaDer = skel.Joints[JointType.WristRight];
+                        Joint codoDer = skel.Joints[JointType.ElbowRight];
+                        Joint shoulderRight = skel.Joints[JointType.ShoulderRight];
 
-                        AnguloCodo = DistanceHelper.Angulos(shoulderRight, elbowRight, handRight);
-                        AnguloHombroArriba = DistanceHelper.Angulos(HipRight, shoulderRight, elbowRight);
-                        // Al generar el angulo del hombro mediante a los puntos de la cadera izquierda
-                        // el angulo obtenido no es del todo preciso, ya que la cadera izquierda esta
-                        // "dentro" del cuerpo y no es recto desde el hombro.
+                        if ((shoulderRight.TrackingState == JointTrackingState.Tracked) &&
+                                   (handRight.TrackingState == JointTrackingState.Tracked)
+                                   && (codoDer.TrackingState == JointTrackingState.Tracked))
+                        {
+                            //dibujo las líneas de los segmentos:
+                            //mano hombro
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position), this.SkeletonPointToScreen(shoulderRight.Position));
+                            //mano codo
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position), this.SkeletonPointToScreen(codoDer.Position));
+                            //hombro codo
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position), this.SkeletonPointToScreen(codoDer.Position));
 
-                        if(AnguloHombroArriba != 0 && AnguloHombroArriba != 0)
+                            string distHombroMano = DistanceHelper.ObtenerDistancia(handRight, shoulderRight).ToString();
+                            string distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer).ToString();
+                            string distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight).ToString();
+
+                            Double anguloCodo = DistanceHelper.calcularAngulo(codoDer, handRight, shoulderRight);
+                           /* Console.WriteLine("Distancia codo mano: " + distCodoMano);
+                            Console.WriteLine("Distancia hombro codo: " + distHombroCodo); */
+                            Console.WriteLine("Angulo: " + anguloCodo);
+                        }
+
+                        /*      // Toma de Mediciones
+                              Joint elbowLeft = skel.Joints[JointType.ElbowLeft];
+                              Joint handLeft = skel.Joints[JointType.HandLeft];
+                              Joint shoulderLeft = skel.Joints[JointType.ShoulderLeft];
+
+                              Joint shoulderCenter = skel.Joints[JointType.ShoulderCenter];
+
+                              Joint HipRight = skel.Joints[JointType.HipRight];
+                              //Joint shoulderRight = skel.Joints[JointType.ShoulderRight];
+                              Joint elbowRight = skel.Joints[JointType.ElbowRight];
+                              //Joint handRight = skel.Joints[JointType.HandRight];
+
+                              AnguloCodo = DistanceHelper.Angulos(shoulderRight, elbowRight, handRight);
+                              AnguloHombroArriba = DistanceHelper.Angulos(HipRight, shoulderRight, elbowRight);
+                              // Al generar el angulo del hombro mediante a los puntos de la cadera izquierda
+                              // el angulo obtenido no es del todo preciso, ya que la cadera izquierda esta
+                              // "dentro" del cuerpo y no es recto desde el hombro.
+                              */
+                        /*if (AnguloHombroArriba != 0 && AnguloHombroArriba != 0)
                             Console.WriteLine("Angulo Codo: " + AnguloCodo + "Angulo Hombre: " + AnguloHombroArriba);
-
+                            */
                         //if ((handLeft.TrackingState == JointTrackingState.Tracked) &&
                         //           (handRight.TrackingState == JointTrackingState.Tracked))
                         //{

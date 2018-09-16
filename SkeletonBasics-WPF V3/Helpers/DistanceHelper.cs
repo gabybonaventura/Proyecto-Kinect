@@ -16,6 +16,37 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 
             return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2));                //Realiza el calculo de la distancia entre articulaciones
         }
+
+        //Método calculo ángulo donde: 
+        public static double calcularAngulo(Joint a, Joint b, Joint c)
+        {
+            //se devuelve el ángulo del primer punto, es decir que si el hombro es "a",
+            //devuelve el angulo del hombro en relación al codo y hombro.
+            float segmentoA = ObtenerDistancia(c, b);
+            float segmentoB = ObtenerDistancia(a, c);
+            float segmentoC = ObtenerDistancia(a, b);
+
+            /*float segmentoA = 12;
+            float segmentoB = 25;
+            float segmentoC = 24;*/
+
+            float segA2 = (float)Math.Pow(segmentoA, 2);
+            float segB2 = (float)Math.Pow(segmentoB, 2);
+            float segC2 = (float)Math.Pow(segmentoC, 2);
+
+            double rad = Math.Acos((segA2 - segB2 - segC2) / ((-2) * segmentoB * segmentoC));
+
+            double deg = DistanceHelper.RadToDeg(rad);
+            return deg;
+
+            //return rad;
+        }
+
+        public static double RadToDeg(double rad)
+        {
+            return rad * (180.0 / Math.PI);
+        }
+
         //Evento para calcular angulos:
         public static double Angulos(Joint j1, Joint j2, Joint j3)
         {
