@@ -9,6 +9,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System;
     using System.Globalization;
     using System.IO;
+    using System.IO.Ports;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -61,6 +62,18 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         WriteableBitmap bitmapImagenDistancia = null;
         double ObjetoX;
         double ObjetoY;
+
+
+        private SerialPort _serialPort = new SerialPort();
+        private int _baudRate = 9600;
+        private int _dataBits = 8;
+        private Handshake _handshake = Handshake.None;
+        private Parity _parity = Parity.None;
+        private string _portName = "COM5";
+        private StopBits _stopBits = StopBits.One;
+
+        double AnguloCodo = 0;
+        double AnguloHombroArriba = 0;
 
         public MainWindow()
         {
@@ -157,6 +170,22 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
+
+
+            try
+            {
+                _serialPort.BaudRate = _baudRate;
+                _serialPort.DataBits = _dataBits;
+                _serialPort.Handshake = _handshake;
+                _serialPort.Parity = _parity;
+                _serialPort.PortName = _portName;
+                _serialPort.StopBits = _stopBits;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
         }
 
         private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
@@ -245,7 +274,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     int valorDistancia = datosDistancia[i] >> 3;
 
                     if (x == ObjetoX && y == ObjetoY)
+                    {
+                        if(_serialPort.IsOpen)
+                            _serialPort.Write(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
                         Console.WriteLine($"Z: {valorDistancia}");
+                        Console.WriteLine(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
+
+                    }
 
 
                     if (y >= 470 && y <= 480)
@@ -365,40 +400,53 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         }
 
                         // Toma de Mediciones
-                        Joint handRight = skel.Joints[JointType.HandRight];
-                        Joint handLeft = skel.Joints[JointType.HandLeft];
-                        Joint shoulderCenter = skel.Joints[JointType.ShoulderCenter];
                         Joint elbowLeft = skel.Joints[JointType.ElbowLeft];
-                        
+                        Joint handLeft = skel.Joints[JointType.HandLeft];
+                        Joint shoulderLeft = skel.Joints[JointType.ShoulderLeft];
 
-                      
-                        if ((handLeft.TrackingState == JointTrackingState.Tracked) &&
-                                   (handRight.TrackingState == JointTrackingState.Tracked))
-                        {
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position), this.SkeletonPointToScreen(handLeft.Position));
-                            //DistanceHelper.Angulos(handLeft, shoulderCenter, handRight);
+                        Joint shoulderCenter = skel.Joints[JointType.ShoulderCenter];
 
-                            string distance = DistanceHelper.ObtenerDistancia(handLeft, handRight).ToString();
-                            FormattedText formattedText = new FormattedText(distance, CultureInfo.CurrentCulture, FlowDirection.LeftToRight
-                               ,new Typeface("Verdana") , 50, Brushes.Red );
-                            double x = ((handLeft.Position.X + handRight.Position.X) / 2) * 320;
-                            double y = 240 - (((handLeft.Position.Y + handRight.Position.Y) / 2) * 240);
-                            //double x = 320;
-                            //double y = 240;
-                            //640x480
+                        Joint HipRight = skel.Joints[JointType.HipRight];
+                        Joint shoulderRight = skel.Joints[JointType.ShoulderRight];
+                        Joint elbowRight = skel.Joints[JointType.ElbowRight];
+                        Joint handRight = skel.Joints[JointType.HandRight];
 
-                            //dc.DrawText(formattedText, new Point(x,y));
-                            Console.WriteLine("x" + x.ToString());
-                            Console.WriteLine("y" + y.ToString());
+                        AnguloCodo = DistanceHelper.Angulos(shoulderRight, elbowRight, handRight);
+                        AnguloHombroArriba = DistanceHelper.Angulos(HipRight, shoulderRight, elbowRight);
+                        // Al generar el angulo del hombro mediante a los puntos de la cadera izquierda
+                        // el angulo obtenido no es del todo preciso, ya que la cadera izquierda esta
+                        // "dentro" del cuerpo y no es recto desde el hombro.
 
-                        }
-                        string setDistanceHands;
+                        if(AnguloHombroArriba != 0 && AnguloHombroArriba != 0)
+                            Console.WriteLine("Angulo Codo: " + AnguloCodo + "Angulo Hombre: " + AnguloHombroArriba);
+
+                        //if ((handLeft.TrackingState == JointTrackingState.Tracked) &&
+                        //           (handRight.TrackingState == JointTrackingState.Tracked))
+                        //{
+                        //    dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position), this.SkeletonPointToScreen(handLeft.Position));
+                        //    //DistanceHelper.Angulos(handLeft, shoulderCenter, handRight);
+
+                        //    string distance = DistanceHelper.ObtenerDistancia(handLeft, handRight).ToString();
+                        //    FormattedText formattedText = new FormattedText(distance, CultureInfo.CurrentCulture, FlowDirection.LeftToRight
+                        //       ,new Typeface("Verdana") , 50, Brushes.Red );
+                        //    double x = ((handLeft.Position.X + handRight.Position.X) / 2) * 320;
+                        //    double y = 240 - (((handLeft.Position.Y + handRight.Position.Y) / 2) * 240);
+                        //    //double x = 320;
+                        //    //double y = 240;
+                        //    //640x480
+
+                        //    //dc.DrawText(formattedText, new Point(x,y));
+                        //    Console.WriteLine("x" + x.ToString());
+                        //    Console.WriteLine("y" + y.ToString());
+
+                        //}
+                        //string setDistanceHands;
                        
-                            dc.DrawRectangle(Brushes.Red, null, rect);
+                        //    dc.DrawRectangle(Brushes.Red, null, rect);
                         
-                        setDistanceHands = "" + DistanceHelper.ObtenerDistancia(handLeft, handRight);
-                        if(setDistanceHands != "0")
-                            DistanceHandHand.Text = setDistanceHands;
+                        //setDistanceHands = "" + DistanceHelper.ObtenerDistancia(handLeft, handRight);
+                        //if(setDistanceHands != "0")
+                        //    DistanceHandHand.Text = setDistanceHands;
                         //Console.WriteLine("La distancia es:" + setDistanceHands);
 
                     }
