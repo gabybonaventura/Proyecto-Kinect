@@ -499,6 +499,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         Joint munecaDer = skel.Joints[JointType.WristRight];
                         Joint codoDer = skel.Joints[JointType.ElbowRight];
                         Joint shoulderRight = skel.Joints[JointType.ShoulderRight];
+                        Joint hipRight = skel.Joints[JointType.HipRight];
 
                         if ((shoulderRight.TrackingState == JointTrackingState.Tracked) &&
                                    (handRight.TrackingState == JointTrackingState.Tracked)
@@ -546,6 +547,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             float distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer);
                             float distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight);
 
+                            float distCadHombro = DistanceHelper.ObtenerDistancia(hipRight, shoulderRight);
+                            float distCadMano = DistanceHelper.ObtenerDistancia(handRight, hipRight);
 
                             //Point3D objeto3d = new Point3D(this.ObjetoX, this.ObjetoY, this.ObjetoZ);
                             float distObjeto = DistanceHelper.ObtenerDistancia(shoulderRight, skelObjeto);
@@ -553,7 +556,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             //el primer argumento es el segmento opuesto al angulo que queremos obtener.
                             double anguloCodo = DistanceHelper.CalcularAngulo(distHombroMano, distHombroCodo, distCodoMano);
 
-                            Console.WriteLine("angulo codo: " + anguloCodo);
+                            double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano, distHombroMano, distCadHombro);
+                            //el siguiente angulo que obtenemos es el del hombro en relación con 
+                            //el torso. 
+
+                            Console.WriteLine("angulo hombro: " + anguloHombroCad);
                             //codo menos hombro (codo>hombro)
                             //Point puntoMedioHC = new Point((codoDer.Position.X + shoulderRight.Position.X) / 2, (codoDer.Position.Y + shoulderRight.Position.Y) / 2);
 
@@ -583,7 +590,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 + "hombro z: " + shoulderRight.Position.Z);
 
                             dc.DrawText(
-                            new FormattedText("hombro: " + shoulderRight.Position.Y.ToString(),
+                            new FormattedText("ang hombro: " + anguloHombroCad,
                                               CultureInfo.GetCultureInfo("en-us"),
                                               FlowDirection.LeftToRight,
                                               new Typeface("Verdana"),
