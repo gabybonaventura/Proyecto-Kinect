@@ -13,6 +13,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using System.Windows.Media.Media3D;
     using Emgu.CV;
     using Emgu.CV.Structure;
     using Emgu.CV.Util;
@@ -62,6 +63,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         WriteableBitmap bitmapImagenDistancia = null;
         double ObjetoX;
         double ObjetoY;
+        int valorDistancia;
+        int ObjetoZ;
+        SkeletonPoint skelObjeto;
 
 
         private SerialPort _serialPort = new SerialPort();
@@ -153,7 +157,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 // Add an event handler to be called whenever there is new color frame data
                 this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
                 this.sensor.ColorFrameReady += this.SensorColorFrameReady;
-                this.sensor.DepthFrameReady += miKinect_DepthFrameReady;
+                this.sensor.DepthFrameReady += this.miKinect_DepthFrameReady;
 
                 // Start the sensor!
                 try
@@ -188,7 +192,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
         }
 
-        private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+
+
+        /*private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
 
             Hsv lowerLimit = new Hsv(40, 100, 100);
@@ -232,6 +238,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             }
                         }
 
+                        Point3D point3D;
 
 
                         colorFrame.CopyPixelDataTo(this.colorPixels);
@@ -244,7 +251,94 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     }
                 }
             }
+        }*/
+
+        private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+
+            Hsv lowerLimit = new Hsv(40, 100, 100);
+            Hsv upperLimit = new Hsv(80, 255, 255);
+
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            {
+
+                if (colorFrame != null)
+                {
+                    if (colorFrame != null)
+                    {
+                        System.Drawing.Bitmap bmp = Helper.ImageToBitmap(colorFrame);
+                        Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
+                        // Copy the pixel data from the image to a temporary array
+
+                        Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
+
+                        Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
+                        //imageHSVDest.Erode(200);
+                        VectorOfVectorOfPoint vectorOfPoint = Helper.FindContours(imageHSVDest);
+                        //VectorOfPointF vf = new VectorOfPointF();
+                        for (int i = 0; i < vectorOfPoint.Size; i++)
+                        {
+                            var contour = vectorOfPoint[i];
+                            var area = CvInvoke.ContourArea(contour);
+                            if (area > 100)
+                            {
+
+                                System.Drawing.Rectangle rec = CvInvoke.BoundingRectangle(contour);
+                                Point p1 = new Point(rec.X, rec.Y);
+                                Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
+                                rect = new Rect(p1, p2);
+                                ObjetoX = (p1.X + p2.X) / 2;
+                                ObjetoY = (p1.Y + p2.Y) / 2;
+
+                                //Console.WriteLine($"objeto x: {(p1.X + p2.X) / 2} objeto y: {(p1.Y + p2.Y) / 2}");
+                                //currentFrame.Draw(rec, new Bgr(0, double.MaxValue, 0), 3);
+
+                                skelObjeto = DistanceHelper.ObtenerSkelPoint((int)ObjetoX, (int)ObjetoY,
+                                    ObjetoZ, this.sensor);
+                                /*DepthImagePoint dip1 = new DepthImagePoint();
+                                dip1.X = (int)ObjetoX;
+                                dip1.Y = (int)ObjetoY;
+                                dip1.Depth = ObjetoZ;
+
+                                skelObjeto = this.sensor.CoordinateMapper.MapDepthPointToSkeletonPoint(DepthImageFormat.Resolution640x480Fps30, dip1);
+                                // SkeletonPoint sp1 = CoordinateMapper.MapDepthPointToSkeletonPoint(DepthImageFormat.Resolution640x480Fps30, dip1);
+                                */
+                                /*Console.WriteLine("obj x: " + ObjetoX + "obj y: " + ObjetoY 
+                                    + "obj z: " + ObjetoZ);*/
+                                /*Console.WriteLine("punto x: " + skelObjeto.X.ToString() + "punto y: "
+                                    + skelObjeto.Y.ToString() + "punto z: " + skelObjeto.Z.ToString());
+                            */
+                                Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
+                            }
+                        }
+
+                        colorFrame.CopyPixelDataTo(this.colorPixels);
+                        // Write the pixel data into our bitmap
+                        this.colorBitmap.WritePixels(
+                            new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
+                            this.colorPixels,
+                            this.colorBitmap.PixelWidth * sizeof(int),
+                            0);
+
+                        /*using (DrawingContext dc = this.drawingGroup.Open())
+                        {
+                            // Draw a transparent background to set the render size
+                            //dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+                            dc.DrawImage(this.colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+                            dc.DrawText(new FormattedText
+                                ("y:" + skelObjeto.Y,
+                                CultureInfo.GetCultureInfo("en-us"),
+                                FlowDirection.LeftToRight,
+                                new Typeface("Verdana"),
+                                25, System.Windows.Media.Brushes.BlueViolet),
+                                new Point(skelObjeto.X, skelObjeto.Y));
+                        }*/
+                    }
+
+                }
+            }
         }
+
         void miKinect_DepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
         {
             using (DepthImageFrame framesDistancia = e.OpenDepthImageFrame())
@@ -271,14 +365,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         y++;
                         x = 0;
                     }
-                    int valorDistancia = datosDistancia[i] >> 3;
+                    valorDistancia = datosDistancia[i] >> 3;
 
                     if (x == ObjetoX && y == ObjetoY)
                     {
+                        ObjetoZ = valorDistancia;
                         if(_serialPort.IsOpen)
                             _serialPort.Write(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
-                        Console.WriteLine($"Z: {valorDistancia}");
-                        Console.WriteLine(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
+                        //Console.WriteLine($"Z: {valorDistancia}");
+                        //Console.WriteLine(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
 
                     }
 
@@ -410,21 +505,115 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                    && (codoDer.TrackingState == JointTrackingState.Tracked))
                         {
                             //dibujo las líneas de los segmentos:
-                            //mano hombro
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position), this.SkeletonPointToScreen(shoulderRight.Position));
+                             //mano hombro
+                           /* dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
+                                this.SkeletonPointToScreen(shoulderRight.Position));
                             //mano codo
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position), this.SkeletonPointToScreen(codoDer.Position));
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
+                                this.SkeletonPointToScreen(codoDer.Position));
                             //hombro codo
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position), this.SkeletonPointToScreen(codoDer.Position));
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
+                                this.SkeletonPointToScreen(codoDer.Position));
+                            */
+                            Point objeto = new Point(this.ObjetoX, this.ObjetoY);
+                            //Console.WriteLine("punto obj: " + objeto.ToString());
 
-                            string distHombroMano = DistanceHelper.ObtenerDistancia(handRight, shoulderRight).ToString();
-                            string distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer).ToString();
-                            string distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight).ToString();
+                            //convierto los Joint en SkeletonPoint para que sea compatible el eje x y z.
 
-                            Double anguloCodo = DistanceHelper.calcularAngulo(codoDer, handRight, shoulderRight);
-                           /* Console.WriteLine("Distancia codo mano: " + distCodoMano);
-                            Console.WriteLine("Distancia hombro codo: " + distHombroCodo); */
-                            Console.WriteLine("Angulo: " + anguloCodo);
+                            
+
+                            //Hombro
+                           /* SkeletonPoint skelHombro = DistanceHelper.ObtenerSkelPoint((int)
+                                shoulderRight.Position.X, (int)shoulderRight.Position.Y,
+                                (int)shoulderRight.Position.Z, this.sensor);
+
+                            SkeletonPoint skelCodo = DistanceHelper.ObtenerSkelPoint((int)
+                                codoDer.Position.X, (int)codoDer.Position.Y,
+                                (int)codoDer.Position.Z, this.sensor);
+
+                            SkeletonPoint skelMano = DistanceHelper.ObtenerSkelPoint((int)
+                                handRight.Position.X, (int)handRight.Position.Y,
+                                (int)handRight.Position.Z, this.sensor);*/
+
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
+                                objeto);
+                            /*
+                            float distHombroMano = DistanceHelper.ObtenerDistancia(skelMano, skelHombro);
+                            float distCodoMano = DistanceHelper.ObtenerDistancia(skelMano, skelCodo);
+                            float distHombroCodo = DistanceHelper.ObtenerDistancia(skelCodo, skelHombro);*/
+
+                            float distHombroMano = DistanceHelper.ObtenerDistancia(handRight, shoulderRight);
+                            float distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer);
+                            float distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight);
+
+
+                            //Point3D objeto3d = new Point3D(this.ObjetoX, this.ObjetoY, this.ObjetoZ);
+                            float distObjeto = DistanceHelper.ObtenerDistancia(shoulderRight, skelObjeto);
+
+                            //el primer argumento es el segmento opuesto al angulo que queremos obtener.
+                            double anguloCodo = DistanceHelper.CalcularAngulo(distHombroMano, distHombroCodo, distCodoMano);
+
+                            Console.WriteLine("angulo codo: " + anguloCodo);
+                            //codo menos hombro (codo>hombro)
+                            //Point puntoMedioHC = new Point((codoDer.Position.X + shoulderRight.Position.X) / 2, (codoDer.Position.Y + shoulderRight.Position.Y) / 2);
+
+                           /* Point puntoMedioHC = new Point((codoDer.Position.X + shoulderRight.Position.X) / 2,
+                                (codoDer.Position.Y + shoulderRight.Position.Y) / 2);
+                                */
+                            Point puntoMedioHO = new Point((skelObjeto.X + shoulderRight.Position.X) / 2,
+                                (skelObjeto.Y + shoulderRight.Position.Y) / 2);
+
+                            if(ObjetoY == 0)
+                            {
+                                Console.WriteLine("NO RECONOCE OBJETO");
+                            }
+                            else { 
+                            dc.DrawText(
+                            new FormattedText(distObjeto.ToString(),
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.BlueViolet),
+                                              puntoMedioHO);
+                            }
+
+                            var distenMt = distObjeto * 100;
+                            //Console.WriteLine("distancia hombro obj en cm: " + distenMt.ToString());
+                            Console.WriteLine("hombro x: " + shoulderRight.Position.X + "hombro y: " + shoulderRight.Position.Y
+                                + "hombro z: " + shoulderRight.Position.Z);
+
+                            dc.DrawText(
+                            new FormattedText("hombro: " + shoulderRight.Position.Y.ToString(),
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.Red),
+                                              this.SkeletonPointToScreen(shoulderRight.Position));
+
+                            dc.DrawText(
+                            new FormattedText("dist: " + distenMt,
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              40, System.Windows.Media.Brushes.Blue),
+                                              objeto);
+
+
+                            dc.DrawText(
+                            new FormattedText(anguloCodo.ToString(),
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.BlueViolet),
+                                              this.SkeletonPointToScreen(codoDer.Position));
+                            /*string distHombroMano = DistanceHelper.ObtenerDistancia(handRight, shoulderRight).ToString();
+                                                        string distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer).ToString();
+                                                        string distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight).ToString();
+                                                        */
+                            // Double anguloCodo = DistanceHelper.CalcularAngulo(codoDer, handRight, shoulderRight);
+                            /* Console.WriteLine("Distancia codo mano: " + distCodoMano);
+                             Console.WriteLine("Distancia hombro codo: " + distHombroCodo); */
+                            //Console.WriteLine("Angulo: " + anguloCodo);
                         }
 
                         /*      // Toma de Mediciones
@@ -469,9 +658,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                         //}
                         //string setDistanceHands;
-                       
+
                         //    dc.DrawRectangle(Brushes.Red, null, rect);
-                        
+
                         //setDistanceHands = "" + DistanceHelper.ObtenerDistancia(handLeft, handRight);
                         //if(setDistanceHands != "0")
                         //    DistanceHandHand.Text = setDistanceHands;
