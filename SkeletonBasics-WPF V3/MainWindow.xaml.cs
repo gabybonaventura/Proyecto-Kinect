@@ -552,14 +552,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                             //Point3D objeto3d = new Point3D(this.ObjetoX, this.ObjetoY, this.ObjetoZ);
                             float distObjeto = DistanceHelper.ObtenerDistancia(shoulderRight, skelObjeto);
-
+                            float distManoObj = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
                             //el primer argumento es el segmento opuesto al angulo que queremos obtener.
-                            double anguloCodo = DistanceHelper.CalcularAngulo(distHombroMano, distHombroCodo, distCodoMano);
-
+                            double anguloCodoAct = DistanceHelper.CalcularAngulo(distHombroMano, distHombroCodo, distCodoMano);
+                            double anguloCodoFut = DistanceHelper.CalcularAngulo(distObjeto, distHombroCodo, distCodoMano);
                             double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano, distHombroMano, distCadHombro);
                             //el siguiente angulo que obtenemos es el del hombro en relación con 
                             //el torso. 
 
+                            double anguloHombro = DistanceHelper.CalcularAngulo(distManoObj, distObjeto, distHombroMano);
                             Console.WriteLine("angulo hombro: " + anguloHombroCad);
                             //codo menos hombro (codo>hombro)
                             //Point puntoMedioHC = new Point((codoDer.Position.X + shoulderRight.Position.X) / 2, (codoDer.Position.Y + shoulderRight.Position.Y) / 2);
