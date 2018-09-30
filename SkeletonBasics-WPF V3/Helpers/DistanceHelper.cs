@@ -43,6 +43,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             //return rad;
         }
 
+        public static double AnguloRectang(float segH, float segA)
+        {
+            double rad = Math.Acos(segA / segH);
+            double deg = DistanceHelper.RadToDeg(rad);
+            return deg;
+        }
+
         public static float ObtenerDistancia (Joint articulacion, SkeletonPoint objeto)
         {
             float Distancia_X = articulacion.Position.X - (float)objeto.X;
@@ -51,6 +58,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 
             return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2));
         }
+
+
         public static double[] SetearAngulos(Joint hombroDer, Joint codoDer, Joint munecaDer, SkeletonPoint objeto)
         {
             //primero calculamos la distancia entre hombro y objeto, con eso
@@ -85,6 +94,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             return angulos;
 
         }
+
+
 
         public static double RadToDeg(double rad)
         {
