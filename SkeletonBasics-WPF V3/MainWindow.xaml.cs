@@ -481,7 +481,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         {
                             //dibujo las líneas de los segmentos:
                             //mano hombro
-                            /* dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
                                  this.SkeletonPointToScreen(shoulderRight.Position));
                              //mano codo
                              dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
@@ -489,110 +489,55 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                              //hombro codo
                              dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
                                  this.SkeletonPointToScreen(codoDer.Position));
-                             */
-                            float distHombroObj = DistanceHelper.ObtenerDistancia(shoulderRight, skelObjeto);
-                            /*if (distObjetoAnt>0 && (distObjtoAnt - distHombroObj))
-                            {
 
-                            }*/
+                            double[] angulos = AngleHelper.SetValorAngulos(shoulderRight, 
+                                handRight, codoDer, hipRight, skelObjeto);
+                            if(angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1)
+                            {
+                                Console.WriteLine("no se puede alcanzar el objeto");
+                            }
+
+
                             Point objeto = new Point(this.ObjetoX, this.ObjetoY);
-                            
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
-                                objeto);
-                      
-                            float distHombroMano = DistanceHelper.ObtenerDistancia(handRight, shoulderRight);
-                            float distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer);
-                            float distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight);
-
-                            float distCadHombro = DistanceHelper.ObtenerDistancia(hipRight, shoulderRight);
-                            float distCadMano = DistanceHelper.ObtenerDistancia(handRight, hipRight);
-
-                            
-                            float distManoObj = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
-
-                            //el primer argumento es el segmento opuesto al angulo que queremos obtener.
-                            double anguloCodoAct = DistanceHelper.CalcularAngulo(distHombroMano, 
-                                distHombroCodo, distCodoMano);
-                            double anguloCodoFut = DistanceHelper.CalcularAngulo(distHombroObj, 
-                                distHombroCodo, distCodoMano);
-                            double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano,
-                                    distHombroMano, distCadHombro); ;
-
-                            //el siguiente angulo que obtenemos es el del hombro en relación con 
-                            //el torso. 
-
-                            //si la distancia del objeto es mayor al largo del brazo,
-                            //que sería la suma de hombro codo y codo mano,
-                            //se debe informar que no se puede alcanzar el objeto.
-                            if (distHombroObj > (distCodoMano + distHombroCodo))
-                            {
-                                Console.WriteLine("no se puede alcanzar el objeto!");
-                            }
-                            else
-                            {
-                                double anguloHombro = DistanceHelper.CalcularAngulo(distManoObj,
-                                    distHombroObj, distHombroMano);
-                                Console.WriteLine("angulo hombro: " + anguloHombroCad);
-                            }
-
-                            //calculamos angulo arriba abajo de hombro:
-                            //necesitamos obtener un punto en el torso que nos sirva para calcular el angulo actual:
-                            SkeletonPoint puntoTorso = new SkeletonPoint();
-                            puntoTorso.X = shoulderRight.Position.X;
-                            puntoTorso.Y = codoDer.Position.Y;
-                            puntoTorso.Z = shoulderRight.Position.Z;
-
-                            float distTorsoHombro = DistanceHelper.ObtenerDistancia(shoulderRight, puntoTorso);
-                            //obtenemos angulo actual.
-                            double angHombroAA = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
-
-                            //para angulo deseado, sacamos distancia en altura
-                            //entre mano y objeto. 
-                            float distAuxMO = (handRight.Position.Y - skelObjeto.Y);
-                            puntoTorso.Y = codoDer.Position.Y + distAuxMO;
-                            double angHombroAAFut = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
-                            //si el punto del codo está más arriba que el hombro, el angulo se calculará para el otro lado
-                            //entonces hay que sacar el suplementario para que corresponda al servo.
-                            if (puntoTorso.Y > shoulderRight.Position.Y)
-                            {
-                                angHombroAAFut = 180 - angHombroAAFut;
-                            }
-
+                            dc.DrawLine(this.HandHandPen, objeto,
+                                 this.SkeletonPointToScreen(shoulderRight.Position));
 
                             /* Point puntoMedioHC = new Point((codoDer.Position.X + shoulderRight.Position.X) / 2,
                                  (codoDer.Position.Y + shoulderRight.Position.Y) / 2);
                                  */
 
-                            Point puntoMedioHO = new Point((skelObjeto.X + shoulderRight.Position.X) / 2,
-                                (skelObjeto.Y + shoulderRight.Position.Y) / 2);
+                            /*
+                                                        Point puntoMedioHO = new Point((skelObjeto.X + shoulderRight.Position.X) / 2,
+                                                            (skelObjeto.Y + shoulderRight.Position.Y) / 2);
 
-                            if(ObjetoY == 0)
-                            {
-                                Console.WriteLine("NO RECONOCE OBJETO");
-                            }
-                            else { 
+                                                        dc.DrawText(
+                                                        new FormattedText(distHombroObj.ToString(),
+                                                                          CultureInfo.GetCultureInfo("en-us"),
+                                                                          FlowDirection.LeftToRight,
+                                                                          new Typeface("Verdana"),
+                                                                          25, System.Windows.Media.Brushes.BlueViolet),
+                                                                          puntoMedioHO);
+
+                                                        var distenMt = distHombroObj * 100;
+                                                        //Console.WriteLine("distancia hombro obj en cm: " + distenMt.ToString());
+                                                        Console.WriteLine("hombro x: " + shoulderRight.Position.X + "hombro y: " + shoulderRight.Position.Y
+                                                            + "hombro z: " + shoulderRight.Position.Z);
+                                                            */
                             dc.DrawText(
-                            new FormattedText(distHombroObj.ToString(),
-                                              CultureInfo.GetCultureInfo("en-us"),
-                                              FlowDirection.LeftToRight,
-                                              new Typeface("Verdana"),
-                                              25, System.Windows.Media.Brushes.BlueViolet),
-                                              puntoMedioHO);
-                            }
-
-                            var distenMt = distHombroObj * 100;
-                            //Console.WriteLine("distancia hombro obj en cm: " + distenMt.ToString());
-                            Console.WriteLine("hombro x: " + shoulderRight.Position.X + "hombro y: " + shoulderRight.Position.Y
-                                + "hombro z: " + shoulderRight.Position.Z);
-
-                            dc.DrawText(
-                            new FormattedText("ang hombro: " + anguloHombroCad,
+                            new FormattedText("ang hombro d-i: " + angulos[1] + "\nang a-a: " + angulos[2],
                                               CultureInfo.GetCultureInfo("en-us"),
                                               FlowDirection.LeftToRight,
                                               new Typeface("Verdana"),
                                               25, System.Windows.Media.Brushes.Red),
                                               this.SkeletonPointToScreen(shoulderRight.Position));
-
+                            dc.DrawText(
+                            new FormattedText("ang codo: " + angulos[0],
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.Red),
+                                              this.SkeletonPointToScreen(codoDer.Position));
+                            /*
                             dc.DrawText(
                             new FormattedText("dist: " + distenMt,
                                               CultureInfo.GetCultureInfo("en-us"),
@@ -609,6 +554,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                               new Typeface("Verdana"),
                                               25, System.Windows.Media.Brushes.BlueViolet),
                                               this.SkeletonPointToScreen(codoDer.Position));
+
+                            */
                             /*string distHombroMano = DistanceHelper.ObtenerDistancia(handRight, shoulderRight).ToString();
                                                         string distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer).ToString();
                                                         string distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight).ToString();
