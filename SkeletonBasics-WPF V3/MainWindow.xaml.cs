@@ -66,7 +66,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         int valorDistancia;
         int ObjetoZ;
         SkeletonPoint skelObjeto;
-        private float distObjetoAnt = 0;
+        //private float distObjetoAnt = 0;
+        double[] angulos;
+        
+        bool flagSkeleton = false;
+        
+        bool flagObjeto = false;
 
         private SerialPort _serialPort = new SerialPort();
         private int _baudRate = 9600;
@@ -76,8 +81,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private string _portName = "COM5";
         private StopBits _stopBits = StopBits.One;
 
-        double AnguloCodo = 0;
-        double AnguloHombroArriba = 0;
+        //double AnguloCodo = 0;
+        //double AnguloHombroArriba = 0;
 
         public MainWindow()
         {
@@ -297,6 +302,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                     ObjetoZ, this.sensor);
                                 
                                 Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
+                                flagObjeto = true;
                             }
                         }
 
@@ -490,14 +496,18 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                              dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
                                  this.SkeletonPointToScreen(codoDer.Position));
 
-                            double[] angulos = AngleHelper.SetValorAngulos(shoulderRight, 
-                                handRight, codoDer, hipRight, skelObjeto);
-                            if(angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1)
+                            if(flagObjeto && !flagSkeleton)
                             {
-                                Console.WriteLine("no se puede alcanzar el objeto");
+                                angulos = AngleHelper.SetValorAngulos(shoulderRight,
+                                handRight, codoDer, hipRight, skelObjeto);
+                                if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1)
+                                {
+                                    Console.WriteLine("no se puede alcanzar el objeto");
+                                    //flagSkeleton = false;
+                                }
+                                flagSkeleton = true;
                             }
-
-
+                            
                             Point objeto = new Point(this.ObjetoX, this.ObjetoY);
                             dc.DrawLine(this.HandHandPen, objeto,
                                  this.SkeletonPointToScreen(shoulderRight.Position));
