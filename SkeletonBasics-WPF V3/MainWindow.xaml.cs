@@ -80,12 +80,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private Parity _parity = Parity.None;
         private string _portName = "COM5";
         private StopBits _stopBits = StopBits.One;
+        private bool flagTokenValidado;
 
         //double AnguloCodo = 0;
         //double AnguloHombroArriba = 0;
 
-        public MainWindow()
+            //se inicializa con un flag de la ventana anterior
+            //sirve para saber si se validó la sesión previamente.
+        public MainWindow(bool flagToken)
         {
+            flagTokenValidado = flagToken;
             InitializeComponent();
         }
        

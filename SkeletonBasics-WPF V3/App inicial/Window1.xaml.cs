@@ -1,0 +1,97 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
+{
+    /// <summary>
+    /// Lógica de interacción para Window1.xaml
+    /// </summary>
+    public partial class Window1 : Window
+    {
+        /*string valid = "true";
+        string status_ok = "200";*/
+        private bool flagTokenValidado;
+        public Window1()
+        {
+            InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrEmpty(TokenTextBox.Text))
+            {
+                this.ErrorLabel.Content = "Por favor ingrese un token";
+                return;
+            }
+
+            this.ErrorLabel.Content = "";
+            string token = this.TokenTextBox.Text;
+            string url = "https://ataxia-services-project.herokuapp.com/token/"+token;
+            var request = (HttpWebRequest)WebRequest.Create(url);
+
+            request.Method = "GET";
+            
+            var content = string.Empty;
+
+            try
+            {
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        using (var sr = new StreamReader(stream))
+                        {
+                            content = sr.ReadToEnd();
+                        }
+                    }
+                }
+                var rta = JsonConvert.DeserializeObject<dynamic>(content);
+                string status_code = rta.head.status_code;
+                
+                //Console.WriteLine(rta.head.status_code);
+                if (status_code.Equals("200"))
+                {
+                    string isValid = rta.data.isValid;
+                    if (isValid.Equals("True"))
+                    {
+                        Console.WriteLine("token válido");
+                        flagTokenValidado = true;
+                        this.IniRehabBtn.IsEnabled = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("token inválido");
+                    }
+                        
+                }
+            }
+            catch
+            {
+                Console.WriteLine("no hay conexión amea!");
+                flagTokenValidado = false;
+            }
+
+            
+        }
+
+        private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow win = new MainWindow(flagTokenValidado);
+            win.Show();
+            this.Close();
+        }
+    }
+}

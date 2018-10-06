@@ -1,0 +1,17 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.SkeletonBasics.App_inicial.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Microsoft.Samples.Kinect.SkeletonBasics.App_inicial"
+        mc:Ignorable="d"
+        Title="Window1" Height="300" Width="300">
+    <Grid>
+        <Button Content="Validar token" HorizontalAlignment="Left" Margin="207,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Label Content="Estado conexión: " HorizontalAlignment="Left" Margin="60,33,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="TokenTextBox" HorizontalAlignment="Left" Height="23" Margin="60,64,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="IniRehabBtn" Content="Iniciar rehabilitación" HorizontalAlignment="Left" Margin="60,161,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False" Click="IniRehabBtn_Click"/>
+        <Label x:Name="ErrorLabel" Foreground="Red" Content="" HorizontalAlignment="Left" Margin="60,111,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
