@@ -55,7 +55,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                     distHombroCodo, distCodoMano);
                 double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano,
                         distHombroMano, distCadHombro);
-                double anguloHombroFut = DistanceHelper.CalcularAngulo(distManoObj,
+                double anguloHombroDIFut = DistanceHelper.CalcularAngulo(distManoObj,
                         distHombroObj, distHombroMano);
                 double angHombroAA = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
 
@@ -73,7 +73,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                     angHombroAAFut = 180 - angHombroAAFut;
                 }
                 array[0] = anguloCodoFut;
-                array[1] = anguloHombroFut;
+                array[1] = anguloHombroDIFut;
                 array[2] = angHombroAAFut;
             }
             return array;

@@ -13,7 +13,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using System.Windows.Media.Media3D;
+    //using System.Windows.Media.Media3D;
     using Emgu.CV;
     using Emgu.CV.Structure;
     using Emgu.CV.Util;
@@ -80,10 +80,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private Parity _parity = Parity.None;
         private string _portName = "COM5";
         private StopBits _stopBits = StopBits.One;
-        private bool flagTokenValidado;
 
-        //double AnguloCodo = 0;
-        //double AnguloHombroArriba = 0;
+        private bool flagTokenValidado;
 
             //se inicializa con un flag de la ventana anterior
             //sirve para saber si se validó la sesión previamente.
@@ -91,12 +89,29 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         {
             flagTokenValidado = flagToken;
             InitializeComponent();
+
+            try
+            {
+                _serialPort.BaudRate = _baudRate;
+                _serialPort.DataBits = _dataBits;
+                _serialPort.Handshake = _handshake;
+                _serialPort.Parity = _parity;
+                _serialPort.PortName = _portName;
+                _serialPort.StopBits = _stopBits;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
+
         }
        
         private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
         {
             if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
             {
+
                 drawingContext.DrawRectangle(
                     Brushes.Red,
                     null,
@@ -509,6 +524,31 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                     Console.WriteLine("no se puede alcanzar el objeto");
                                     //flagSkeleton = false;
                                 }
+                                else
+                                {
+                                    //si se puede alcanzar el objeto,
+                                    if (_serialPort.IsOpen)
+                                    {
+                                        string rtaAngulos = "*";
+                                        foreach (double ang in angulos)
+                                        {
+                                            string aux = null;
+                                            if (ang < 100)
+                                            {
+                                                aux = "0";
+                                                aux += ang.ToString().Substring(0, 2);
+                                            }
+                                            else
+                                            {
+                                                aux += ang.ToString().Substring(0, 3);
+                                            }
+                                            rtaAngulos += aux;
+                                        }
+                                        _serialPort.Write(rtaAngulos);
+                                    }
+                                        
+                                }
+
                                 flagSkeleton = true;
                             }
                             
