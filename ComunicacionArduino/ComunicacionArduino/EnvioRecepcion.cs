@@ -14,7 +14,8 @@ namespace ComunicacionArduino
     public partial class EnvioRecepcion : Form
     {
         private SerialPort _serialPort;
-
+        static string CadenaRecibida = "Mediciones:\n";
+        static int Lineas = 1;
         public EnvioRecepcion()
         {
             InitializeComponent();
@@ -28,7 +29,7 @@ namespace ComunicacionArduino
 
         private void EnvioRecepcion_Load(object sender, EventArgs e)
         {
-            //_serialPort.DataReceived += new SerialDataReceivedEventHandler(_serialPort_DataReceived);
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             _serialPort.Open();
         }
 
@@ -38,8 +39,24 @@ namespace ComunicacionArduino
                 _serialPort.Write(EnviarTextBox.Text);
             else
                 AlertaLabel.Text = "Debe ingresar texto a enviar";
+            
         }
-        
-        
+        private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort sp = (SerialPort)sender;
+            string indata = sp.ReadExisting();
+            if(!string.IsNullOrEmpty(indata))
+            {
+                Console.WriteLine(indata);
+                /*
+                if(EnvioRecepcion.Lineas != 10)
+                {
+                    CadenaRecibida += indata;
+                    
+                }
+                */
+            }
+        }
+
     }
 }

@@ -1,7 +1,8 @@
 float Sensibilidad = 0.185; //sensibilidad en Voltios/Amperio para sensor de 5A
 
 String incoming;
-int CodoPosicion;
+int CodoArribaAbajoPosicion;
+int CodoIzquierdaDerechaPosicion;
 int HombroArribaAbajoPosicion;
 int HombroAdelanteAtrasPosicion;
 String inString = "";    // string to hold input
@@ -13,7 +14,8 @@ byte pos = 0;
 
 #include <Servo.h>
 
-Servo CodoServo;
+Servo CodoArribaAbajoServo;
+Servo CodoIzquierdaDerechaServo;
 Servo HombroArribaAbajoServo;
 Servo HombroAdelanteAtrasServo;
 
@@ -21,15 +23,16 @@ Servo HombroAdelanteAtrasServo;
 void setup() {
   Serial.begin(9600);
   pinMode(13, OUTPUT);
-  CodoServo.attach(9);
-  HombroArribaAbajoServo.attach(10);
-  HombroAdelanteAtrasServo.attach(11);
+  CodoArribaAbajoServo.attach(9);
+  CodoIzquierdaDerechaServo.attach(10);
+  HombroArribaAbajoServo.attach(11);
+  HombroAdelanteAtrasServo.attach(12);
 
 }
 
 void loop() {
   tiempoEnSegundos = millis() / 1000; //La funcion millis() devuelve el tiempo en milisegundos desde que el arduino comenzo a ejecutar el sketch
-  while (Serial.available() > 9) {
+  while (Serial.available() > 12) {
     inString = "";
     int inChar = Serial.read();
     if (inChar == '*')
@@ -40,7 +43,16 @@ void loop() {
       inString += (char)inChar;
       inChar = Serial.read();
       inString += (char)inChar;
-      CodoPosicion = inString.toInt();
+      CodoArribaAbajoPosicion = inString.toInt();
+
+      inString = "";
+      inChar = Serial.read();
+      inString += (char)inChar;
+      inChar = Serial.read();
+      inString += (char)inChar;
+      inChar = Serial.read();
+      inString += (char)inChar;
+      CodoIzquierdaDerechaPosicion = inString.toInt();
 
       inString = "";
       inChar = Serial.read();
@@ -50,6 +62,7 @@ void loop() {
       inChar = Serial.read();
       inString += (char)inChar;
       HombroArribaAbajoPosicion = inString.toInt();
+
       inString = "";
       inChar = Serial.read();
       inString += (char)inChar;
@@ -60,7 +73,11 @@ void loop() {
       HombroAdelanteAtrasPosicion = inString.toInt();
 
       Serial.print("Value:");
-      Serial.println(CodoPosicion);
+      Serial.println(CodoArribaAbajoPosicion);
+      Serial.print("String: ");
+      Serial.println(inString);
+      Serial.print("Value:");
+      Serial.println(CodoIzquierdaDerechaPosicion);
       Serial.print("String: ");
       Serial.println(inString);
       Serial.print("Value:");
@@ -72,43 +89,40 @@ void loop() {
       Serial.print("String: ");
       Serial.println(inString);
 
-      CodoServo.write(CodoPosicion);
+      CodoArribaAbajoServo.write(CodoArribaAbajoPosicion);
+      CodoArribaAbajoServo.write(CodoIzquierdaDerechaPosicion);
       HombroArribaAbajoServo.write(HombroArribaAbajoPosicion);
       HombroAdelanteAtrasServo.write(HombroAdelanteAtrasPosicion);
     }
   }
     if(tiempoEnSegundos != UltimoSegundo)
-{
-      float voltajeSensor= analogRead(A0)*(5.0 / 1023.0); //lectura del sensor   
-      float I=(voltajeSensor-2.5)/Sensibilidad; //Ecuación  para obtener la corriente
-      Serial.print("Corriente: ");
-      Serial.println(I,3);
-     UltimoSegundo = tiempoEnSegundos;
+    {
+      //float voltajeSensor= analogRead(A0)*(5.0 / 1023.0); //lectura del sensor   
+      //float I=(voltajeSensor-2.5)/Sensibilidad; //Ecuación  para obtener la corriente
+      float I0=get_corriente(200, A0);//obtenemos la corriente promedio de 200 muestras 
+      float I1=get_corriente(200, A1);//obtenemos la corriente promedio de 200 muestras 
+      float I2=get_corriente(200, A2);//obtenemos la corriente promedio de 200 muestras 
+      float I3=get_corriente(200, A3);//obtenemos la corriente promedio de 200 muestras 
+      String aux = 'A' + String((int)abs(I0 * 1000));
+      aux += 'B' + String((int)abs(I1 * 1000));
+      aux += 'C' + String((int)abs(I2 * 1000));
+      aux += 'D' + String((int)abs(I3 * 1000));
+      Serial.println(aux);
+      UltimoSegundo = tiempoEnSegundos;
+    }
 }
-    
-  /*
-    // if you get a newline, print the string, then the string's value:
-    if (inChar == '|') {
-    Serial.print("Value:");
-    Serial.println(inString.toInt());
-    Serial.print("String: ");
-    Serial.println(inString);
-    // clear the string for new input:
-    inString = "";
-    }*/
-}
-/*
-  HombroArribaAbajoPosicion = Serial.read();
-  HombroAdelanteAtrasPosicion = Serial.read();
-  Serial.write(incoming);
-  Serial.print(CodoPosicion, DEC);
-  Serial.print(HombroArribaAbajoPosicion, DEC);
-  Serial.print(HombroAdelanteAtrasPosicion, DEC);
 
-  Serial.print(pos, DEC);
-  CodoServo.write(pos);
-  HombroArribaAbajoServo.write(pos);
-  HombroAdelanteAtrasServo.write(pos);
-*/
+float get_corriente(int n_muestras, int pin)
+{
+  float voltajeSensor;
+  float corriente=0;
+  for(int i=0;i<n_muestras;i++)
+  {
+    voltajeSensor = analogRead(pin) * (5.0 / 1023.0);////lectura del sensor
+    corriente=corriente+(voltajeSensor-2.5)/Sensibilidad; //Ecuación  para obtener la corriente
+  }
+  corriente=corriente/n_muestras;
+  return(corriente);
+}
 
 

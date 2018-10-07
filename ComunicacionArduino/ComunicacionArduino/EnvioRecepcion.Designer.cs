@@ -31,6 +31,7 @@
             this.EnviarButton = new System.Windows.Forms.Button();
             this.EnviarTextBox = new System.Windows.Forms.TextBox();
             this.AlertaLabel = new System.Windows.Forms.Label();
+            this.MedicionesLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // EnviarButton
@@ -61,12 +62,22 @@
             this.AlertaLabel.Size = new System.Drawing.Size(0, 25);
             this.AlertaLabel.TabIndex = 2;
             // 
+            // MedicionesLabel
+            // 
+            this.MedicionesLabel.AutoSize = true;
+            this.MedicionesLabel.Location = new System.Drawing.Point(50, 112);
+            this.MedicionesLabel.Name = "MedicionesLabel";
+            this.MedicionesLabel.Size = new System.Drawing.Size(79, 17);
+            this.MedicionesLabel.TabIndex = 3;
+            this.MedicionesLabel.Text = "Mediciones";
+            // 
             // EnvioRecepcion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.ClientSize = new System.Drawing.Size(608, 164);
+            this.ClientSize = new System.Drawing.Size(608, 476);
+            this.Controls.Add(this.MedicionesLabel);
             this.Controls.Add(this.AlertaLabel);
             this.Controls.Add(this.EnviarTextBox);
             this.Controls.Add(this.EnviarButton);
@@ -83,5 +94,6 @@
         private System.Windows.Forms.Button EnviarButton;
         private System.Windows.Forms.TextBox EnviarTextBox;
         private System.Windows.Forms.Label AlertaLabel;
+        private System.Windows.Forms.Label MedicionesLabel;
     }
 }
