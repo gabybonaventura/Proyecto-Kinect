@@ -7,6 +7,7 @@
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.IO.Ports;
@@ -18,6 +19,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using Emgu.CV.Structure;
     using Emgu.CV.Util;
     using Microsoft.Kinect;
+    using Microsoft.Samples.Kinect.SkeletonBasics.App_inicial;
     using Microsoft.Samples.Kinect.SkeletonBasics.Helpers;
 
     public partial class MainWindow : Window
@@ -82,12 +84,17 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private StopBits _stopBits = StopBits.One;
 
         private bool flagTokenValidado;
+        private string valorToken;
 
-            //se inicializa con un flag de la ventana anterior
-            //sirve para saber si se validó la sesión previamente.
-        public MainWindow(bool flagToken)
+        List<Angulos> desvios /*= new List<Angulos>()*/;
+
+        //se inicializa con un flag de la ventana anterior
+        //sirve para saber si se validó la sesión previamente.
+        public MainWindow(bool flagToken, string token)
         {
             flagTokenValidado = flagToken;
+            this.valorToken = token;
+            desvios = new List<Angulos>();
             InitializeComponent();
 
             try
@@ -199,7 +206,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
 
-
             try
             {
                 _serialPort.BaudRate = _baudRate;
@@ -208,6 +214,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 _serialPort.Parity = _parity;
                 _serialPort.PortName = _portName;
                 _serialPort.StopBits = _stopBits;
+                _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+                _serialPort.Open();
             }
             catch (Exception ex)
             {
@@ -216,66 +224,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
         }
 
-
-
-        /*private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
-
-            Hsv lowerLimit = new Hsv(40, 100, 100);
-            Hsv upperLimit = new Hsv(80, 255, 255);
-
-            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            SerialPort sp = (SerialPort)sender;
+            string indata = sp.ReadExisting();
+            if (!string.IsNullOrEmpty(indata))
             {
-
-                if(colorFrame != null)
-                {
-                    if (colorFrame != null)
-                    {
-
-
-                        System.Drawing.Bitmap bmp = Helper.ImageToBitmap(colorFrame);
-                        Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
-                        // Copy the pixel data from the image to a temporary array
-
-                        Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
-
-                        Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
-                        //imageHSVDest.Erode(200);
-                        VectorOfVectorOfPoint vectorOfPoint = Helper.FindContours(imageHSVDest);
-                        //VectorOfPointF vf = new VectorOfPointF();
-                        for (int i = 0; i < vectorOfPoint.Size; i++)
-                        {
-                            var contour = vectorOfPoint[i];
-                            var area = CvInvoke.ContourArea(contour);
-                            if (area > 100)
-                            {
-
-                                System.Drawing.Rectangle rec = CvInvoke.BoundingRectangle(contour);
-                                Point p1 = new Point(rec.X, rec.Y);
-                                Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
-                                ObjetoX = (p1.X + p2.X) / 2;
-                                ObjetoY = (p1.Y + p2.Y) / 2;
-                                rect = new Rect(p1, p2);
-                                Console.WriteLine($"x: {(p1.X + p2.X) / 2} y: {(p1.Y + p2.Y) / 2}");
-                                //currentFrame.Draw(rec, new Bgr(0, double.MaxValue, 0), 3);
-
-                            }
-                        }
-
-                        Point3D point3D;
-
-
-                        colorFrame.CopyPixelDataTo(this.colorPixels);
-                        // Write the pixel data into our bitmap
-                        this.colorBitmap.WritePixels(
-                            new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
-                            this.colorPixels,
-                            this.colorBitmap.PixelWidth * sizeof(int),
-                            0);
-                    }
-                }
+                desvios.Add(new Angulos(indata));
             }
-        }*/
+        }
 
         private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
@@ -453,6 +410,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.sensor.Stop();
             }
+            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, false, valorToken);
+            win.Show();
         }
 
         private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
@@ -508,14 +467,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             //mano hombro
                             dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
                                  this.SkeletonPointToScreen(shoulderRight.Position));
-                             //mano codo
-                             dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
-                                 this.SkeletonPointToScreen(codoDer.Position));
-                             //hombro codo
-                             dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
-                                 this.SkeletonPointToScreen(codoDer.Position));
+                            //mano codo
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
+                                this.SkeletonPointToScreen(codoDer.Position));
+                            //hombro codo
+                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
+                                this.SkeletonPointToScreen(codoDer.Position));
 
-                            if(flagObjeto && !flagSkeleton)
+                            if (flagObjeto && !flagSkeleton)
                             {
                                 angulos = AngleHelper.SetValorAngulos(shoulderRight,
                                 handRight, codoDer, hipRight, skelObjeto);
@@ -546,37 +505,27 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                         }
                                         _serialPort.Write(rtaAngulos);
                                     }
-                                        
+
                                 }
 
                                 flagSkeleton = true;
                             }
-                            
+
+                            if(DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 1)
+                            {
+                                //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
+                                //los datos.
+
+                                //falta el envío de datos, que se obtiene desde arduino.
+                                Confirmacion win = new Confirmacion(flagTokenValidado, desvios, true, valorToken);
+                                win.Show();
+                                this.Close();
+                            }
+ 
                             Point objeto = new Point(this.ObjetoX, this.ObjetoY);
                             dc.DrawLine(this.HandHandPen, objeto,
                                  this.SkeletonPointToScreen(shoulderRight.Position));
 
-                            /* Point puntoMedioHC = new Point((codoDer.Position.X + shoulderRight.Position.X) / 2,
-                                 (codoDer.Position.Y + shoulderRight.Position.Y) / 2);
-                                 */
-
-                            /*
-                                                        Point puntoMedioHO = new Point((skelObjeto.X + shoulderRight.Position.X) / 2,
-                                                            (skelObjeto.Y + shoulderRight.Position.Y) / 2);
-
-                                                        dc.DrawText(
-                                                        new FormattedText(distHombroObj.ToString(),
-                                                                          CultureInfo.GetCultureInfo("en-us"),
-                                                                          FlowDirection.LeftToRight,
-                                                                          new Typeface("Verdana"),
-                                                                          25, System.Windows.Media.Brushes.BlueViolet),
-                                                                          puntoMedioHO);
-
-                                                        var distenMt = distHombroObj * 100;
-                                                        //Console.WriteLine("distancia hombro obj en cm: " + distenMt.ToString());
-                                                        Console.WriteLine("hombro x: " + shoulderRight.Position.X + "hombro y: " + shoulderRight.Position.Y
-                                                            + "hombro z: " + shoulderRight.Position.Z);
-                                                            */
                             dc.DrawText(
                             new FormattedText("ang hombro d-i: " + angulos[1] + "\nang a-a: " + angulos[2],
                                               CultureInfo.GetCultureInfo("en-us"),
@@ -591,33 +540,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                               new Typeface("Verdana"),
                                               25, System.Windows.Media.Brushes.Red),
                                               this.SkeletonPointToScreen(codoDer.Position));
-                            /*
-                            dc.DrawText(
-                            new FormattedText("dist: " + distenMt,
-                                              CultureInfo.GetCultureInfo("en-us"),
-                                              FlowDirection.LeftToRight,
-                                              new Typeface("Verdana"),
-                                              40, System.Windows.Media.Brushes.Blue),
-                                              objeto);
-
-
-                            dc.DrawText(
-                            new FormattedText(anguloCodoAct.ToString(),
-                                              CultureInfo.GetCultureInfo("en-us"),
-                                              FlowDirection.LeftToRight,
-                                              new Typeface("Verdana"),
-                                              25, System.Windows.Media.Brushes.BlueViolet),
-                                              this.SkeletonPointToScreen(codoDer.Position));
-
-                            */
-                            /*string distHombroMano = DistanceHelper.ObtenerDistancia(handRight, shoulderRight).ToString();
-                                                        string distCodoMano = DistanceHelper.ObtenerDistancia(handRight, codoDer).ToString();
-                                                        string distHombroCodo = DistanceHelper.ObtenerDistancia(codoDer, shoulderRight).ToString();
-                                                        */
-                            // Double anguloCodo = DistanceHelper.CalcularAngulo(codoDer, handRight, shoulderRight);
-                            /* Console.WriteLine("Distancia codo mano: " + distCodoMano);
-                             Console.WriteLine("Distancia hombro codo: " + distHombroCodo); */
-                            //Console.WriteLine("Angulo: " + anguloCodo);
                         }
 
                         /*      // Toma de Mediciones
