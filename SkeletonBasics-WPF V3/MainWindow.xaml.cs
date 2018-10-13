@@ -273,12 +273,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                                 //Console.WriteLine($"objeto x: {(p1.X + p2.X) / 2} objeto y: {(p1.Y + p2.Y) / 2}");
                                 //currentFrame.Draw(rec, new Bgr(0, double.MaxValue, 0), 3);
-
-                                skelObjeto = DistanceHelper.ObtenerSkelPoint((int)ObjetoX, (int)ObjetoY,
+                                if(ObjetoZ>0)
+                                {
+                                    skelObjeto = DistanceHelper.ObtenerSkelPoint((int)ObjetoX, (int)ObjetoY,
                                     ObjetoZ, this.sensor);
+
+                                    Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
+                                    flagObjeto = true;
+                                }
                                 
-                                Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
-                                flagObjeto = true;
                             }
                         }
 
@@ -326,8 +329,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     if (x == ObjetoX && y == ObjetoY)
                     {
                         ObjetoZ = valorDistancia;
-                        if(_serialPort.IsOpen)
-                            _serialPort.Write(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
+                        /*if(_serialPort.IsOpen)
+                            _serialPort.Write(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());*/
                         //Console.WriteLine($"Z: {valorDistancia}");
                         //Console.WriteLine(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
 
@@ -465,20 +468,20 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         {
                             //dibujo las líneas de los segmentos:
                             //mano hombro
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
+                            /*dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
                                  this.SkeletonPointToScreen(shoulderRight.Position));
                             //mano codo
                             dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
                                 this.SkeletonPointToScreen(codoDer.Position));
                             //hombro codo
                             dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
-                                this.SkeletonPointToScreen(codoDer.Position));
+                                this.SkeletonPointToScreen(codoDer.Position));*/
 
                             if (flagObjeto && !flagSkeleton)
                             {
                                 angulos = AngleHelper.SetValorAngulos(shoulderRight,
                                 handRight, codoDer, hipRight, skelObjeto);
-                                if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1)
+                                if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
                                 {
                                     Console.WriteLine("no se puede alcanzar el objeto");
                                     //flagSkeleton = false;
@@ -504,6 +507,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                             rtaAngulos += aux;
                                         }
                                         _serialPort.Write(rtaAngulos);
+                                        Console.WriteLine("rta angulos: " + rtaAngulos);
                                     }
 
                                 }
@@ -526,7 +530,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             dc.DrawLine(this.HandHandPen, objeto,
                                  this.SkeletonPointToScreen(shoulderRight.Position));
 
-                            dc.DrawText(
+                            /*dc.DrawText(
                             new FormattedText("ang hombro d-i: " + angulos[1] + "\nang a-a: " + angulos[2],
                                               CultureInfo.GetCultureInfo("en-us"),
                                               FlowDirection.LeftToRight,
@@ -539,7 +543,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                               FlowDirection.LeftToRight,
                                               new Typeface("Verdana"),
                                               25, System.Windows.Media.Brushes.Red),
-                                              this.SkeletonPointToScreen(codoDer.Position));
+                                              this.SkeletonPointToScreen(codoDer.Position));*/
                         }
 
                         /*      // Toma de Mediciones

@@ -23,10 +23,10 @@ Servo HombroAdelanteAtrasServo;
 void setup() {
   Serial.begin(9600);
   pinMode(13, OUTPUT);
-  CodoArribaAbajoServo.attach(9);
-  CodoIzquierdaDerechaServo.attach(10);
-  HombroArribaAbajoServo.attach(11);
-  HombroAdelanteAtrasServo.attach(12);
+  CodoArribaAbajoServo.attach(8);
+  CodoIzquierdaDerechaServo.attach(9);
+  HombroArribaAbajoServo.attach(10);
+  HombroAdelanteAtrasServo.attach(11);
 
 }
 
@@ -90,7 +90,7 @@ void loop() {
       Serial.println(inString);
 
       CodoArribaAbajoServo.write(CodoArribaAbajoPosicion);
-      CodoArribaAbajoServo.write(CodoIzquierdaDerechaPosicion);
+      CodoIzquierdaDerechaServo.write(CodoIzquierdaDerechaPosicion);
       HombroArribaAbajoServo.write(HombroArribaAbajoPosicion);
       HombroAdelanteAtrasServo.write(HombroAdelanteAtrasPosicion);
     }

@@ -30,22 +30,21 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
 
         public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token)
         {
+            InitializeComponent();
             this.listDesvio = desvios;
             this.flagToken = flagToken;
             this.result = resultado;
             this.tokenID = token;
             lines = null;
             CalcularDesviosYResultado();
-            EnviarDatos();
-            InitializeComponent();
-            
+            EnviarDatos();  
         }
 
         private string GenerarJSON(string json)
         {
             string jsonAux = "{\"ejercicios\":[";
             //reviso que el archivo no exista.
-            if (File.Exists(@"\Archivo\ArchivoSinc.txt"))
+            /*if (File.Exists(@"\Archivo\ArchivoSinc.txt"))
             {
                 //si existe, leo todos los datos para sincronizar:
                 lines = System.IO.File.ReadAllLines(@"\Archivo\ArchivoSinc.txt");
@@ -57,7 +56,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                     // Use a tab to indent each line of the file.
                     Console.WriteLine("\t" + line);
                 }
-            }
+            }*/
             jsonAux = jsonAux + json + "]}";
             return jsonAux;
         }
@@ -74,7 +73,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             string jsonAux = GenerarJSON(json);
 
             //la url es otra.
-            string url = "https://ataxia-services-project.herokuapp.com/token/";
+            //es un path de mock server
+            //string url = "https://5f504b6e-15a3-4946-87de-56cdfdccf0ca.mock.pstmn.io/pathgabi";
+
+            string url = "https://ataxia-services-project.herokuapp.com/sessions";
+
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -96,22 +99,22 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                     var result = streamReader.ReadToEnd();
                     //revisar que dice result. Si envia ok o no ok.
                     //si todo sale exitosamente Y existe el archivo, debo eliminar el archivo: 
-                    if (1 == 1)
+                   /* if (1 == 1)
                     {
-                        if (File.Exists(@"\Archivo\ArchivoSinc.txt"))
-                            File.Delete(@"\Archivo\ArchivoSinc.txt");
+                  /*      if (File.Exists(@"\ArchivoSinc.txt"))
+                            File.Delete(@"\ArchivoSinc.txt");
                     }
                     else
                     {
                         File.AppendAllText(@"\Archivo\ArchivoSinc.txt", json);
                         MessageBox.Show("No se ha podido sincronizar los datos.", "Error sincronización");
-                    }
+                    }*/
                 }
             }
             catch (Exception d)
             {
                 //si no se puede enviar, agrego a archivo. si el archivo no existe, lo creo.
-                File.AppendAllText(@"\Archivo\ArchivoSinc.txt", json);
+                //File.AppendAllText(@"\ArchivoSinc.txt", json);
                 MessageBox.Show("No se ha podido sincronizar los datos.", "Error sincronización");
             }
 

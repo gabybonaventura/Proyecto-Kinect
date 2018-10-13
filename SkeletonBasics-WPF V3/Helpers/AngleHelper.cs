@@ -11,10 +11,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
     {
         public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, Joint cadera, SkeletonPoint skelObjeto)
         {
-            double[] array = new double[3];
+            double[] array = new double[4];
             array[0] = -1;
             array[1] = -1;
             array[2] = -1;
+            array[3] = -1;
             //punto auxiliar en el torso para calcular el ángulo del hombro 
             //en el movimiento arriba - abajo.
 
@@ -73,8 +74,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                     angHombroAAFut = 180 - angHombroAAFut;
                 }
                 array[0] = anguloCodoFut;
-                array[1] = anguloHombroDIFut;
-                array[2] = angHombroAAFut;
+                array[1] = 090;
+                array[2] = anguloHombroDIFut;
+                array[3] = angHombroAAFut;
             }
             return array;
         }
