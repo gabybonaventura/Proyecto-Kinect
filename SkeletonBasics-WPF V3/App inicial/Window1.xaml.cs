@@ -149,7 +149,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
 
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow win = new MainWindow(flagTokenValidado, token);
+            MainWindow win = new MainWindow(flagTokenValidado, token, 1);
             win.Show();
             this.Close();
         }

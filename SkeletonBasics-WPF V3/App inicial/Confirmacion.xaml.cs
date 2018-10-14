@@ -28,16 +28,18 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
         int desvios = 0, contProm=0;
         float prom = 0;
         string tokenID, json;
-        
+        int nro_ejercicio;
+
         List<DatosSesion> listaDatos;
 
-        public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token)
+        public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token, int nroEj)
         {
             InitializeComponent();
             this.listDesvio = desvios;
             this.flagToken = flagToken;
             this.result = resultado;
             this.tokenID = token;
+            nro_ejercicio = nroEj;
             listaDatos = new List<DatosSesion>();
             CalcularDesviosYResultado();
             EnviarDatos();  
@@ -61,8 +63,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
         private void EnviarDatos()
         {
 
-             DatosSesion datos = new DatosSesion("546", 1, true, 5, 2);
-            //DatosSesion datos = new DatosSesion(tokenID, nroEj, result, desvios, prom);
+             //DatosSesion datos = new DatosSesion("546", 1, true, 5, 2);
+            DatosSesion datos = new DatosSesion(tokenID, nro_ejercicio, result, desvios, prom);
 
             GenerarJSON();
 
@@ -164,7 +166,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
         private void SiBtn_Click(object sender, RoutedEventArgs e)
         {
             //en este botón abro de nuevo MainWindow para un nuevo ejercicio
-            MainWindow win = new MainWindow(flagToken,tokenID);
+            MainWindow win = new MainWindow(flagToken,tokenID, nro_ejercicio);
             win.Show();
             this.Close();
         }

@@ -85,16 +85,19 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private bool flagTokenValidado;
         private string valorToken;
+        private int nro_ejercicio;
 
         List<Angulos> desvios /*= new List<Angulos>()*/;
 
         //se inicializa con un flag de la ventana anterior
         //sirve para saber si se validó la sesión previamente.
-        public MainWindow(bool flagToken, string token)
+        public MainWindow(bool flagToken, string token, int nroEj)
         {
             flagTokenValidado = flagToken;
             this.valorToken = token;
             desvios = new List<Angulos>();
+            nro_ejercicio = nroEj;
+            nro_ejercicio++;
             InitializeComponent();
 
             try
@@ -413,7 +416,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.sensor.Stop();
             }
-            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, false, valorToken);
+            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, false, valorToken, nro_ejercicio);
             win.Show();
         }
 
@@ -521,7 +524,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 //los datos.
 
                                 //falta el envío de datos, que se obtiene desde arduino.
-                                Confirmacion win = new Confirmacion(flagTokenValidado, desvios, true, valorToken);
+                                Confirmacion win = new Confirmacion(flagTokenValidado, desvios, true, valorToken, nro_ejercicio);
                                 win.Show();
                                 this.Close();
                             }
