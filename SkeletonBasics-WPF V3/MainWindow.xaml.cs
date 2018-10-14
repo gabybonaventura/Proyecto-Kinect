@@ -108,6 +108,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 _serialPort.Parity = _parity;
                 _serialPort.PortName = _portName;
                 _serialPort.StopBits = _stopBits;
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Write("*020090040040");
+                }
             }
             catch (Exception ex)
             {
@@ -276,14 +280,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                                 //Console.WriteLine($"objeto x: {(p1.X + p2.X) / 2} objeto y: {(p1.Y + p2.Y) / 2}");
                                 //currentFrame.Draw(rec, new Bgr(0, double.MaxValue, 0), 3);
-                                if(ObjetoZ>0)
+                                if (ObjetoZ > 0)
                                 {
                                     skelObjeto = DistanceHelper.ObtenerSkelPoint((int)ObjetoX, (int)ObjetoY,
                                     ObjetoZ, this.sensor);
 
-                                    Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
+                                    //Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
                                     flagObjeto = true;
                                 }
+                                else Console.WriteLine("ERROR EN DISTANCIA OBJETO: " + ObjetoZ);
                                 
                             }
                         }
@@ -509,10 +514,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                             }
                                             rtaAngulos += aux;
                                         }
-                                        _serialPort.Write(rtaAngulos);
-                                        Console.WriteLine("rta angulos: " + rtaAngulos);
+                                        //confirmacion del angulo
+                                        var msj = MessageBox.Show("los angulos seran: " + rtaAngulos,"asd", MessageBoxButton.YesNo);
+                                        if(msj.Equals(MessageBoxResult.Yes))
+                                        {
+                                            _serialPort.Write(rtaAngulos);
+                                            Console.WriteLine("rta angulos: " + rtaAngulos);
+                                        }
                                     }
-
                                 }
 
                                 flagSkeleton = true;
