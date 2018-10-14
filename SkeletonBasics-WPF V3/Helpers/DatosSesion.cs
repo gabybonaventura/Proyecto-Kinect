@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 {
-    class DatosSesion
+    class DatosSesion : Object
     {
         private string token_id;
         private int nro_ejercicio;

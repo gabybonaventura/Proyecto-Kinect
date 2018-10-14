@@ -125,25 +125,26 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                  //Console.WriteLine(rta.head.status_code);
                  if (status_code.Equals("200"))
                  {
-                     string isValid = rta.data.isValid;
-                     if (isValid.Equals("True"))
-                     {
-                         Console.WriteLine("token válido");
-                         flagTokenValidado = true;
-                         this.IniRehabBtn.IsEnabled = true;
-                     }
-                     else
-                     {
-                         Console.WriteLine("token inválido");
-                     }
-
-                 }
+                    string isValid = rta.data.isValid;
+                    if (isValid.Equals("True"))
+                    {
+                        Console.WriteLine("token válido");
+                        flagTokenValidado = true;
+                        this.IniRehabBtn.IsEnabled = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("token inválido");
+                    }
+                    
+                }
              }
              catch
              {
-                 Console.WriteLine("no hay conexión amea!");
-                 flagTokenValidado = false;
-             }
+                Console.WriteLine("no hay conexión amea!");
+                flagTokenValidado = false;
+                this.IniRehabBtn.IsEnabled = true;
+            }
         }
 
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)

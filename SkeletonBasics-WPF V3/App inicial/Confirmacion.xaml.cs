@@ -28,7 +28,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
         int desvios = 0, contProm=0;
         float prom = 0;
         string tokenID, json;
-        string[] lines;
+        
         List<DatosSesion> listaDatos;
 
         public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token)
@@ -38,7 +38,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             this.flagToken = flagToken;
             this.result = resultado;
             this.tokenID = token;
-            lines = null;
             listaDatos = new List<DatosSesion>();
             CalcularDesviosYResultado();
             EnviarDatos();  
@@ -49,10 +48,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             //si el archivo existe, no se sincronizaron otras sesiones:
             if (File.Exists("..\\Archivo\\ArchivoSinc.txt"))
             {
+                string[] lines;
                 lines = System.IO.File.ReadAllLines(@"..\\Archivo\\ArchivoSinc.txt");
                 foreach (string line in lines)
                 {
-                    DatosSesion d = (DatosSesion)JsonConvert.DeserializeObject(line);
+                    DatosSesion d = (DatosSesion)JsonConvert.DeserializeObject(line, typeof(DatosSesion));
                     listaDatos.Add(d);
                 }
             }
@@ -60,37 +60,32 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
 
         private void EnviarDatos()
         {
-            int nroEj = 1;
-            DatosSesion datos = new DatosSesion("546", 1, true, 5, 2);
+
+             DatosSesion datos = new DatosSesion("546", 1, true, 5, 2);
             //DatosSesion datos = new DatosSesion(tokenID, nroEj, result, desvios, prom);
 
             GenerarJSON();
+
             string jsonAux = JsonConvert.SerializeObject(datos);
+
             listaDatos.Add(datos);
-
-            /*List<DatosSesion> list = new List<DatosSesion>();
-
-            list.Add(datos);
-            list.Add(new DatosSesion("789", 1, false, 5, 2));*/
-
 
             json = JsonConvert.SerializeObject(listaDatos);
 
-            //la url es otra.
             string url = "https://ataxia-services-project.herokuapp.com/session";
+
             //es un path de mock server
             //string url = "https://5f504b6e-15a3-4946-87de-56cdfdccf0ca.mock.pstmn.io/pathgabi";
-
-
+                        
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "application/json";
-            
+
             try
             {
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                 {
-                    
+
                     streamWriter.Write(json);
                     streamWriter.Flush();
                     streamWriter.Close();
@@ -100,36 +95,31 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    
 
                     //si todo sale exitosamente Y existe el archivo, debo eliminar el archivo: 
 
                     if (File.Exists("..\\Archivo\\ArchivoSinc.txt"))
                         File.Delete("..\\Archivo\\ArchivoSinc.txt");
-                    
-                    
-                   /* if (1 == 1)
-                    {
-                  /*      if (File.Exists(@"\ArchivoSinc.txt"))
-                            File.Delete(@"\ArchivoSinc.txt");
-                    }
-                    else
-                    {
-                        File.AppendAllText(@"\Archivo\ArchivoSinc.txt", json);
-                        MessageBox.Show("No se ha podido sincronizar los datos.", "Error sincronización");
-                    }*/
                 }
             }
             catch (Exception d)
             {
                 //si no se puede enviar, agrego a archivo. si el archivo no existe, lo creo.
-                File.AppendAllText("..\\Archivo\\ArchivoSinc.txt", jsonAux);
+                File.AppendAllText("..\\Archivo\\ArchivoSinc.txt", jsonAux + "\n");
                 //File.AppendAllText(@"\ArchivoSinc.txt", json);
                 MessageBox.Show("No se ha podido sincronizar los datos.", "Error sincronización");
             }
-
             
+            //genArchivo();
+        }
 
+        private void genArchivo()
+        {
+            DatosSesion datos = new DatosSesion("25", 1, true, 5, 2);
+
+            string jsonAux = JsonConvert.SerializeObject(datos);
+
+            File.AppendAllText("..\\Archivo\\ArchivoSinc.txt", jsonAux + "\n");
         }
 
         private void CalcularDesviosYResultado()
