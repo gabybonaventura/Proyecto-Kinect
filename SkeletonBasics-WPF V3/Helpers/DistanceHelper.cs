@@ -146,7 +146,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             dip.X = equis;
             dip.Y = ygriega;
             dip.Depth = zeta;
-            return sensor.CoordinateMapper.MapDepthPointToSkeletonPoint(DepthImageFormat.Resolution640x480Fps30, dip);
+            SkeletonPoint aux = sensor.CoordinateMapper.MapDepthPointToSkeletonPoint(DepthImageFormat.Resolution640x480Fps30, dip);
+            return aux;
         }                                
     }
 }

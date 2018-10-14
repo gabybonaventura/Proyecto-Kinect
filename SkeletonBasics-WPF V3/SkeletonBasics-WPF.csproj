@@ -118,6 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\AngleHelper.cs" />
+    <Compile Include="Helpers\DatosSesion.cs" />
     <Compile Include="Helpers\DistanceHelper.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
@@ -171,7 +172,7 @@
     <Resource Include="Images\Logo-AV_Solo-circulo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Archivo\" />
+    <Folder Include="App inicial\Archivo\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
