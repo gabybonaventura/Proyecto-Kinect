@@ -46,37 +46,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
 
         private void GenerarJSON()
         {
-            
-            //reviso que el archivo no exista.
-<<<<<<< HEAD
-<<<<<<< HEAD
+            //si el archivo existe, no se sincronizaron otras sesiones:
             if (File.Exists("..\\Archivo\\ArchivoSinc.txt"))
-=======
-            /*if (File.Exists(@"\Archivo\ArchivoSinc.txt"))
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
-=======
-            /*if (File.Exists(@"\Archivo\ArchivoSinc.txt"))
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
             {
-                //si existe, leo todos los datos para sincronizar:
-                lines = System.IO.File.ReadAllLines(@"\Archivo\ArchivoSinc.txt");
-
-                //genero el json para enviar todos los datos:
+                lines = System.IO.File.ReadAllLines(@"..\\Archivo\\ArchivoSinc.txt");
                 foreach (string line in lines)
                 {
                     DatosSesion d = (DatosSesion)JsonConvert.DeserializeObject(line);
                     listaDatos.Add(d);
                 }
-<<<<<<< HEAD
-<<<<<<< HEAD
             }
-=======
-=======
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
-            }*/
-            jsonAux = jsonAux + json + "]}";
-            return jsonAux;
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
         }
 
         private void EnviarDatos()
@@ -98,21 +77,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             json = JsonConvert.SerializeObject(listaDatos);
 
             //la url es otra.
-<<<<<<< HEAD
-<<<<<<< HEAD
             string url = "https://ataxia-services-project.herokuapp.com/session";
-=======
-=======
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
             //es un path de mock server
             //string url = "https://5f504b6e-15a3-4946-87de-56cdfdccf0ca.mock.pstmn.io/pathgabi";
 
-            string url = "https://ataxia-services-project.herokuapp.com/sessions";
 
-<<<<<<< HEAD
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
-=======
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -134,16 +103,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                     
 
                     //si todo sale exitosamente Y existe el archivo, debo eliminar el archivo: 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
                     if (File.Exists("..\\Archivo\\ArchivoSinc.txt"))
                         File.Delete("..\\Archivo\\ArchivoSinc.txt");
                     
                     
-=======
-=======
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
                    /* if (1 == 1)
                     {
                   /*      if (File.Exists(@"\ArchivoSinc.txt"))
@@ -154,22 +118,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                         File.AppendAllText(@"\Archivo\ArchivoSinc.txt", json);
                         MessageBox.Show("No se ha podido sincronizar los datos.", "Error sincronización");
                     }*/
-<<<<<<< HEAD
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
-=======
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
                 }
             }
             catch (Exception d)
             {
                 //si no se puede enviar, agrego a archivo. si el archivo no existe, lo creo.
-<<<<<<< HEAD
-<<<<<<< HEAD
                 File.AppendAllText("..\\Archivo\\ArchivoSinc.txt", jsonAux);
-=======
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
-=======
->>>>>>> cd0ab7993a3be4cfde6fd5850e0f6aaefe730300
                 //File.AppendAllText(@"\ArchivoSinc.txt", json);
                 MessageBox.Show("No se ha podido sincronizar los datos.", "Error sincronización");
             }
