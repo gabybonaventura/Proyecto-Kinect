@@ -52,31 +52,40 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             {
                 //calculamos el ángulo ACTUAL de las articulaciones
                 //el primer argumento es el segmento opuesto al angulo que queremos obtener.
+
+                
                 double anguloCodoAct = DistanceHelper.CalcularAngulo(distHombroMano,
                     distHombroCodo, distCodoMano);
+
                 double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano,
                         distHombroMano, distCadHombro);
-                double anguloHombroDIFut = DistanceHelper.CalcularAngulo(distManoObj,
+
+                double anguloHombro_aaFut = DistanceHelper.CalcularAngulo(distManoObj,
                         distHombroObj, distHombroMano);
-                double angHombroAA = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
+
+                double angHombro_id = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
 
                 double anguloCodoFut = DistanceHelper.CalcularAngulo(distHombroObj,
                     distHombroCodo, distCodoMano);
 
                 float distAuxMO = (mano.Position.Y - skelObjeto.Y);
                 puntoTorso.Y = codo.Position.Y + distAuxMO;
-                double angHombroAAFut = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
+                double angHombro_idFut = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
 
                 //si el punto del codo está más arriba que el hombro, el angulo se calculará para el otro lado
                 //entonces hay que sacar el suplementario para que corresponda al servo.
                 if (puntoTorso.Y > hombro.Position.Y)
                 {
-                    angHombroAAFut = 180 - angHombroAAFut;
+                    angHombro_idFut = 180 - angHombro_idFut;
                 }
-                array[0] = anguloCodoFut;
-                array[1] = 090;
-                array[2] = anguloHombroDIFut;
-                array[3] = angHombroAAFut;
+                if(anguloHombro_aaFut < 90 && anguloHombro_aaFut > 0 &&
+                    anguloCodoFut < 90 && anguloCodoFut > 0)
+                {
+                    array[0] = anguloCodoFut;
+                    array[1] = 090;
+                    array[2] = anguloHombro_aaFut;
+                    array[3] = angHombro_idFut;
+                }
             }
             return array;
         }
