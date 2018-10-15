@@ -17,6 +17,7 @@ namespace ComunicacionArduino
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ComunicacionArduinoForm());
+            //Application.Run(new EnvioRecepcion());
         }
     }
 }
