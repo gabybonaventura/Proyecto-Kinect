@@ -108,10 +108,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 _serialPort.Parity = _parity;
                 _serialPort.PortName = _portName;
                 _serialPort.StopBits = _stopBits;
-                if (_serialPort.IsOpen)
-                {
-                    _serialPort.Write("*020090040040");
-                }
             }
             catch (Exception ex)
             {
@@ -223,6 +219,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 _serialPort.StopBits = _stopBits;
                 _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
                 _serialPort.Open();
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Write("*020090040040");
+                }
             }
             catch (Exception ex)
             {
@@ -422,9 +422,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.sensor.Stop();
             }
+            if (_serialPort.IsOpen)
+                _serialPort.Close();
             Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
             Console.WriteLine("cierra por acá");
             win.Show();
+            
         }
 
         private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
