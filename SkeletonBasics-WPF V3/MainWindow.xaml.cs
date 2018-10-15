@@ -83,7 +83,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private string _portName = "COM5";
         private StopBits _stopBits = StopBits.One;
 
-        private bool flagTokenValidado;
+        private bool flagTokenValidado, resultado=false;
         private string valorToken;
         private int nro_ejercicio;
 
@@ -421,7 +421,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.sensor.Stop();
             }
-            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, false, valorToken, nro_ejercicio);
+            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
+            Console.WriteLine("cierra por acá");
             win.Show();
         }
 
@@ -497,13 +498,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 else
                                 {
                                     //si se puede alcanzar el objeto,
-                                    if (_serialPort.IsOpen)
+                                    //if (_serialPort.IsOpen)
+                                    if(true)
                                     {
                                         string rtaAngulos = "*";
                                         foreach (double ang in angulos)
                                         {
                                             string aux = null;
-                                            if (ang < 100)
+                                            aux = ang.ToString("000");
+                                            /*if (ang < 100)
                                             {
                                                 aux = "0";
                                                 aux += ang.ToString().Substring(0, 2);
@@ -511,14 +514,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                             else
                                             {
                                                 aux += ang.ToString().Substring(0, 3);
-                                            }
+                                            }*/
                                             rtaAngulos += aux;
                                         }
                                         //confirmacion del angulo
                                         var msj = MessageBox.Show("los angulos seran: " + rtaAngulos,"asd", MessageBoxButton.YesNo);
                                         if(msj.Equals(MessageBoxResult.Yes))
                                         {
-                                            _serialPort.Write(rtaAngulos);
+                                            //_serialPort.Write(rtaAngulos);
                                             Console.WriteLine("rta angulos: " + rtaAngulos);
                                         }
                                     }
@@ -526,21 +529,27 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                                 flagSkeleton = true;
                             }
+                            float distAux = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
 
-                            if(DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 1)
+                            if(DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 0.1)
                             {
                                 //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
                                 //los datos.
-
-                                //falta el envío de datos, que se obtiene desde arduino.
-                                Confirmacion win = new Confirmacion(flagTokenValidado, desvios, true, valorToken, nro_ejercicio);
-                                win.Show();
-                                this.Close();
+                                resultado = true;
+                               this.Close();
                             }
- 
-                            Point objeto = new Point(this.ObjetoX, this.ObjetoY);
+                            
+                             Point objeto = new Point(this.ObjetoX, this.ObjetoY);
                             dc.DrawLine(this.HandHandPen, objeto,
-                                 this.SkeletonPointToScreen(shoulderRight.Position));
+                                 this.SkeletonPointToScreen(handRight.Position));
+
+                            dc.DrawText(
+                            new FormattedText("dist: " + distAux,
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.Red),
+                                              objeto);
 
                             /*dc.DrawText(
                             new FormattedText("ang hombro d-i: " + angulos[1] + "\nang a-a: " + angulos[2],
