@@ -288,7 +288,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                     //Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
                                     flagObjeto = true;
                                 }
-                                else Console.WriteLine("ERROR EN DISTANCIA OBJETO: " + ObjetoZ);
+                                //else Console.WriteLine("ERROR EN DISTANCIA OBJETO: " + ObjetoZ);
                                 
                             }
                         }
@@ -493,7 +493,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
                                 {
                                     Console.WriteLine("no se puede alcanzar el objeto");
-                                    //flagSkeleton = false;
+                                    /*dc.DrawText(
+                                    new FormattedText("No se puede alcanzar el objeto",
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.Red),
+                                              new Point(0,0));*/
+                                    flagSkeleton = false;
                                 }
                                 else
                                 {
@@ -517,9 +524,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                             Console.WriteLine("rta angulos: " + rtaAngulos);
                                         }
                                     }
+                                    flagSkeleton = true;
                                 }
 
-                                flagSkeleton = true;
+                                
                             }
                             float distAux = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
 
@@ -531,10 +539,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                this.Close();
                             }
                             
-                             Point objeto = new Point(this.ObjetoX, this.ObjetoY);
+                             /*Point objeto = new Point(this.ObjetoX, this.ObjetoY);
                             dc.DrawLine(this.HandHandPen, objeto,
                                  this.SkeletonPointToScreen(handRight.Position));
-
+                            /*
                             dc.DrawText(
                             new FormattedText("dist: " + distAux,
                                               CultureInfo.GetCultureInfo("en-us"),
