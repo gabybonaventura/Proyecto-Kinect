@@ -498,30 +498,22 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 else
                                 {
                                     //si se puede alcanzar el objeto,
-                                    //if (_serialPort.IsOpen)
-                                    if(true)
+
+                                    if (_serialPort.IsOpen)
                                     {
                                         string rtaAngulos = "*";
                                         foreach (double ang in angulos)
                                         {
                                             string aux = null;
                                             aux = ang.ToString("000");
-                                            /*if (ang < 100)
-                                            {
-                                                aux = "0";
-                                                aux += ang.ToString().Substring(0, 2);
-                                            }
-                                            else
-                                            {
-                                                aux += ang.ToString().Substring(0, 3);
-                                            }*/
+                                            
                                             rtaAngulos += aux;
                                         }
                                         //confirmacion del angulo
                                         var msj = MessageBox.Show("los angulos seran: " + rtaAngulos,"asd", MessageBoxButton.YesNo);
                                         if(msj.Equals(MessageBoxResult.Yes))
                                         {
-                                            //_serialPort.Write(rtaAngulos);
+                                            _serialPort.Write(rtaAngulos);
                                             Console.WriteLine("rta angulos: " + rtaAngulos);
                                         }
                                     }
