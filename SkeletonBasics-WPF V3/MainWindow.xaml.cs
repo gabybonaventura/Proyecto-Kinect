@@ -438,9 +438,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     skeletonFrame.CopySkeletonDataTo(skeletons);
                 }
             }
-
-            using (DrawingContext dc = this.drawingGroup.Open())
+            DrawingContext dc = null;
+            //using (DrawingContext dc = this.drawingGroup.Open())
+            try
             {
+                dc = this.drawingGroup.Open();
                 // Draw a transparent background to set the render size
                 //dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
                 dc.DrawImage(this.colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
@@ -616,6 +618,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
 
                 
+            }
+            catch
+            {
+                //Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                dc.Close();
             }
         }
 
