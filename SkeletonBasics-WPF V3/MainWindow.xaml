@@ -60,12 +60,12 @@
         <Viewbox Grid.Row="1" Grid.ColumnSpan="2"  Stretch="Uniform" HorizontalAlignment="Center">
             <Image Name="Image" Width="556" Height="480"/>
         </Viewbox>
-        <Label Grid.Row="2" Content="de la Mano a la mano:"  HorizontalAlignment="Left" FontSize="16"></Label>
-        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="DistanceHandHand" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="10" FontFamily="Segoe Print" Foreground="Black" Width="110" ><Run Language="es-co" Text="lallala"/></TextBlock>
+        <Label Grid.Row="2" Grid.Column="0" x:Name="MensajesLabel">Calculando Angulos Finales</Label>
+        <Button Grid.Row="2" Grid.Column="1" x:Name="ConfirmacionButton" HorizontalAlignment="Left"   Width="110" Height="20" IsEnabled="False" Click="ConfirmacionButton_Click">Confirmar</Button>
 
         <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
             <StatusBarItem Padding="0 0 0 10">
-                <TextBlock Name="statusBarText" Margin="-1 0 0 0">Click 'Seated' to change skeletal pipeline type!</TextBlock>
+                <TextBlock Name="statusBarText" Margin="-1 0 0 0"></TextBlock>
             </StatusBarItem>
         </StatusBar>       
     </Grid>
