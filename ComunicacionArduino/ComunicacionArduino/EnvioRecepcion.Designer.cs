@@ -107,6 +107,7 @@
             // 
             // CodoArribaAbajoMas_btn
             // 
+            this.CodoArribaAbajoMas_btn.Enabled = false;
             this.CodoArribaAbajoMas_btn.Location = new System.Drawing.Point(258, 265);
             this.CodoArribaAbajoMas_btn.Name = "CodoArribaAbajoMas_btn";
             this.CodoArribaAbajoMas_btn.Size = new System.Drawing.Size(46, 26);
@@ -127,6 +128,7 @@
             // 
             // CodoArribaAbajoMenos_btn
             // 
+            this.CodoArribaAbajoMenos_btn.Enabled = false;
             this.CodoArribaAbajoMenos_btn.Location = new System.Drawing.Point(206, 265);
             this.CodoArribaAbajoMenos_btn.Name = "CodoArribaAbajoMenos_btn";
             this.CodoArribaAbajoMenos_btn.Size = new System.Drawing.Size(46, 26);
@@ -137,6 +139,7 @@
             // 
             // CodoDerechaIzquierdaMenos_btn
             // 
+            this.CodoDerechaIzquierdaMenos_btn.Enabled = false;
             this.CodoDerechaIzquierdaMenos_btn.Location = new System.Drawing.Point(206, 378);
             this.CodoDerechaIzquierdaMenos_btn.Name = "CodoDerechaIzquierdaMenos_btn";
             this.CodoDerechaIzquierdaMenos_btn.Size = new System.Drawing.Size(46, 26);
@@ -147,6 +150,7 @@
             // 
             // CodoDerechaIzquierdaMas_btn
             // 
+            this.CodoDerechaIzquierdaMas_btn.Enabled = false;
             this.CodoDerechaIzquierdaMas_btn.Location = new System.Drawing.Point(258, 378);
             this.CodoDerechaIzquierdaMas_btn.Name = "CodoDerechaIzquierdaMas_btn";
             this.CodoDerechaIzquierdaMas_btn.Size = new System.Drawing.Size(46, 26);
@@ -157,6 +161,7 @@
             // 
             // HombroAdelanteAtrasMas_btn
             // 
+            this.HombroAdelanteAtrasMas_btn.Enabled = false;
             this.HombroAdelanteAtrasMas_btn.Location = new System.Drawing.Point(207, 156);
             this.HombroAdelanteAtrasMas_btn.Name = "HombroAdelanteAtrasMas_btn";
             this.HombroAdelanteAtrasMas_btn.Size = new System.Drawing.Size(46, 26);
@@ -167,6 +172,7 @@
             // 
             // HombroAdelanteAtrasMenos_btn
             // 
+            this.HombroAdelanteAtrasMenos_btn.Enabled = false;
             this.HombroAdelanteAtrasMenos_btn.Location = new System.Drawing.Point(259, 156);
             this.HombroAdelanteAtrasMenos_btn.Name = "HombroAdelanteAtrasMenos_btn";
             this.HombroAdelanteAtrasMenos_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -178,6 +184,7 @@
             // 
             // HombroArribaAbajoMas_btn
             // 
+            this.HombroArribaAbajoMas_btn.Enabled = false;
             this.HombroArribaAbajoMas_btn.Location = new System.Drawing.Point(259, 51);
             this.HombroArribaAbajoMas_btn.Name = "HombroArribaAbajoMas_btn";
             this.HombroArribaAbajoMas_btn.Size = new System.Drawing.Size(46, 26);
@@ -188,6 +195,7 @@
             // 
             // HombroArribaAbajoMenos_btn
             // 
+            this.HombroArribaAbajoMenos_btn.Enabled = false;
             this.HombroArribaAbajoMenos_btn.Location = new System.Drawing.Point(207, 51);
             this.HombroArribaAbajoMenos_btn.Name = "HombroArribaAbajoMenos_btn";
             this.HombroArribaAbajoMenos_btn.Size = new System.Drawing.Size(46, 26);
@@ -242,6 +250,7 @@
             // 
             // AnguloHombroArribaAbajo_txt
             // 
+            this.AnguloHombroArribaAbajo_txt.Enabled = false;
             this.AnguloHombroArribaAbajo_txt.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AnguloHombroArribaAbajo_txt.Location = new System.Drawing.Point(311, 51);
             this.AnguloHombroArribaAbajo_txt.MaxLength = 3;
@@ -254,6 +263,7 @@
             // 
             // AnguloHombroAdelanteAtras_txt
             // 
+            this.AnguloHombroAdelanteAtras_txt.Enabled = false;
             this.AnguloHombroAdelanteAtras_txt.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AnguloHombroAdelanteAtras_txt.Location = new System.Drawing.Point(311, 156);
             this.AnguloHombroAdelanteAtras_txt.MaxLength = 3;
@@ -266,6 +276,7 @@
             // 
             // AnguloCodoArribaAbajo_txt
             // 
+            this.AnguloCodoArribaAbajo_txt.Enabled = false;
             this.AnguloCodoArribaAbajo_txt.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AnguloCodoArribaAbajo_txt.Location = new System.Drawing.Point(310, 265);
             this.AnguloCodoArribaAbajo_txt.MaxLength = 3;
@@ -278,6 +289,7 @@
             // 
             // AnguloCodoDerechaIzquierda_txt
             // 
+            this.AnguloCodoDerechaIzquierda_txt.Enabled = false;
             this.AnguloCodoDerechaIzquierda_txt.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AnguloCodoDerechaIzquierda_txt.Location = new System.Drawing.Point(310, 378);
             this.AnguloCodoDerechaIzquierda_txt.MaxLength = 3;

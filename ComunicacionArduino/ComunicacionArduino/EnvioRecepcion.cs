@@ -196,6 +196,7 @@ namespace ComunicacionArduino
             SetAnguloCodoDerechaIzquierda(90, false);
             SetAnguloHombroArribaAbajo(40, false);
             SetAnguloHombroAdelanteAtras(40);
+            HabilitarBotones();
         }
 
         private void ImprimirAngulosAEnviar()
@@ -380,6 +381,26 @@ namespace ComunicacionArduino
                 int angulo = Convert.ToInt32(AnguloCodoDerechaIzquierda_txt.Text);
                 SetAnguloCodoDerechaIzquierda(angulo);
             }
+        }
+        
+
+        private void HabilitarBotones()
+        {
+            AnguloHombroArribaAbajo_txt.Enabled = true;
+            AnguloHombroAdelanteAtras_txt.Enabled = true;
+            AnguloCodoArribaAbajo_txt.Enabled = true;
+            AnguloCodoDerechaIzquierda_txt.Enabled = true;
+
+            HombroArribaAbajoMenos_btn.Enabled = true;
+            HombroArribaAbajoMas_btn.Enabled = true;
+            HombroAdelanteAtrasMenos_btn.Enabled = true;
+            HombroAdelanteAtrasMas_btn.Enabled = true;
+            CodoDerechaIzquierdaMas_btn.Enabled = true;
+            CodoDerechaIzquierdaMenos_btn.Enabled = true;
+            CodoArribaAbajoMenos_btn.Enabled = true;
+            CodoArribaAbajoMas_btn.Enabled = true;
+
+            AngulosDefault_btn.Text = "Angulos default";
         }
     }
 }
