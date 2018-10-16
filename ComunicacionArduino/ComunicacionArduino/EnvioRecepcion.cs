@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,6 +24,22 @@ namespace ComunicacionArduino
         public int AnguloCodoArribaAbajo { get; set; }
         public int AnguloCodoDerechaIzquierda { get; set; }
 
+        // Delegates para los consumos
+        public delegate void DelegateHistorialConsumos(int[] consumos);
+        public DelegateHistorialConsumos delegateHistorialConsumo;
+
+        public delegate void DelegateConsumoHombroArribaAbajo(int consumo);
+        public DelegateConsumoHombroArribaAbajo delegateConsumoHombroArribaAbajo;
+
+        public delegate void DelegateConsumoHombroAdelanteAtras(int consumo);
+        public DelegateConsumoHombroAdelanteAtras delegateConsumoHombroAdelanteAtras;
+
+        public delegate void DelegateConsumoCodoArribaAbajo(int consumo);
+        public DelegateConsumoCodoArribaAbajo delegateConsumoCodoArribaAbajo;
+
+        public delegate void DelegateConsumoCodoDerechaIzquierda(int consumo);
+        public DelegateConsumoCodoDerechaIzquierda delegateConsumoCodoDerechaIzquierda;
+
         public EnvioRecepcion()
         {
             InitializeComponent();
@@ -38,9 +55,27 @@ namespace ComunicacionArduino
         {
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             _serialPort.Open();
-
+            delegateHistorialConsumo = new DelegateHistorialConsumos(AgregarConsumosAHistorial);
+            delegateConsumoHombroArribaAbajo = new DelegateConsumoHombroArribaAbajo(SetConsumoHombroArribaAbajo);
+            delegateConsumoHombroAdelanteAtras = new DelegateConsumoHombroAdelanteAtras(SetConsumoHombroAdelanteAtras);
+            delegateConsumoCodoArribaAbajo = new DelegateConsumoCodoArribaAbajo(SetConsumoCodoArribaAbajo);
+            delegateConsumoCodoDerechaIzquierda = new DelegateConsumoCodoDerechaIzquierda(SetConsumoCodoDerechaIzquierda);
         }
 
+        public void AgregarConsumosAHistorial(int[] consumos)
+        {
+            string c2 = consumos[2].ToString("000");
+            string c3 = consumos[3].ToString("000");
+            string c0 = consumos[0].ToString("000");
+            string c1 = consumos[1].ToString("000");
+            string cadena = "H.ArAb:   " + c2
+                + "   |   H.AdAt:   " + c3
+                + "   |   C.ArAb:   " + c0
+                + "   |   C.DI:   " + c1
+                + "\n";
+            HistorialConsumo_txtArea.AppendText(cadena);
+        }
+        
         private void EnviarButton_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(EnviarTextBox.Text))
@@ -57,42 +92,23 @@ namespace ComunicacionArduino
             {
                 Console.WriteLine(indata);
                 MostrarConsumos(indata);
-                /*
-                if(EnvioRecepcion.Lineas != 10)
-                {
-                    CadenaRecibida += indata;
-                    
-                }
-                */
             }
         }
 
-        private void MostrarConsumos(string consumos)
+        private void MostrarConsumos(string consumoString)
         {
-            string[] consumo = CortarString(consumos);
             /*
             Servo CodoArribaAbajoServo;
             Servo CodoIzquierdaDerechaServo;
             Servo HombroArribaAbajoServo;
             Servo HombroAdelanteAtrasServo;
              */
-            SetConsumoCodoArribaAbajo(Convert.ToInt32(consumo[0]));
-            SetConsumoCodoDerechaIzquierda(Convert.ToInt32(consumo[1]));
-            SetConsumoHombroArribaAbajo(Convert.ToInt32(consumo[2]));
-            SetConsumoHombroAdelanteAtras(Convert.ToInt32(consumo[3]));
-
-            HistorialConsumo(consumo);
-        }
-
-        private void HistorialConsumo(string[] consumo)
-        {
-            HistorialConsumo_txtArea.AppendText(
-                "H.ArAb:   " + Convert.ToInt32(consumo[2]).ToString("D3")
-                + "   |   H.AdAt:   " + Convert.ToInt32(consumo[3]).ToString("D3")
-                + "   |   C.ArAb:   " + Convert.ToInt32(consumo[0]).ToString("D3")
-                + "   |   C.DI:   " + Convert.ToInt32(consumo[1]).ToString("D3")
-                + "\n"
-                ); 
+            int[] consumos = CortarString(consumoString);
+            ConsumoCodoArribaAbajo_lbl.Invoke(delegateConsumoCodoArribaAbajo, consumos[0]);
+            ConsumoCodoDerechaIzquierda_lbl.Invoke(delegateConsumoCodoDerechaIzquierda, consumos[1]);
+            ConsumoHombroArribaAbajo_lbl.Invoke(delegateConsumoHombroArribaAbajo, consumos[2]);
+            ConsumoHombroAdelanteAtras_lbl.Invoke(delegateConsumoHombroAdelanteAtras, consumos[3]);
+            HistorialConsumo_txtArea.Invoke(delegateHistorialConsumo, consumos);
         }
 
         private Color CalcularColor(int c)
@@ -109,35 +125,69 @@ namespace ComunicacionArduino
         private void SetConsumoCodoArribaAbajo(int consumo)
         {
             ConsumoCodoArribaAbajo_lbl.ForeColor = CalcularColor(consumo);
-            ConsumoCodoArribaAbajo_lbl.Text = "Consumo: " + consumo.ToString("D3") + " mA";
+            ConsumoCodoArribaAbajo_lbl.Text = "Consumo: " + consumo.ToString("000") + " mA";
         }
 
         private void SetConsumoCodoDerechaIzquierda(int consumo)
         {
             ConsumoCodoDerechaIzquierda_lbl.ForeColor = CalcularColor(consumo);
-            ConsumoCodoDerechaIzquierda_lbl.Text = "Consumo: " + consumo.ToString("D3") + " mA";
+            ConsumoCodoDerechaIzquierda_lbl.Text = "Consumo: " + consumo.ToString("000") + " mA";
         }
 
         private void SetConsumoHombroAdelanteAtras(int consumo)
         {
             ConsumoHombroAdelanteAtras_lbl.ForeColor = CalcularColor(consumo);
-            ConsumoHombroAdelanteAtras_lbl.Text = "Consumo: " + consumo.ToString("D3") + " mA";
+            ConsumoHombroAdelanteAtras_lbl.Text = "Consumo: " + consumo.ToString("000") + " mA";
         }
 
         private void SetConsumoHombroArribaAbajo(int consumo)
         {
             ConsumoHombroArribaAbajo_lbl.ForeColor = CalcularColor(consumo);
-            ConsumoHombroArribaAbajo_lbl.Text = "Consumo: " + consumo.ToString("D3") + " mA";
+            ConsumoHombroArribaAbajo_lbl.Text = "Consumo: " + consumo.ToString("000") + " mA";
         }
 
-        private static string[] CortarString(string cadena)
+        private static int[] CortarString(string cadena)
         {
-            string[] result = new string[4];
-            result[0] = cadena.Split('A').Last().Split('B').FirstOrDefault();
-            result[1] = cadena.Split('B').Last().Split('C').FirstOrDefault();
-            result[2] = cadena.Split('C').Last().Split('D').FirstOrDefault();
-            result[3] = cadena.Split('D').Last();
+            int[] result = new int[4];
+
+            string regexA = @"A\d+";
+            string matchA = Regex.Match(cadena, regexA).Value;
+
+            string regexB = @"B\d+";
+            string matchB = Regex.Match(cadena, regexB).Value;
+
+            string regexC = @"C\d+";
+            string matchC = Regex.Match(cadena, regexC).Value;
+
+            string regexD = @"D\d+";
+            string matchD = Regex.Match(cadena, regexD).Value;
+
+            string r0 = matchA == "" ? "" : matchA.Substring(1);
+            string r1 = matchB == "" ? "" : matchB.Substring(1);
+            string r2 = matchC == "" ? "" : matchC.Substring(1);
+            string r3 = matchD == "" ? "" : matchD.Substring(1);
+
+            result[0] = TryConvert(r0);
+            result[1] = TryConvert(r1);
+            result[2] = TryConvert(r2);
+            result[3] = TryConvert(r3);
             return result;
+        }
+
+        private static int TryConvert(string number)
+        {
+            int n = 0;
+            try
+            {
+                n = Convert.ToInt32(number);
+                if (n > 999)
+                    n = 999;
+            }
+            catch (Exception)
+            {
+                n = 0;
+            }
+            return n;
         }
 
         private void AngulosDefault_btn_Click(object sender, EventArgs e)

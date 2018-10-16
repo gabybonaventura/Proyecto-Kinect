@@ -63,7 +63,7 @@
             // 
             // EnviarButton
             // 
-            this.EnviarButton.Location = new System.Drawing.Point(573, 514);
+            this.EnviarButton.Location = new System.Drawing.Point(716, 514);
             this.EnviarButton.Margin = new System.Windows.Forms.Padding(2);
             this.EnviarButton.Name = "EnviarButton";
             this.EnviarButton.Size = new System.Drawing.Size(56, 19);
@@ -75,7 +75,7 @@
             // 
             // EnviarTextBox
             // 
-            this.EnviarTextBox.Location = new System.Drawing.Point(421, 513);
+            this.EnviarTextBox.Location = new System.Drawing.Point(564, 513);
             this.EnviarTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.EnviarTextBox.Name = "EnviarTextBox";
             this.EnviarTextBox.Size = new System.Drawing.Size(148, 20);
@@ -97,7 +97,7 @@
             // MedicionesLabel
             // 
             this.MedicionesLabel.AutoSize = true;
-            this.MedicionesLabel.Location = new System.Drawing.Point(418, 538);
+            this.MedicionesLabel.Location = new System.Drawing.Point(561, 538);
             this.MedicionesLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.MedicionesLabel.Name = "MedicionesLabel";
             this.MedicionesLabel.Size = new System.Drawing.Size(61, 13);
@@ -346,7 +346,7 @@
             // 
             this.AngulosAEnviar_lbl.AutoSize = true;
             this.AngulosAEnviar_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AngulosAEnviar_lbl.Location = new System.Drawing.Point(11, 495);
+            this.AngulosAEnviar_lbl.Location = new System.Drawing.Point(1, 507);
             this.AngulosAEnviar_lbl.Name = "AngulosAEnviar_lbl";
             this.AngulosAEnviar_lbl.Size = new System.Drawing.Size(136, 26);
             this.AngulosAEnviar_lbl.TabIndex = 26;
@@ -355,10 +355,10 @@
             // EstadoEnvio_lbl
             // 
             this.EstadoEnvio_lbl.AutoSize = true;
-            this.EstadoEnvio_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EstadoEnvio_lbl.Location = new System.Drawing.Point(12, 532);
+            this.EstadoEnvio_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EstadoEnvio_lbl.Location = new System.Drawing.Point(3, 539);
             this.EstadoEnvio_lbl.Name = "EstadoEnvio_lbl";
-            this.EstadoEnvio_lbl.Size = new System.Drawing.Size(124, 20);
+            this.EstadoEnvio_lbl.Size = new System.Drawing.Size(84, 13);
             this.EstadoEnvio_lbl.TabIndex = 27;
             this.EstadoEnvio_lbl.Text = "Estado envio: ---";
             // 
