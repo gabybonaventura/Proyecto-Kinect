@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Confirmacion" Height="235.556" Width="335.556">
     <Grid Margin="0,0,2,67">
-        <Label Content="¡Ejercicio exitoso! ¿Desea repetir el ejercicio?" HorizontalAlignment="Left" Margin="37,40,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LabelResultado" Content="¡Ejercicio exitoso! ¿Desea repetir el ejercicio?" HorizontalAlignment="Left" Margin="37,40,0,0" VerticalAlignment="Top"/>
         <Button x:Name="SiBtn" Content="Si" HorizontalAlignment="Left" Margin="63,107,0,0" VerticalAlignment="Top" Width="75" Click="SiBtn_Click"/>
         <Button x:Name="NoBtn" Content="No" HorizontalAlignment="Left" Margin="181,107,0,0" VerticalAlignment="Top" Width="75" Click="NoBtn_Click"/>
 

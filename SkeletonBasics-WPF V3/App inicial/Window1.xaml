@@ -9,7 +9,7 @@
     <Grid>
         <Button Content="Validar token" HorizontalAlignment="Left" Margin="207,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Label Content="Estado conexión: " HorizontalAlignment="Left" Margin="60,33,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="TokenTextBox" HorizontalAlignment="Left" Height="23" Margin="60,64,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="TokenTextBox" HorizontalAlignment="Left" Height="23" Margin="60,64,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="120"/>
         <Button x:Name="IniRehabBtn" Content="Iniciar rehabilitación" HorizontalAlignment="Left" Margin="60,161,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False" Click="IniRehabBtn_Click"/>
         <Label x:Name="ErrorLabel" Foreground="Red" Content="" HorizontalAlignment="Left" Margin="60,111,0,0" VerticalAlignment="Top"/>
 

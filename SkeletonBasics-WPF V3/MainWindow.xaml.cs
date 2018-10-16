@@ -83,7 +83,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private string _portName = "COM5";
         private StopBits _stopBits = StopBits.One;
 
-        private bool flagTokenValidado;
+        private bool flagTokenValidado, resultado=false;
         private string valorToken;
         private int nro_ejercicio;
 
@@ -108,10 +108,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 _serialPort.Parity = _parity;
                 _serialPort.PortName = _portName;
                 _serialPort.StopBits = _stopBits;
-                if (_serialPort.IsOpen)
-                {
-                    _serialPort.Write("*020090040040");
-                }
             }
             catch (Exception ex)
             {
@@ -223,6 +219,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 _serialPort.StopBits = _stopBits;
                 _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
                 _serialPort.Open();
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Write("*020090040040");
+                }
             }
             catch (Exception ex)
             {
@@ -235,6 +235,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadExisting();
+            Console.WriteLine(indata);
             if (!string.IsNullOrEmpty(indata))
             {
                 desvios.Add(new Angulos(indata));
@@ -288,7 +289,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                     //Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
                                     flagObjeto = true;
                                 }
-                                else Console.WriteLine("ERROR EN DISTANCIA OBJETO: " + ObjetoZ);
+                                //else Console.WriteLine("ERROR EN DISTANCIA OBJETO: " + ObjetoZ);
                                 
                             }
                         }
@@ -421,8 +422,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.sensor.Stop();
             }
-            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, false, valorToken, nro_ejercicio);
+            if (_serialPort.IsOpen)
+                _serialPort.Close();
+            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
+            Console.WriteLine("cierra por acá");
             win.Show();
+            
         }
 
         private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
@@ -492,55 +497,76 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
                                 {
                                     Console.WriteLine("no se puede alcanzar el objeto");
-                                    //flagSkeleton = false;
+                                    /*dc.DrawText(
+                                    new FormattedText("No se puede alcanzar el objeto",
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.Red),
+                                              new Point(0,0));*/
+                                    flagSkeleton = false;
                                 }
                                 else
                                 {
+                                    flagSkeleton = true;
                                     //si se puede alcanzar el objeto,
-                                    if (_serialPort.IsOpen)
+                                    try
                                     {
-                                        string rtaAngulos = "*";
-                                        foreach (double ang in angulos)
+                                        this.ConfirmacionButton.IsEnabled = true;
+                                        this.MensajesLabel.Content = "Angulos calculados";
+
+
+                                        /*
+                                        if (_serialPort.IsOpen)
                                         {
-                                            string aux = null;
-                                            if (ang < 100)
+                                            string rtaAngulos = "*";
+                                            foreach (double ang in angulos)
                                             {
-                                                aux = "0";
-                                                aux += ang.ToString().Substring(0, 2);
+                                                string aux = null;
+                                                aux = ang.ToString("000");
+                                            
+                                                rtaAngulos += aux;
                                             }
-                                            else
+                                            //confirmacion del angulo
+                                            var msj = MessageBox.Show("los angulos seran: " + rtaAngulos,"asd", MessageBoxButton.YesNo);
+                                            if(msj.Equals(MessageBoxResult.Yes))
                                             {
-                                                aux += ang.ToString().Substring(0, 3);
+                                                _serialPort.Write(rtaAngulos);
+                                                Console.WriteLine("rta angulos: " + rtaAngulos);
                                             }
-                                            rtaAngulos += aux;
-                                        }
-                                        //confirmacion del angulo
-                                        var msj = MessageBox.Show("los angulos seran: " + rtaAngulos,"asd", MessageBoxButton.YesNo);
-                                        if(msj.Equals(MessageBoxResult.Yes))
-                                        {
-                                            _serialPort.Write(rtaAngulos);
-                                            Console.WriteLine("rta angulos: " + rtaAngulos);
-                                        }
+                                        }*/
+                                        
+
+                                    }
+                                    catch (Exception)
+                                    {
+                                        Console.WriteLine("Excepcion en escribir el angulo en arduino");
                                     }
                                 }
 
-                                flagSkeleton = true;
+                                
                             }
+                            float distAux = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
 
-                            if(DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 1)
+                            if(DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 0.1)
                             {
                                 //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
                                 //los datos.
-
-                                //falta el envío de datos, que se obtiene desde arduino.
-                                Confirmacion win = new Confirmacion(flagTokenValidado, desvios, true, valorToken, nro_ejercicio);
-                                win.Show();
-                                this.Close();
+                                resultado = true;
+                               this.Close();
                             }
- 
-                            Point objeto = new Point(this.ObjetoX, this.ObjetoY);
+                            
+                             /*Point objeto = new Point(this.ObjetoX, this.ObjetoY);
                             dc.DrawLine(this.HandHandPen, objeto,
-                                 this.SkeletonPointToScreen(shoulderRight.Position));
+                                 this.SkeletonPointToScreen(handRight.Position));
+                            /*
+                            dc.DrawText(
+                            new FormattedText("dist: " + distAux,
+                                              CultureInfo.GetCultureInfo("en-us"),
+                                              FlowDirection.LeftToRight,
+                                              new Typeface("Verdana"),
+                                              25, System.Windows.Media.Brushes.Red),
+                                              objeto);
 
                             /*dc.DrawText(
                             new FormattedText("ang hombro d-i: " + angulos[1] + "\nang a-a: " + angulos[2],
@@ -616,6 +642,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                 
             }
+
         }
 
         private void DrawBonesAndJoints(Skeleton skeleton, DrawingContext drawingContext)
@@ -678,6 +705,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             // We are not using depth directly, but we do want the points in our 640x480 output resolution.
             DepthImagePoint depthPoint = this.sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
+        }
+
+        private void ConfirmacionButton_Click(object sender, RoutedEventArgs e)
+        {
+            ArduinoHelper.EscribirAngulosArduino(_serialPort, angulos);
+
         }
 
         private void DrawBone(Skeleton skeleton, DrawingContext drawingContext, JointType jointType0, JointType jointType1)

@@ -35,6 +35,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
         public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token, int nroEj)
         {
             InitializeComponent();
+            if (!resultado)
+                this.LabelResultado.Content = "El ejercicio ha fallado. ¿Desea repetir el ejercicio?";
             this.listDesvio = desvios;
             this.flagToken = flagToken;
             this.result = resultado;
