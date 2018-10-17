@@ -104,11 +104,17 @@ namespace ComunicacionArduino
             Servo HombroAdelanteAtrasServo;
              */
             int[] consumos = CortarString(consumoString);
-            ConsumoCodoArribaAbajo_lbl.Invoke(delegateConsumoCodoArribaAbajo, consumos[0]);
-            ConsumoCodoDerechaIzquierda_lbl.Invoke(delegateConsumoCodoDerechaIzquierda, consumos[1]);
-            ConsumoHombroArribaAbajo_lbl.Invoke(delegateConsumoHombroArribaAbajo, consumos[2]);
-            ConsumoHombroAdelanteAtras_lbl.Invoke(delegateConsumoHombroAdelanteAtras, consumos[3]);
-            HistorialConsumo_txtArea.Invoke(delegateHistorialConsumo, consumos);
+            try
+            {
+                ConsumoCodoArribaAbajo_lbl.Invoke(delegateConsumoCodoArribaAbajo, consumos[0]);
+                ConsumoCodoDerechaIzquierda_lbl.Invoke(delegateConsumoCodoDerechaIzquierda, consumos[1]);
+                ConsumoHombroArribaAbajo_lbl.Invoke(delegateConsumoHombroArribaAbajo, consumos[2]);
+                ConsumoHombroAdelanteAtras_lbl.Invoke(delegateConsumoHombroAdelanteAtras, consumos[3]);
+                HistorialConsumo_txtArea.Invoke(delegateHistorialConsumo, consumos);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private Color CalcularColor(int c)
@@ -245,34 +251,47 @@ namespace ComunicacionArduino
 
         private void SetAnguloCodoArribaAbajo(int angulo, bool imprime = true)
         {
-            AnguloCodoArribaAbajo = angulo;
-            AnguloCodoArribaAbajo_txt.Text = angulo.ToString();
+            int anguloValidado = ValidarAngulo(angulo);
+            AnguloCodoArribaAbajo = anguloValidado;
+            AnguloCodoArribaAbajo_txt.Text = anguloValidado.ToString();
             if(imprime)
                 ImprimirAngulosAEnviar();
         }
 
         private void SetAnguloCodoDerechaIzquierda(int angulo, bool imprime = true)
         {
-            AnguloCodoDerechaIzquierda = angulo;
-            AnguloCodoDerechaIzquierda_txt.Text = angulo.ToString();
+            int anguloValidado = ValidarAngulo(angulo);
+            AnguloCodoDerechaIzquierda = anguloValidado;
+            AnguloCodoDerechaIzquierda_txt.Text = anguloValidado.ToString();
             if (imprime)
                 ImprimirAngulosAEnviar();
         }
 
         private void SetAnguloHombroArribaAbajo(int angulo, bool imprime = true)
         {
-            AnguloHombroArribaAbajo = angulo;
-            AnguloHombroArribaAbajo_txt.Text = angulo.ToString();
+            int anguloValidado = ValidarAngulo(angulo);
+            AnguloHombroArribaAbajo = anguloValidado;
+            AnguloHombroArribaAbajo_txt.Text = anguloValidado.ToString();
             if (imprime)
                 ImprimirAngulosAEnviar();
         }
 
         private void SetAnguloHombroAdelanteAtras(int angulo, bool imprime = true)
         {
-            AnguloHombroAdelanteAtras = angulo;
-            AnguloHombroAdelanteAtras_txt.Text = angulo.ToString();
+            int anguloValidado = ValidarAngulo(angulo);
+            AnguloHombroAdelanteAtras = anguloValidado;
+            AnguloHombroAdelanteAtras_txt.Text = anguloValidado.ToString();
             if (imprime)
                 ImprimirAngulosAEnviar();
+        }
+
+        private int ValidarAngulo(int angulo)
+        {
+            if (angulo < 0)
+                return 0;
+            if (angulo > 180)
+                return 180;
+            return angulo;
         }
 
         private void AnguloHombroArribaAbajo_txt_TextChanged(object sender, EventArgs e)
@@ -351,8 +370,15 @@ namespace ComunicacionArduino
         {
             if (e.KeyCode == Keys.Enter)
             {
-                int angulo = Convert.ToInt32(AnguloHombroArribaAbajo_txt.Text);
-                SetAnguloHombroArribaAbajo(angulo);
+                try
+                {
+                    int angulo = Convert.ToInt32(AnguloHombroArribaAbajo_txt.Text);
+                    SetAnguloHombroArribaAbajo(angulo);
+                }
+                catch (Exception)
+                {
+                    SetAnguloHombroArribaAbajo(0);
+                }
             }
         }
 
@@ -360,8 +386,16 @@ namespace ComunicacionArduino
         {
             if (e.KeyCode == Keys.Enter)
             {
-                int angulo = Convert.ToInt32(AnguloHombroAdelanteAtras_txt.Text);
-                SetAnguloHombroAdelanteAtras(angulo);
+                try
+                {
+                    int angulo = Convert.ToInt32(AnguloHombroAdelanteAtras_txt.Text);
+                    SetAnguloHombroAdelanteAtras(angulo);
+                }
+                catch (Exception)
+                {
+                    SetAnguloHombroAdelanteAtras(0);
+                }
+                
             }
         }
 
@@ -369,8 +403,16 @@ namespace ComunicacionArduino
         {
             if (e.KeyCode == Keys.Enter)
             {
-                int angulo = Convert.ToInt32(AnguloCodoArribaAbajo_txt.Text);
-                SetAnguloCodoArribaAbajo(angulo);
+                try
+                {
+                    int angulo = Convert.ToInt32(AnguloCodoArribaAbajo_txt.Text);
+                    SetAnguloCodoArribaAbajo(angulo);
+                }
+                catch (Exception)
+                {
+                    SetAnguloCodoArribaAbajo(0);
+                }
+                
             }
         }
 
@@ -378,8 +420,16 @@ namespace ComunicacionArduino
         {
             if (e.KeyCode == Keys.Enter)
             {
-                int angulo = Convert.ToInt32(AnguloCodoDerechaIzquierda_txt.Text);
-                SetAnguloCodoDerechaIzquierda(angulo);
+                try
+                {
+                    int angulo = Convert.ToInt32(AnguloCodoDerechaIzquierda_txt.Text);
+                    SetAnguloCodoDerechaIzquierda(angulo);
+                }
+                catch (Exception)
+                {
+                    SetAnguloCodoDerechaIzquierda(0);
+                }
+                
             }
         }
         
