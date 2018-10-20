@@ -36,13 +36,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private const double ClipBoundsThickness = 10;
 
-        private readonly Brush centerPointBrush = Brushes.Blue;
+        private readonly Brush centerPointBrush = Brushes.DarkRed;
 
         private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
 
-        private readonly Brush inferredJointBrush = Brushes.Yellow;
+        private readonly Brush inferredJointBrush = Brushes.White;
 
-        private readonly Pen trackedBonePen = new Pen(Brushes.Green, 6);
+        private readonly Pen trackedBonePen = new Pen(Brushes.Red, 6);
 
         private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
 
@@ -369,15 +369,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         {
                             this.DrawBonesAndJoints(skel, dc);
                         }
-                        else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
-                        {
-                            dc.DrawEllipse(
-                            this.centerPointBrush,
-                            null,
-                            this.SkeletonPointToScreen(skel.Position),
-                            BodyCenterThickness,
-                            BodyCenterThickness);
-                        }
 
                         //Toma de mediciones de mano, hombro y codo derecho:
                         Joint handRight = skel.Joints[JointType.HandRight];
@@ -425,29 +416,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                     {
                                         this.ConfirmacionButton.IsEnabled = true;
                                         this.MensajesLabel.Content = "Angulos calculados";
-
-
-                                        /*
-                                        if (_serialPort.IsOpen)
-                                        {
-                                            string rtaAngulos = "*";
-                                            foreach (double ang in angulos)
-                                            {
-                                                string aux = null;
-                                                aux = ang.ToString("000");
-                                            
-                                                rtaAngulos += aux;
-                                            }
-                                            //confirmacion del angulo
-                                            var msj = MessageBox.Show("los angulos seran: " + rtaAngulos,"asd", MessageBoxButton.YesNo);
-                                            if(msj.Equals(MessageBoxResult.Yes))
-                                            {
-                                                _serialPort.Write(rtaAngulos);
-                                                Console.WriteLine("rta angulos: " + rtaAngulos);
-                                            }
-                                        }*/
-                                        
-
                                     }
                                     catch (Exception)
                                     {
@@ -467,9 +435,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                this.Close();
                             }
                             
-                             /*Point objeto = new Point(this.ObjetoX, this.ObjetoY);
-                            dc.DrawLine(this.HandHandPen, objeto,
-                                 this.SkeletonPointToScreen(handRight.Position));
+                             Point objeto = new Point(this.ObjetoX, this.ObjetoY);
+                            dc.DrawEllipse(Brushes.Black, new Pen(Brushes.Black, 5), objeto, 5, 5);
+                                //dc.DrawLine(this.HandHandPen, objeto,
+                            //     this.SkeletonPointToScreen(handRight.Position));
                             /*
                             dc.DrawText(
                             new FormattedText("dist: " + distAux,
@@ -579,16 +548,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.DrawBone(skeleton, drawingContext, JointType.ElbowRight, JointType.WristRight);
             this.DrawBone(skeleton, drawingContext, JointType.WristRight, JointType.HandRight);
 
-            // Left Leg
-            this.DrawBone(skeleton, drawingContext, JointType.HipLeft, JointType.KneeLeft);
-            this.DrawBone(skeleton, drawingContext, JointType.KneeLeft, JointType.AnkleLeft);
-            this.DrawBone(skeleton, drawingContext, JointType.AnkleLeft, JointType.FootLeft);
-
-            // Right Leg
-            this.DrawBone(skeleton, drawingContext, JointType.HipRight, JointType.KneeRight);
-            this.DrawBone(skeleton, drawingContext, JointType.KneeRight, JointType.AnkleRight);
-            this.DrawBone(skeleton, drawingContext, JointType.AnkleRight, JointType.FootRight);
-
             // Render Joints
             foreach (Joint joint in skeleton.Joints)
             {
@@ -603,10 +562,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     drawBrush = this.inferredJointBrush;
                 }
 
-                if (drawBrush != null)
-                {
-                    drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);
-                }
             }
         }
 
