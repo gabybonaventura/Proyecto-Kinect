@@ -58,45 +58,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 
             return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2));
         }
-
-
-        public static double[] SetearAngulos(Joint hombroDer, Joint codoDer, Joint munecaDer, SkeletonPoint objeto)
-        {
-            //primero calculamos la distancia entre hombro y objeto, con eso
-            //vamos a saber el ángulo que debe tomar el codo para poder alcanzar el objeto.
-            float distHombroObjeto = ObtenerDistancia(hombroDer, objeto);
-            double anguloCodo;
-            double anguloRelativoHombro;
-            //si distancia entre hombro y muñeca es distinta a dist hombro y muñeca, se cambia el angulo del codo:
-            if (distHombroObjeto != ObtenerDistancia(hombroDer, munecaDer))
-            {
-                //para calcular el ángulo, enviamos la dist entre hombro y codo, entre codo y muñeca
-                //y la distancia entre objeto y hombro, para encontrar el ángulo que debería estar.
-                anguloCodo = CalcularAngulo(distHombroObjeto,
-                    ObtenerDistancia(munecaDer,codoDer),
-                    ObtenerDistancia(codoDer,hombroDer));
-            }
-            //una vez obtenido el ángulo del codo tenemos que saber en qué angulo debe estar el hombro
-            //para llegar al objeto.
-            //para esto debemos comparar los puntos de la mano y el objeto:
-            //comparar puntos:
-            if (1 == 1)
-            {
-                anguloRelativoHombro = CalcularAngulo(
-                    ObtenerDistancia(munecaDer, codoDer), //el primer segmento es opuesto al angulo que queremos calcular.
-                    distHombroObjeto,
-                    ObtenerDistancia(codoDer, hombroDer));
-
-            }
-            double[] angulos = new double[2];
-            //angulos[0] = anguloCodo;
-            //angulos[1] = anguloRelativoHombro;
-            return angulos;
-
-        }
-
-
-
+        
         public static double RadToDeg(double rad)
         {
             return rad * (180.0 / Math.PI);

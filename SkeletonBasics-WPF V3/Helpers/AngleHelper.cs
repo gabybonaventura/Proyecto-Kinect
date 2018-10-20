@@ -9,7 +9,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 {
     class AngleHelper
     {
-        static public int CotaDistancia = 20;
+        static public int CotaDistancia = 30;
        
         public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, Joint cadera, SkeletonPoint skelObjeto)
         {
@@ -58,6 +58,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                 
                 double anguloCodoAct = DistanceHelper.CalcularAngulo(distHombroMano,
                     distHombroCodo, distCodoMano);
+                Console.WriteLine($"Angulo Codo Actual {anguloCodoAct}");
 
                 double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano,
                         distHombroMano, distCadHombro);
@@ -88,10 +89,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                     array[2] = anguloHombro_aaFut;
                     array[3] = angHombro_idFut;
                 }
-                Console.WriteLine($"Angulo Codo Adelante Atras: {array[0]}");
-                Console.WriteLine($"Angulo Codo Izquieda Derecha: {array[1]}");
-                Console.WriteLine($"Hombro Adelante Atras: {array[2]}");
-                Console.WriteLine($"Hombro Izquieda Derecha: {array[3]}");
+                //Console.WriteLine($"Angulo Codo Adelante Atras: {array[0]}");
+                //Console.WriteLine($"Angulo Codo Izquieda Derecha: {array[1]}");
+                //Console.WriteLine($"Hombro Adelante Atras: {array[2]}");
+                //Console.WriteLine($"Hombro Izquieda Derecha: {array[3]}");
             }
             return array;
         }

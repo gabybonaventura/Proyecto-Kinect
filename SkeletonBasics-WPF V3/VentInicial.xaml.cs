@@ -26,11 +26,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             WindowStyle = WindowStyle.None;
             InitializeComponent();
 
-           /* TaskEx.Delay(5000);
+           //TaskEx.Delay(5000);
 
             Window1 win = new Window1();
-            win.Show();*/
-            //this.Close();
+            win.Show();
+            this.Close();
         }
     }
 }

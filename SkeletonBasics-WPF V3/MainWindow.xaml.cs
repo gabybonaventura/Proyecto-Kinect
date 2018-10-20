@@ -241,7 +241,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadExisting();
-            Console.WriteLine(indata);
+            //Console.WriteLine(indata);
             if (!string.IsNullOrEmpty(indata))
             {
                 desvios.Add(new Angulos(indata));
@@ -383,6 +383,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         shoulderRight = skel.Joints[JointType.ShoulderRight];
                         hipRight = skel.Joints[JointType.HipRight];
 
+                        //Dibujo un punto negro sobre el objeto detectado
+                        Point objeto = new Point(this.ObjetoX, this.ObjetoY);
+                        dc.DrawEllipse(Brushes.Black, new Pen(Brushes.Black, 5), objeto, 5, 5);
+
                         if ((shoulderRight.TrackingState == JointTrackingState.Tracked) &&
                                    (handRight.TrackingState == JointTrackingState.Tracked)
                                    && (codoDer.TrackingState == JointTrackingState.Tracked))
@@ -410,9 +414,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                this.Close();
                             }
                             
-                            //Dibujo un punto negro sobre el objeto detectado
-                             Point objeto = new Point(this.ObjetoX, this.ObjetoY);
-                            dc.DrawEllipse(Brushes.Black, new Pen(Brushes.Black, 5), objeto, 5, 5);
+                           
 
                                 //dc.DrawLine(this.HandHandPen, objeto,
                             //     this.SkeletonPointToScreen(handRight.Position));
@@ -557,7 +559,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
         private void CalcularButton_Click(object sender, RoutedEventArgs e)
         {
-
+            this.CalcularAngulosFinales();
         }
 
         public void CalcularAngulosFinales()
@@ -568,7 +570,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 handRight, codoDer, hipRight, skelObjeto);
                 if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
                 {
-                    Console.WriteLine("no se puede alcanzar el objeto");
+                    //Console.WriteLine("no se puede alcanzar el objeto");
                     /*dc.DrawText(
                     new FormattedText("No se puede alcanzar el objeto",
                               CultureInfo.GetCultureInfo("en-us"),
