@@ -321,97 +321,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                 framesDistancia.CopyPixelDataTo(datosDistancia);
 
-                int posColorImagenDistancia = 0;
-                int x = 0;
-                int y = 0;
-                for (int i = 0; i < framesDistancia.PixelDataLength; i++)
-                {
-                    if (x < 639)
-                        x++;
-                    else
-                    {
-                        y++;
-                        x = 0;
-                    }
-                    valorDistancia = datosDistancia[i] >> 3;
+                // Calculo la posicion del vector Depth Frame obteniendo la posicion donde esta
+                // Alojada la profundidad del objeto.
+                int posicionDelObjetoEnVector = Convert.ToInt32( 640 * ObjetoY + ObjetoX - 1);
 
-                    if (x == ObjetoX && y == ObjetoY)
-                    {
-                        ObjetoZ = valorDistancia;
-                        /*if(_serialPort.IsOpen)
-                            _serialPort.Write(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());*/
-                        //Console.WriteLine($"Z: {valorDistancia}");
-                        //Console.WriteLine(ObjetoX.ToString() + ObjetoY.ToString() + valorDistancia.ToString());
-
-                    }
-
-
-                    if (y >= 470 && y <= 480)
-                    {
-                        //Console.WriteLine(valorDistancia);
-                        colorImagenDistancia[posColorImagenDistancia++] = 0; //Azul
-                        colorImagenDistancia[posColorImagenDistancia++] = 0; //Verde
-                        colorImagenDistancia[posColorImagenDistancia++] = 0; //Rojo
-                    }
-                    else
-                    {
-                        if (x > 630 && x < 640)
-                        {
-                            colorImagenDistancia[posColorImagenDistancia++] = 0; //Azul
-                            colorImagenDistancia[posColorImagenDistancia++] = 0; //Verde
-                            colorImagenDistancia[posColorImagenDistancia++] = 0; //Rojo
-                        }
-                        else
-                        {
-                            if (valorDistancia == sensor.DepthStream.UnknownDepth)
-                            {
-                                colorImagenDistancia[posColorImagenDistancia++] = 0; //Azul
-                                colorImagenDistancia[posColorImagenDistancia++] = 0; //Verde
-                                colorImagenDistancia[posColorImagenDistancia++] = 255; //Rojo
-                            }
-                            else if (valorDistancia == sensor.DepthStream.TooFarDepth)
-                            {
-                                colorImagenDistancia[posColorImagenDistancia++] = 255; //Azul
-                                colorImagenDistancia[posColorImagenDistancia++] = 0; //Verde
-                                colorImagenDistancia[posColorImagenDistancia++] = 0; //Rojo
-                            }
-                            else if (valorDistancia == sensor.DepthStream.TooNearDepth)
-                            {
-                                colorImagenDistancia[posColorImagenDistancia++] = 0; //Azul
-                                colorImagenDistancia[posColorImagenDistancia++] = 255; //Verde
-                                colorImagenDistancia[posColorImagenDistancia++] = 0; //Rojo
-                            }
-                            else
-                            {
-                                byte byteDistancia = (byte)(255 - (valorDistancia >> 5));
-                                colorImagenDistancia[posColorImagenDistancia++] = byteDistancia; //Azul
-                                colorImagenDistancia[posColorImagenDistancia++] = byteDistancia; //Verde
-                                colorImagenDistancia[posColorImagenDistancia++] = byteDistancia; //Rojo
-                            }
-
-                        }
-                    }
-                    posColorImagenDistancia++;
-                }
-
-                if (bitmapImagenDistancia == null)
-                {
-                    this.bitmapImagenDistancia = new WriteableBitmap(
-                        framesDistancia.Width,
-                        framesDistancia.Height,
-                        96,
-                        96,
-                        PixelFormats.Bgr32,
-                        null);
-                    //DistanciaKinect.Source = bitmapImagenDistancia;
-                }
-
-                this.bitmapImagenDistancia.WritePixels(
-                    new Int32Rect(0, 0, framesDistancia.Width, framesDistancia.Height),
-                    colorImagenDistancia, //Datos de pixeles a color
-                    framesDistancia.Width * 4,
-                    0
-                    );
+                ObjetoZ = datosDistancia[posicionDelObjetoEnVector] >> 3;
 
             }
         }
