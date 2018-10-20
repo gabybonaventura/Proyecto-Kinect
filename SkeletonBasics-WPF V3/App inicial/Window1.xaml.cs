@@ -21,10 +21,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
     /// </summary>
     public partial class Window1 : Window
     {
+        
         string token;
         private bool flagTokenValidado;
         public Window1()
         {
+            WindowState = WindowState.Maximized;
+
             //debo revisar si existe archivo para sincronizar.
             SincronizarDatos();
             InitializeComponent();
