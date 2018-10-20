@@ -89,6 +89,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         List<Angulos> desvios /*= new List<Angulos>()*/;
 
+
+        Joint handRight;
+        Joint codoDer;
+        Joint shoulderRight;
+        Joint hipRight;
+
         //se inicializa con un flag de la ventana anterior
         //sirve para saber si se validó la sesión previamente.
         public MainWindow(bool flagToken, string token, int nroEj)
@@ -371,11 +377,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         }
 
                         //Toma de mediciones de mano, hombro y codo derecho:
-                        Joint handRight = skel.Joints[JointType.HandRight];
+                        handRight = skel.Joints[JointType.HandRight];
                         //Joint munecaDer = skel.Joints[JointType.WristRight];
-                        Joint codoDer = skel.Joints[JointType.ElbowRight];
-                        Joint shoulderRight = skel.Joints[JointType.ShoulderRight];
-                        Joint hipRight = skel.Joints[JointType.HipRight];
+                        codoDer = skel.Joints[JointType.ElbowRight];
+                        shoulderRight = skel.Joints[JointType.ShoulderRight];
+                        hipRight = skel.Joints[JointType.HipRight];
 
                         if ((shoulderRight.TrackingState == JointTrackingState.Tracked) &&
                                    (handRight.TrackingState == JointTrackingState.Tracked)
@@ -392,39 +398,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
                                 this.SkeletonPointToScreen(codoDer.Position));*/
 
-                            if (flagObjeto && !flagSkeleton)
-                            {
-                                angulos = AngleHelper.SetValorAngulos(shoulderRight,
-                                handRight, codoDer, hipRight, skelObjeto);
-                                if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
-                                {
-                                    Console.WriteLine("no se puede alcanzar el objeto");
-                                    /*dc.DrawText(
-                                    new FormattedText("No se puede alcanzar el objeto",
-                                              CultureInfo.GetCultureInfo("en-us"),
-                                              FlowDirection.LeftToRight,
-                                              new Typeface("Verdana"),
-                                              25, System.Windows.Media.Brushes.Red),
-                                              new Point(0,0));*/
-                                    flagSkeleton = false;
-                                }
-                                else
-                                {
-                                    flagSkeleton = true;
-                                    //si se puede alcanzar el objeto,
-                                    try
-                                    {
-                                        this.ConfirmacionButton.IsEnabled = true;
-                                        this.MensajesLabel.Content = "Angulos calculados";
-                                    }
-                                    catch (Exception)
-                                    {
-                                        Console.WriteLine("Excepcion en escribir el angulo en arduino");
-                                    }
-                                }
-
-                                
-                            }
+                            CalcularAngulosFinales();
+                            
                             float distAux = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
 
                             if(DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 0.1)
@@ -580,6 +555,47 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             ArduinoHelper.EscribirAngulosArduino(_serialPort, angulos);
 
         }
+        private void CalcularButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void CalcularAngulosFinales()
+        {
+            if (flagObjeto && !flagSkeleton)
+            {
+                angulos = AngleHelper.SetValorAngulos(shoulderRight,
+                handRight, codoDer, hipRight, skelObjeto);
+                if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
+                {
+                    Console.WriteLine("no se puede alcanzar el objeto");
+                    /*dc.DrawText(
+                    new FormattedText("No se puede alcanzar el objeto",
+                              CultureInfo.GetCultureInfo("en-us"),
+                              FlowDirection.LeftToRight,
+                              new Typeface("Verdana"),
+                              25, System.Windows.Media.Brushes.Red),
+                              new Point(0,0));*/
+                    flagSkeleton = false;
+                }
+                else
+                {
+                    flagSkeleton = true;
+                    //si se puede alcanzar el objeto,
+                    try
+                    {
+                        this.ConfirmacionButton.IsEnabled = true;
+                        this.MensajesLabel.Content = "Angulos calculados";
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Excepcion en escribir el angulo en arduino");
+                    }
+                }
+            }
+        }
+
+
 
         private void DrawBone(Skeleton skeleton, DrawingContext drawingContext, JointType jointType0, JointType jointType1)
         {

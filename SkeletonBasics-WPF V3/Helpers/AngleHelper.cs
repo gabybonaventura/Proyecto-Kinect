@@ -9,6 +9,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 {
     class AngleHelper
     {
+        static public int CotaDistancia = 20;
+       
         public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, Joint cadera, SkeletonPoint skelObjeto)
         {
             double[] array = new double[4];
@@ -44,7 +46,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             //distancia entre mano y objeto
             float distManoObj = DistanceHelper.ObtenerDistancia(mano, skelObjeto);
 
-            if (distHombroObj > (distCodoMano + distHombroCodo))
+            if (distHombroObj > (distCodoMano + distHombroCodo + AngleHelper.CotaDistancia))
             {
                 Console.WriteLine("no se puede alcanzar el objeto!");
             }
@@ -86,6 +88,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                     array[2] = anguloHombro_aaFut;
                     array[3] = angHombro_idFut;
                 }
+                Console.WriteLine($"Angulo Codo Adelante Atras: {array[0]}");
+                Console.WriteLine($"Angulo Codo Izquieda Derecha: {array[1]}");
+                Console.WriteLine($"Hombro Adelante Atras: {array[2]}");
+                Console.WriteLine($"Hombro Izquieda Derecha: {array[3]}");
             }
             return array;
         }

@@ -144,7 +144,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
              }
              catch
              {
-                Console.WriteLine("no hay conexión amea!");
+                Console.WriteLine("no hay conexión!");
                 flagTokenValidado = false;
                 this.IniRehabBtn.IsEnabled = true;
             }
