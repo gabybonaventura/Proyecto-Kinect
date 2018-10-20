@@ -29,8 +29,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             WindowState = WindowState.Maximized;
 
             //debo revisar si existe archivo para sincronizar.
-            SincronizarDatos();
             InitializeComponent();
+            SincronizarDatos();
+            
         }
 
         private void SincronizarDatos()
