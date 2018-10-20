@@ -262,16 +262,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
 
                         Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
-                        //imageHSVDest.Erode(200);
+                        imageHSVDest.Erode(100);
                         VectorOfVectorOfPoint vectorOfPoint = Helper.FindContours(imageHSVDest);
-                        //VectorOfPointF vf = new VectorOfPointF();
+
                         for (int i = 0; i < vectorOfPoint.Size; i++)
                         {
                             var contour = vectorOfPoint[i];
                             var area = CvInvoke.ContourArea(contour);
                             if (area > 100)
                             {
-
                                 System.Drawing.Rectangle rec = CvInvoke.BoundingRectangle(contour);
                                 Point p1 = new Point(rec.X, rec.Y);
                                 Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
@@ -279,17 +278,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                 ObjetoX = (p1.X + p2.X) / 2;
                                 ObjetoY = (p1.Y + p2.Y) / 2;
 
-                                //Console.WriteLine($"objeto x: {(p1.X + p2.X) / 2} objeto y: {(p1.Y + p2.Y) / 2}");
-                                //currentFrame.Draw(rec, new Bgr(0, double.MaxValue, 0), 3);
                                 if (ObjetoZ > 0)
                                 {
                                     skelObjeto = DistanceHelper.ObtenerSkelPoint((int)ObjetoX, (int)ObjetoY,
                                     ObjetoZ, this.sensor);
 
-                                    //Console.WriteLine("pos y objeto:" + skelObjeto.Y + "pixel y:" + (int)ObjetoY);
                                     flagObjeto = true;
                                 }
-                                //else Console.WriteLine("ERROR EN DISTANCIA OBJETO: " + ObjetoZ);
                                 
                             }
                         }
@@ -323,9 +318,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                 // Calculo la posicion del vector Depth Frame obteniendo la posicion donde esta
                 // Alojada la profundidad del objeto.
-                int posicionDelObjetoEnVector = Convert.ToInt32( 640 * ObjetoY + ObjetoX - 1);
-
-                ObjetoZ = datosDistancia[posicionDelObjetoEnVector] >> 3;
+                if(ObjetoX > 0 && ObjetoY > 0)
+                {
+                    int posicionDelObjetoEnVector = Convert.ToInt32( 640 * ObjetoY + ObjetoX - 1);
+                    ObjetoZ = datosDistancia[posicionDelObjetoEnVector] >> 3;
+                }
 
             }
         }
