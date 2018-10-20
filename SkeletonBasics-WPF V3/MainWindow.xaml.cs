@@ -221,7 +221,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 _serialPort.Open();
                 if (_serialPort.IsOpen)
                 {
-                    _serialPort.Write("*020090040040");
+                    _serialPort.Write("*070090030050");
                 }
             }
             catch (Exception ex)
@@ -435,8 +435,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                this.Close();
                             }
                             
+                            //Dibujo un punto negro sobre el objeto detectado
                              Point objeto = new Point(this.ObjetoX, this.ObjetoY);
                             dc.DrawEllipse(Brushes.Black, new Pen(Brushes.Black, 5), objeto, 5, 5);
+
                                 //dc.DrawLine(this.HandHandPen, objeto,
                             //     this.SkeletonPointToScreen(handRight.Position));
                             /*
