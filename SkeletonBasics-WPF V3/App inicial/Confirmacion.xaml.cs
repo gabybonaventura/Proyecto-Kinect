@@ -23,6 +23,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
     /// </summary>
     public partial class Confirmacion : Window
     {
+        
         bool flagToken, result;
         List<Angulos> listDesvio;
         int desvios = 0, contProm=0;
@@ -34,6 +35,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
 
         public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token, int nroEj)
         {
+            WindowState = WindowState.Maximized;
             InitializeComponent();
             if (!resultado)
                 this.LabelResultado.Content = "El ejercicio ha fallado. ¿Desea repetir el ejercicio?";

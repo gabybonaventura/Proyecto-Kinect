@@ -99,6 +99,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         //sirve para saber si se validó la sesión previamente.
         public MainWindow(bool flagToken, string token, int nroEj)
         {
+            WindowState = WindowState.Maximized;
             flagTokenValidado = flagToken;
             this.valorToken = token;
             desvios = new List<Angulos>();

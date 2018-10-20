@@ -107,9 +107,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="VentInicial.xaml.cs">
-      <DependentUpon>VentInicial.xaml</DependentUpon>
-    </Compile>
     <Page Include="App inicial\Confirmacion.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,10 +140,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="VentInicial.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -192,6 +185,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Logo-AV.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Logo-AtaxiaVision4.3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Images\Calcomania_LogoBlanco.png" />
+    <Resource Include="Images\Calcomania_LogoRojo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
