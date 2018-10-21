@@ -4,44 +4,85 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Ataxia vision" Height="300" Width="300" Icon="/SkeletonBasics-WPF;component/Images/Logo-AV.ico">
+        Title="Ataxia vision" Height="600" Width="800" Icon="/SkeletonBasics-WPF;component/Images/Logo-AV.ico"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}" WindowStyle="None" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
-        <Button 
-            Content="Validar token" 
-            HorizontalAlignment="Left" 
-            Margin="207,64,0,0" 
+        <materialDesign:ColorZone Background="#FFF44336" Padding="32">
+            <DockPanel>
+                <Button Name="ExitBtn"
+                    DockPanel.Dock="Right"
+                    Width="55"
+                    Height="45" 
+                    Padding="0" 
+                    Click="ExitBtn_Click">
+                    <materialDesign:PackIcon 
+                        Kind="ExitToApp"
+                        Width="55"
+                        Height="45" 
+                        Padding="0"/>
+                </Button>
+                <StackPanel>
+                    <TextBlock
+                        Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                        Foreground="#FFF" 
+                        TextAlignment="Center" 
+                        FontSize="40">
+                        Ataxia Visión
+                    </TextBlock>
+                </StackPanel>
+            </DockPanel>
+        </materialDesign:ColorZone>
+        <materialDesign:PackIcon 
+            Kind="AccountKey" 
             VerticalAlignment="Top" 
-            Width="75" 
-            Click="Button_Click"/>
-        <Label 
-            Content="Estado conexión: " 
             HorizontalAlignment="Left" 
-            Margin="60,33,0,0" 
-            VerticalAlignment="Top"/>
-        <TextBox 
-            x:Name="TokenTextBox" 
-            HorizontalAlignment="Left" 
-            Height="23" 
-            Margin="60,64,0,0" 
+            Height="74" 
+            Margin="39,150,0,0" 
+            Width="86"/>
+        <TextBox x:Name="TokenTextBox" 
+            materialDesign:HintAssist.Hint="Ingrese Token de Sesión"
+            materialDesign:HintAssist.FloatingScale=".8" 
+            materialDesign:HintAssist.FloatingOffset="1,-30"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+            Height="74" 
+            Margin="130,150,267,0" 
             TextWrapping="Wrap" 
-            Text="10" 
             VerticalAlignment="Top" 
-            Width="120"/>
-        <Button 
-            x:Name="IniRehabBtn" 
+             FontSize="35" FontWeight="Bold"/>
+        <Button Name="ValidarTokenBtn"
+            Content="Validar token" 
+            HorizontalAlignment="Right" 
+            Margin="0,150,33,0" 
+            VerticalAlignment="Top" 
+            Width="222" 
+            Click="Button_Click" 
+            Height="74" 
+            FontSize="20"/>
+        <Button x:Name="IniRehabBtn" 
             Content="Iniciar rehabilitación" 
-            HorizontalAlignment="Left" 
-            Margin="60,161,0,0" 
-            VerticalAlignment="Top" 
-            Width="120" 
             IsEnabled="False" 
-            Click="IniRehabBtn_Click"/>
-        <Label 
-            x:Name="ErrorLabel" 
+            Click="IniRehabBtn_Click" 
+            Margin="40,0,33,40" 
+            VerticalAlignment="Bottom" 
+             Height="135" FontSize="48"/>
+        <Label x:Name="ErrorLabel" 
             Foreground="Red" 
             Content="" 
             HorizontalAlignment="Left" 
-            Margin="60,111,0,0" 
-            VerticalAlignment="Top"/>
+            Margin="40,386,0,0" 
+            VerticalAlignment="Top" Width="227"/>
+        <Label Name="EstadoLbl"
+               Content="Ingrese el código del token creado en la App Mobile." 
+               HorizontalAlignment="Left" 
+               Margin="39,224,0,0" 
+               VerticalAlignment="Top" FontSize="18"
+               />
     </Grid>
 </Window>

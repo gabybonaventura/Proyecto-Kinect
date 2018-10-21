@@ -26,12 +26,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
         private bool flagTokenValidado;
         public Window1()
         {
-            WindowState = WindowState.Maximized;
-
             //debo revisar si existe archivo para sincronizar.
             InitializeComponent();
             SincronizarDatos();
-            
         }
 
         private void SincronizarDatos()
@@ -86,7 +83,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                     }
                     //si todo salió ok, elimino el archivo.
 
-                }catch(Exception d)
+                }catch(Exception)
                 {
                     MessageBox.Show("No se ha podido sincronizar los datos pendientes.", "Error sincronización");
                 }
@@ -156,6 +153,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             MainWindow win = new MainWindow(flagTokenValidado, token, 1);
             win.Show();
             this.Close();
+        }
+        
+        private void ExitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

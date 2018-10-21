@@ -108,7 +108,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
                         File.Delete("..\\Archivo\\ArchivoSinc.txt");
                 }
             }
-            catch (Exception d)
+            catch (Exception)
             {
                 //si no se puede enviar, agrego a archivo. si el archivo no existe, lo creo.
                 File.AppendAllText("..\\Archivo\\ArchivoSinc.txt", jsonAux + "\n");
