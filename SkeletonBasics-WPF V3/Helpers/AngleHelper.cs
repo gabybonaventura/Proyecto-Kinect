@@ -9,7 +9,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 {
     class AngleHelper
     {
-        static public int CotaDistancia = 0;
+        static public float CotaDistancia = 0.3f;
         
         public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, SkeletonPoint skelObjeto)
         {

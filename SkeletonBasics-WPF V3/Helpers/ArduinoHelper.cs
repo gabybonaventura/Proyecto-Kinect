@@ -25,7 +25,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                         rtaAngulos += aux;
                     }
                 _serialPort.Write(rtaAngulos);
-                Console.WriteLine("rta angulos: " + rtaAngulos);
+                Console.WriteLine("Angulo Codo Arriba Abajo : " + angulos[0]);
+                Console.WriteLine("Angulo Codo Izq Der: " + angulos[1]);
+                Console.WriteLine("Angulo Hombro Arriba Abajo: " + angulos[2]);
+                Console.WriteLine("Angulo Hombro Adelante Atras: " + angulos[3]);
                 }
 
                 intentos = 0;

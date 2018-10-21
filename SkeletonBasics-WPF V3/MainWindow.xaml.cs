@@ -83,7 +83,6 @@
         Joint ManoDerecha;
         Joint CodoDerecho;
         Joint HombroDerecho;
-        Joint hipRight;
 
         int contadorAuxiliarDepthFrame = 0;
 
@@ -222,7 +221,7 @@
                 _serialPort.Open();
                 if (_serialPort.IsOpen)
                 {
-                    _serialPort.Write("*070090030050");
+                    _serialPort.Write("*110090040040");
                 }
             }
             catch (Exception ex)
@@ -387,7 +386,6 @@
                         //Joint munecaDer = skel.Joints[JointType.WristRight];
                         CodoDerecho = skel.Joints[JointType.ElbowRight];
                         HombroDerecho = skel.Joints[JointType.ShoulderRight];
-                        hipRight = skel.Joints[JointType.HipRight];
 
                         //Dibujo un punto negro sobre el objeto detectado
                         Point objeto = new Point(this.ObjetoX, this.ObjetoY);

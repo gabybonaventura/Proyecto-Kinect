@@ -198,10 +198,10 @@ namespace ComunicacionArduino
 
         private void AngulosDefault_btn_Click(object sender, EventArgs e)
         {
-            SetAnguloCodoArribaAbajo(70,false);
+            SetAnguloCodoArribaAbajo(110,false);
             SetAnguloCodoDerechaIzquierda(90, false);
-            SetAnguloHombroArribaAbajo(30, false);
-            SetAnguloHombroAdelanteAtras(50);
+            SetAnguloHombroArribaAbajo(40, false);
+            SetAnguloHombroAdelanteAtras(40);
             HabilitarBotones();
         }
 
