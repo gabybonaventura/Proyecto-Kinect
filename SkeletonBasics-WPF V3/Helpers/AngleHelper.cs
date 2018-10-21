@@ -9,13 +9,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 {
     class AngleHelper
     {
-        static public int CotaDistancia = 30;
-
-        public static double distCodoManosSuma = 0;
-        public static double distHombroCodoSuma = 0;
-        public static double distHombroObjSuma = 0 ;
-        static int cantidad = 0;
-        public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, Joint cadera, SkeletonPoint skelObjeto)
+        static public int CotaDistancia = 0;
+        
+        public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, SkeletonPoint skelObjeto)
         {
             double[] array = new double[4];
             array[0] = -1;
@@ -40,10 +36,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             float distCodoMano = DistanceHelper.ObtenerDistancia(mano, codo);
                 //distancia entre codo y hombro
             float distHombroCodo = DistanceHelper.ObtenerDistancia(codo, hombro);
-                //distancia entre cadera y hombro
-            float distCadHombro = DistanceHelper.ObtenerDistancia(cadera, hombro);
-                //distancia entre cadera y mano
-            float distCadMano = DistanceHelper.ObtenerDistancia(mano, cadera);
                 //distancia entre hombro y punto auxiliar del torso
             float distTorsoHombro = DistanceHelper.ObtenerDistancia(hombro, puntoTorso);
 
@@ -53,24 +45,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 
             Console.WriteLine($"Distancia Codo mano {distCodoMano}");
             Console.WriteLine($"Distancia Hombro Codo {distHombroCodo}");
-            Console.WriteLine($"Distancia Homnbro Objeto {distHombroObj}");
-            if(cantidad != 200)
-            {
-                cantidad++;
-                AngleHelper.distCodoManosSuma += distCodoMano;
-                AngleHelper.distHombroCodoSuma += distHombroCodo;
-                AngleHelper.distHombroObjSuma += distHombroObj;
-            }
-            else
-            {
-                Console.WriteLine($"Distancia Codo mano {distCodoManosSuma / 200}");
-                Console.WriteLine($"Distancia Hombro Codo {distHombroCodoSuma / 200}");
-                Console.WriteLine($"Distancia Homnbro Objeto {distHombroObjSuma / 200}");
-                AngleHelper.distCodoManosSuma = 0;
-                AngleHelper.distHombroCodoSuma = 0;
-                AngleHelper.distHombroObjSuma = 0;
-                cantidad = 0;
-            }
+            Console.WriteLine($"Distancia Hombro Objeto {distHombroObj}");
+            
 
 
             if (distHombroObj > (distCodoMano + distHombroCodo + AngleHelper.CotaDistancia))
@@ -79,42 +55,31 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             }
             else
             {
-                //calculamos el ángulo ACTUAL de las articulaciones
                 //el primer argumento es el segmento opuesto al angulo que queremos obtener.
 
-                
-                double anguloCodoAct = DistanceHelper.CalcularAngulo(distHombroMano,
-                    distHombroCodo, distCodoMano);
-                //Console.WriteLine($"Angulo Codo Actual {anguloCodoAct}");
-
-                double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano,
-                        distHombroMano, distCadHombro);
-
-                double anguloHombro_aaFut = DistanceHelper.CalcularAngulo(distManoObj,
+                double anguloHombroAdelanteAtrasFut = DistanceHelper.CalcularAngulo(distManoObj,
                         distHombroObj, distHombroMano);
-
-                double angHombro_id = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
 
                 double anguloCodoFut = DistanceHelper.CalcularAngulo(distHombroObj,
                     distHombroCodo, distCodoMano);
 
-                float distAuxMO = (mano.Position.Y - skelObjeto.Y);
-                puntoTorso.Y = codo.Position.Y + distAuxMO;
-                double angHombro_idFut = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
+                float distAuxManoObjeto = (mano.Position.Y - skelObjeto.Y);
+                puntoTorso.Y = codo.Position.Y + distAuxManoObjeto;
+                double anguloHombroArribaAbajoFut = DistanceHelper.AnguloRectang(distHombroCodo, distTorsoHombro);
 
                 //si el punto del codo está más arriba que el hombro, el angulo se calculará para el otro lado
                 //entonces hay que sacar el suplementario para que corresponda al servo.
                 if (puntoTorso.Y > hombro.Position.Y)
                 {
-                    angHombro_idFut = 180 - angHombro_idFut;
+                    anguloHombroArribaAbajoFut = 180 - anguloHombroArribaAbajoFut;
                 }
-                if(anguloHombro_aaFut < 90 && anguloHombro_aaFut > 0 &&
+                if(anguloHombroAdelanteAtrasFut < 90 && anguloHombroAdelanteAtrasFut > 0 &&
                     anguloCodoFut < 90 && anguloCodoFut > 0)
                 {
                     array[0] = anguloCodoFut;
                     array[1] = 090;
-                    array[2] = anguloHombro_aaFut;
-                    array[3] = angHombro_idFut;
+                    array[2] = anguloHombroAdelanteAtrasFut;
+                    array[3] = anguloHombroArribaAbajoFut;
                 }
                 //Console.WriteLine($"Angulo Codo Adelante Atras: {array[0]}");
                 //Console.WriteLine($"Angulo Codo Izquieda Derecha: {array[1]}");

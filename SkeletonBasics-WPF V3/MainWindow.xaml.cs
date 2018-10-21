@@ -80,9 +80,9 @@
         List<Angulos> desvios /*= new List<Angulos>()*/;
 
 
-        Joint handRight;
-        Joint codoDer;
-        Joint shoulderRight;
+        Joint ManoDerecha;
+        Joint CodoDerecho;
+        Joint HombroDerecho;
         Joint hipRight;
 
         int contadorAuxiliarDepthFrame = 0;
@@ -176,6 +176,8 @@
                 this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                 this.sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
 
+
+
                 this.colorPixels = new byte[this.sensor.ColorStream.FramePixelDataLength];
                 this.colorBitmap = new WriteableBitmap(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
                 //this.Image.Source = this.colorBitmap;
@@ -188,6 +190,7 @@
                 this.colorToDepthDivisor = colorWidth / this.depthWidth;
                 this.sensor.AllFramesReady += this.SensorAllFramesReady;
 
+                this.colorToDepthDivisor = colorWidth / this.depthWidth;
 
                 depthPixels = new DepthImagePixel[sensor.DepthStream.FramePixelDataLength];
 
@@ -380,30 +383,29 @@
                         }
 
                         //Toma de mediciones de mano, hombro y codo derecho:
-                        handRight = skel.Joints[JointType.HandRight];
+                        ManoDerecha = skel.Joints[JointType.HandRight];
                         //Joint munecaDer = skel.Joints[JointType.WristRight];
-                        codoDer = skel.Joints[JointType.ElbowRight];
-                        shoulderRight = skel.Joints[JointType.ShoulderRight];
+                        CodoDerecho = skel.Joints[JointType.ElbowRight];
+                        HombroDerecho = skel.Joints[JointType.ShoulderRight];
                         hipRight = skel.Joints[JointType.HipRight];
 
                         //Dibujo un punto negro sobre el objeto detectado
                         Point objeto = new Point(this.ObjetoX, this.ObjetoY);
                         dc.DrawEllipse(Brushes.Black, new Pen(Brushes.Black, 5), objeto, 5, 5);
 
-                        if ((shoulderRight.TrackingState == JointTrackingState.Tracked) &&
-                                   (handRight.TrackingState == JointTrackingState.Tracked)
-                                   && (codoDer.TrackingState == JointTrackingState.Tracked))
+                        if ((HombroDerecho.TrackingState == JointTrackingState.Tracked) &&
+                                   (ManoDerecha.TrackingState == JointTrackingState.Tracked)
+                                   && (CodoDerecho.TrackingState == JointTrackingState.Tracked))
                         {
                             if (flagObjeto && !flagSkeleton)
                                 CalcularAngulosFinales();
 
-                            float distAux = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
 
                             //Console.WriteLine($"Mano X Y Z {handRight.Position.X} {handRight.Position.Y} {handRight.Position.Z}");
                             //Console.WriteLine($"Objeto X Y Z {skelObjeto.X} {skelObjeto.Y} {skelObjeto.Z}");
 
 
-                            if (DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 0.1)
+                            if (DistanceHelper.ObtenerDistancia(ManoDerecha, skelObjeto) < 0.1)
                             {
                                 //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
                                 //los datos.
@@ -542,8 +544,8 @@
         public void CalcularAngulosFinales()
         {
             
-            angulos = AngleHelper.SetValorAngulos(shoulderRight,
-            handRight, codoDer, hipRight, skelObjeto);
+            angulos = AngleHelper.SetValorAngulos(HombroDerecho,
+            ManoDerecha, CodoDerecho, skelObjeto);
             if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
             {
                 //Console.WriteLine("no se puede alcanzar el objeto");
