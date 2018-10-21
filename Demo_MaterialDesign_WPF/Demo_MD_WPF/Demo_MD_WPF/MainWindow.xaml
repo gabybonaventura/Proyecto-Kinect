@@ -18,9 +18,10 @@
         <materialDesign:Card Padding="32" Margin="20,20,20,0">
             <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}">My First Material Design App</TextBlock>
         </materialDesign:Card>
-        <Button Content="Button" Margin="20,151,20,53" Height="Auto"/>
+        <Button Content="Button" Margin="20,215,20,53" Height="Auto"/>
         <CheckBox Content="CheckBox" HorizontalAlignment="Left" Margin="419,128,0,0" VerticalAlignment="Top"/>
         <Label Content="Label" HorizontalAlignment="Left" Margin="20,120,0,0" VerticalAlignment="Top" Width="39"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="64,123,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="350"/>
+        <RadioButton Content="RadioButton" HorizontalAlignment="Left" Margin="20,151,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
