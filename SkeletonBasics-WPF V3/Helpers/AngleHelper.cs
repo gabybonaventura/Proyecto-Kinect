@@ -10,7 +10,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
     class AngleHelper
     {
         static public int CotaDistancia = 30;
-       
+
+        public static double distCodoManosSuma = 0;
+        public static double distHombroCodoSuma = 0;
+        public static double distHombroObjSuma = 0 ;
+        static int cantidad = 0;
         public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, Joint cadera, SkeletonPoint skelObjeto)
         {
             double[] array = new double[4];
@@ -46,6 +50,29 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             //distancia entre mano y objeto
             float distManoObj = DistanceHelper.ObtenerDistancia(mano, skelObjeto);
 
+
+            Console.WriteLine($"Distancia Codo mano {distCodoMano}");
+            Console.WriteLine($"Distancia Hombro Codo {distHombroCodo}");
+            Console.WriteLine($"Distancia Homnbro Objeto {distHombroObj}");
+            if(cantidad != 200)
+            {
+                cantidad++;
+                AngleHelper.distCodoManosSuma += distCodoMano;
+                AngleHelper.distHombroCodoSuma += distHombroCodo;
+                AngleHelper.distHombroObjSuma += distHombroObj;
+            }
+            else
+            {
+                Console.WriteLine($"Distancia Codo mano {distCodoManosSuma / 200}");
+                Console.WriteLine($"Distancia Hombro Codo {distHombroCodoSuma / 200}");
+                Console.WriteLine($"Distancia Homnbro Objeto {distHombroObjSuma / 200}");
+                AngleHelper.distCodoManosSuma = 0;
+                AngleHelper.distHombroCodoSuma = 0;
+                AngleHelper.distHombroObjSuma = 0;
+                cantidad = 0;
+            }
+
+
             if (distHombroObj > (distCodoMano + distHombroCodo + AngleHelper.CotaDistancia))
             {
                 Console.WriteLine("no se puede alcanzar el objeto!");
@@ -58,7 +85,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                 
                 double anguloCodoAct = DistanceHelper.CalcularAngulo(distHombroMano,
                     distHombroCodo, distCodoMano);
-                Console.WriteLine($"Angulo Codo Actual {anguloCodoAct}");
+                //Console.WriteLine($"Angulo Codo Actual {anguloCodoAct}");
 
                 double anguloHombroCad = DistanceHelper.CalcularAngulo(distCadMano,
                         distHombroMano, distCadHombro);

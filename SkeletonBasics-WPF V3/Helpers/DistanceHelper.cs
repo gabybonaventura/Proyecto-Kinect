@@ -23,13 +23,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
         {
             //se devuelve el ángulo del primer punto, es decir que si el hombro es "a",
             //devuelve el angulo del hombro en relación al codo y hombro.
-            /*float segmentoA = ObtenerDistancia(c, b);
-            float segmentoB = ObtenerDistancia(a, c);
-            float segmentoC = ObtenerDistancia(a, b);*/
-
-            /*float segmentoA = 12;
-            float segmentoB = 25;
-            float segmentoC = 24;*/
+            
 
             float segA2 = (float)Math.Pow(segmentoA, 2);
             float segB2 = (float)Math.Pow(segmentoB, 2);

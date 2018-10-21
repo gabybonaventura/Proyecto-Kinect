@@ -1,10 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-namespace Microsoft.Samples.Kinect.SkeletonBasics
+﻿namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +8,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    //using System.Windows.Media.Media3D;
     using Emgu.CV;
     using Emgu.CV.Structure;
     using Emgu.CV.Util;
@@ -24,7 +17,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
     public partial class MainWindow : Window
     {
-        
+        #region Properties
+
+
         Rect rect;
         private const float RenderWidth = 640.0f;
 
@@ -58,17 +53,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private readonly Pen HandHandPen = new Pen(Brushes.Red, 6);
 
-        WriteableBitmap bitmapEficiente = null;
-
         short[] datosDistancia = null;
         byte[] colorImagenDistancia = null;
-        WriteableBitmap bitmapImagenDistancia = null;
         double ObjetoX;
         double ObjetoY;
-        int valorDistancia;
         int ObjetoZ;
         SkeletonPoint skelObjeto;
-        //private float distObjetoAnt = 0;
         double[] angulos;
         
         bool flagSkeleton = false;
@@ -94,6 +84,36 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         Joint codoDer;
         Joint shoulderRight;
         Joint hipRight;
+
+        int contadorAuxiliarDepthFrame = 0;
+
+        Hsv lowerLimit = new Hsv(40, 100, 100);
+        Hsv upperLimit = new Hsv(80, 255, 255);
+
+        //------------------------------------//
+
+        // Intermediate storage for the depth data received from the sensor
+        private DepthImagePixel[] depthPixels;
+        // Intermediate storage for the color data received from the camera
+        //private byte[] colorPixels;
+        // Intermediate storage for the depth to color mapping
+        private ColorImagePoint[] colorCoordinates;
+        private int depthWidth;
+        private int depthHeight;
+
+        // Inverse scaling factor between color and depth
+        private int colorToDepthDivisor;
+        // Format we will use for the depth stream
+        private const DepthImageFormat DepthFormat = DepthImageFormat.Resolution640x480Fps30;
+        // Format we will use for the color stream
+        private const ColorImageFormat ColorFormat = ColorImageFormat.RgbResolution640x480Fps30;
+
+
+
+        //------------------------------------//
+
+        #endregion Properties
+
 
         //se inicializa con un flag de la ventana anterior
         //sirve para saber si se validó la sesión previamente.
@@ -123,42 +143,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
 
         }
-       
-        private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
-        {
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
-            {
 
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, RenderHeight - ClipBoundsThickness, RenderWidth, ClipBoundsThickness));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Top))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, RenderWidth, ClipBoundsThickness));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Left))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, ClipBoundsThickness, RenderHeight));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Right))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(RenderWidth - ClipBoundsThickness, 0, ClipBoundsThickness, RenderHeight));
-            }
-        }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
@@ -171,10 +156,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             // Display the drawing using our image control
             Image.Source = this.imageSource;
 
-            // Look through all sensors and start the first connected one.
-            // This requires that a Kinect is connected at the time of app startup.
-            // To make your app robust against plug/unplug, 
-            // it is recommended to use KinectSensorChooser provided in Microsoft.Kinect.Toolkit (See components in Toolkit Browser).
+
+
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
                 if (potentialSensor.Status == KinectStatus.Connected)
@@ -186,6 +169,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             if (null != this.sensor)
             {
+
+
                 // Turn on the skeleton stream to receive skeleton frames
                 this.sensor.SkeletonStream.Enable();
                 this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
@@ -195,10 +180,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.colorBitmap = new WriteableBitmap(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
                 //this.Image.Source = this.colorBitmap;
 
-                // Add an event handler to be called whenever there is new color frame data
-                this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
-                this.sensor.ColorFrameReady += this.SensorColorFrameReady;
-                this.sensor.DepthFrameReady += this.miKinect_DepthFrameReady;
+                this.colorCoordinates = new ColorImagePoint[this.sensor.DepthStream.FramePixelDataLength];
+                this.depthWidth = this.sensor.DepthStream.FrameWidth;
+                this.depthHeight = this.sensor.DepthStream.FrameHeight;
+                int colorWidth = this.sensor.ColorStream.FrameWidth;
+                int colorHeight = this.sensor.ColorStream.FrameHeight;
+                this.colorToDepthDivisor = colorWidth / this.depthWidth;
+                this.sensor.AllFramesReady += this.SensorAllFramesReady;
+
+
+                depthPixels = new DepthImagePixel[sensor.DepthStream.FramePixelDataLength];
 
                 // Start the sensor!
                 try
@@ -238,82 +229,21 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
         }
 
-        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+
+        private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
-            SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadExisting();
-            //Console.WriteLine(indata);
-            if (!string.IsNullOrEmpty(indata))
-            {
-                desvios.Add(new Angulos(indata));
-            }
-        }
-
-        private void SensorColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
-        {
-
-            Hsv lowerLimit = new Hsv(40, 100, 100);
-            Hsv upperLimit = new Hsv(80, 255, 255);
-
-            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
-            {
-
-                if (colorFrame != null)
-                {
-                    if (colorFrame != null)
-                    {
-                        System.Drawing.Bitmap bmp = Helper.ImageToBitmap(colorFrame);
-                        Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
-                        // Copy the pixel data from the image to a temporary array
-
-                        Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
-
-                        Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
-                        imageHSVDest.Erode(100);
-                        VectorOfVectorOfPoint vectorOfPoint = Helper.FindContours(imageHSVDest);
-
-                        for (int i = 0; i < vectorOfPoint.Size; i++)
-                        {
-                            var contour = vectorOfPoint[i];
-                            var area = CvInvoke.ContourArea(contour);
-                            if (area > 100)
-                            {
-                                System.Drawing.Rectangle rec = CvInvoke.BoundingRectangle(contour);
-                                Point p1 = new Point(rec.X, rec.Y);
-                                Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
-                                rect = new Rect(p1, p2);
-                                ObjetoX = (p1.X + p2.X) / 2;
-                                ObjetoY = (p1.Y + p2.Y) / 2;
-
-                                if (ObjetoZ > 0)
-                                {
-                                    skelObjeto = DistanceHelper.ObtenerSkelPoint((int)ObjetoX, (int)ObjetoY,
-                                    ObjetoZ, this.sensor);
-
-                                    flagObjeto = true;
-                                }
-                                
-                            }
-                        }
-
-                        colorFrame.CopyPixelDataTo(this.colorPixels);
-                        // Write the pixel data into our bitmap
-                        this.colorBitmap.WritePixels(
-                            new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
-                            this.colorPixels,
-                            this.colorBitmap.PixelWidth * sizeof(int),
-                            0);
-                    }
-
-                }
-            }
-        }
-
-        void miKinect_DepthFrameReady(object sender, DepthImageFrameReadyEventArgs e)
-        {
+            Skeleton[] skeletons = new Skeleton[0];
+            
+            bool depthReceived = false;
+            bool colorReceived = false;
             using (DepthImageFrame framesDistancia = e.OpenDepthImageFrame())
             {
                 if (framesDistancia == null) return;
+
+                framesDistancia.CopyDepthImagePixelDataTo(this.depthPixels);
+
+                depthReceived = true;
+                
 
                 if (datosDistancia == null)
                     datosDistancia = new short[framesDistancia.PixelDataLength];
@@ -325,32 +255,104 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                 // Calculo la posicion del vector Depth Frame obteniendo la posicion donde esta
                 // Alojada la profundidad del objeto.
-                if(ObjetoX > 0 && ObjetoY > 0)
-                {
-                    int posicionDelObjetoEnVector = Convert.ToInt32( 640 * ObjetoY + ObjetoX - 1);
-                    ObjetoZ = datosDistancia[posicionDelObjetoEnVector] >> 3;
-                }
+                //if (ObjetoX > 0 && ObjetoY > 0)
+                //{
+                //    int posicionDelObjetoEnVector = Convert.ToInt32(640 * ObjetoY + ObjetoX - 1);
+                //    ObjetoZ = datosDistancia[posicionDelObjetoEnVector] >> 3;
+                //    if (contadorAuxiliarDepthFrame == 100)
+                //    {
+                //        Console.WriteLine($"Z del objeto: {ObjetoZ}");
+                //        contadorAuxiliarDepthFrame = 0;
+                //    }
+                //    else
+                //        contadorAuxiliarDepthFrame++;
+                //}
+                //Console.WriteLine($"Z del objeto: {ObjetoZ}");
+                //Console.WriteLine($"Z del objeto SKEL: {skelObjeto.Z}");
+
 
             }
-        }
 
-        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (null != this.sensor)
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
             {
-                this.sensor.Stop();
-            }
-            if (_serialPort.IsOpen)
-                _serialPort.Close();
-            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
-            Console.WriteLine("cierra por acá");
-            win.Show();
-            
-        }
 
-        private void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
-        {
-            Skeleton[] skeletons = new Skeleton[0];
+                if (colorFrame != null)
+                {
+
+                    // Copy the pixel data from the image to a temporary array
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+
+                    colorReceived = true;
+
+                    System.Drawing.Bitmap bmp = Helper.ImageToBitmap(colorFrame);
+                    Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
+                    // Copy the pixel data from the image to a temporary array
+
+                    Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
+
+                    Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
+                    imageHSVDest.Erode(100);
+                    VectorOfVectorOfPoint vectorOfPoint = Helper.FindContours(imageHSVDest);
+
+                    for (int i = 0; i < vectorOfPoint.Size; i++)
+                    {
+                        var contour = vectorOfPoint[i];
+                        var area = CvInvoke.ContourArea(contour);
+                        if (area > 100)
+                        {
+                            System.Drawing.Rectangle rec = CvInvoke.BoundingRectangle(contour);
+                            Point p1 = new Point(rec.X, rec.Y);
+                            Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
+                            rect = new Rect(p1, p2);
+                            ObjetoX = (p1.X + p2.X) / 2;
+                            ObjetoY = (p1.Y + p2.Y) / 2;
+
+                            if (true == depthReceived)
+                            {
+                                this.sensor.CoordinateMapper.MapDepthFrameToColorFrame(
+                                    DepthFormat,
+                                    this.depthPixels,
+                                    ColorFormat,
+                                    this.colorCoordinates);
+
+
+                                int depthIndex = (int)ObjetoX + ((int)ObjetoY * this.depthWidth);
+                                DepthImagePixel depthPixel = this.depthPixels[depthIndex];
+
+
+                                ObjetoZ = datosDistancia[depthIndex] >> 3;
+
+
+                                // scale color coordinates to depth resolution
+                                int X = (int)ObjetoX / this.colorToDepthDivisor;
+                                int Y = (int)ObjetoY / this.colorToDepthDivisor;
+
+                                // depthPixel is the depth for the (X,Y) pixel in the color frame
+                            }
+
+
+                            if (ObjetoZ > 0)
+                            {
+                                skelObjeto = DistanceHelper.ObtenerSkelPoint((int)ObjetoX, (int)ObjetoY,
+                                ObjetoZ, this.sensor);
+
+                                flagObjeto = true;
+                            }
+
+                        }
+                    }
+
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+                    // Write the pixel data into our bitmap
+                    this.colorBitmap.WritePixels(
+                        new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
+                        this.colorPixels,
+                        this.colorBitmap.PixelWidth * sizeof(int),
+                        0);
+                    
+
+                }
+            }
 
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
             {
@@ -392,119 +394,93 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                                    (handRight.TrackingState == JointTrackingState.Tracked)
                                    && (codoDer.TrackingState == JointTrackingState.Tracked))
                         {
-                            //dibujo las líneas de los segmentos:
-                            //mano hombro
-                            /*dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
-                                 this.SkeletonPointToScreen(shoulderRight.Position));
-                            //mano codo
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position),
-                                this.SkeletonPointToScreen(codoDer.Position));
-                            //hombro codo
-                            dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(shoulderRight.Position),
-                                this.SkeletonPointToScreen(codoDer.Position));*/
+                            if (flagObjeto && !flagSkeleton)
+                                CalcularAngulosFinales();
 
-                            CalcularAngulosFinales();
-                            
                             float distAux = DistanceHelper.ObtenerDistancia(handRight, skelObjeto);
 
-                            if(DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 0.1)
+                            //Console.WriteLine($"Mano X Y Z {handRight.Position.X} {handRight.Position.Y} {handRight.Position.Z}");
+                            //Console.WriteLine($"Objeto X Y Z {skelObjeto.X} {skelObjeto.Y} {skelObjeto.Z}");
+
+
+                            if (DistanceHelper.ObtenerDistancia(handRight, skelObjeto) < 0.1)
                             {
                                 //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
                                 //los datos.
                                 resultado = true;
-                               this.Close();
+                                this.Close();
                             }
-                            
-                           
-
-                                //dc.DrawLine(this.HandHandPen, objeto,
-                            //     this.SkeletonPointToScreen(handRight.Position));
-                            /*
-                            dc.DrawText(
-                            new FormattedText("dist: " + distAux,
-                                              CultureInfo.GetCultureInfo("en-us"),
-                                              FlowDirection.LeftToRight,
-                                              new Typeface("Verdana"),
-                                              25, System.Windows.Media.Brushes.Red),
-                                              objeto);
-
-                            /*dc.DrawText(
-                            new FormattedText("ang hombro d-i: " + angulos[1] + "\nang a-a: " + angulos[2],
-                                              CultureInfo.GetCultureInfo("en-us"),
-                                              FlowDirection.LeftToRight,
-                                              new Typeface("Verdana"),
-                                              25, System.Windows.Media.Brushes.Red),
-                                              this.SkeletonPointToScreen(shoulderRight.Position));
-                            dc.DrawText(
-                            new FormattedText("ang codo: " + angulos[0],
-                                              CultureInfo.GetCultureInfo("en-us"),
-                                              FlowDirection.LeftToRight,
-                                              new Typeface("Verdana"),
-                                              25, System.Windows.Media.Brushes.Red),
-                                              this.SkeletonPointToScreen(codoDer.Position));*/
                         }
-
-                        /*      // Toma de Mediciones
-                              Joint elbowLeft = skel.Joints[JointType.ElbowLeft];
-                              Joint handLeft = skel.Joints[JointType.HandLeft];
-                              Joint shoulderLeft = skel.Joints[JointType.ShoulderLeft];
-
-                              Joint shoulderCenter = skel.Joints[JointType.ShoulderCenter];
-
-                              Joint HipRight = skel.Joints[JointType.HipRight];
-                              //Joint shoulderRight = skel.Joints[JointType.ShoulderRight];
-                              Joint elbowRight = skel.Joints[JointType.ElbowRight];
-                              //Joint handRight = skel.Joints[JointType.HandRight];
-
-                              AnguloCodo = DistanceHelper.Angulos(shoulderRight, elbowRight, handRight);
-                              AnguloHombroArriba = DistanceHelper.Angulos(HipRight, shoulderRight, elbowRight);
-                              // Al generar el angulo del hombro mediante a los puntos de la cadera izquierda
-                              // el angulo obtenido no es del todo preciso, ya que la cadera izquierda esta
-                              // "dentro" del cuerpo y no es recto desde el hombro.
-                              */
-                        /*if (AnguloHombroArriba != 0 && AnguloHombroArriba != 0)
-                            Console.WriteLine("Angulo Codo: " + AnguloCodo + "Angulo Hombre: " + AnguloHombroArriba);
-                            */
-                        //if ((handLeft.TrackingState == JointTrackingState.Tracked) &&
-                        //           (handRight.TrackingState == JointTrackingState.Tracked))
-                        //{
-                        //    dc.DrawLine(this.HandHandPen, this.SkeletonPointToScreen(handRight.Position), this.SkeletonPointToScreen(handLeft.Position));
-                        //    //DistanceHelper.Angulos(handLeft, shoulderCenter, handRight);
-
-                        //    string distance = DistanceHelper.ObtenerDistancia(handLeft, handRight).ToString();
-                        //    FormattedText formattedText = new FormattedText(distance, CultureInfo.CurrentCulture, FlowDirection.LeftToRight
-                        //       ,new Typeface("Verdana") , 50, Brushes.Red );
-                        //    double x = ((handLeft.Position.X + handRight.Position.X) / 2) * 320;
-                        //    double y = 240 - (((handLeft.Position.Y + handRight.Position.Y) / 2) * 240);
-                        //    //double x = 320;
-                        //    //double y = 240;
-                        //    //640x480
-
-                        //    //dc.DrawText(formattedText, new Point(x,y));
-                        //    Console.WriteLine("x" + x.ToString());
-                        //    Console.WriteLine("y" + y.ToString());
-
-                        //}
-                        //string setDistanceHands;
-
-                        //    dc.DrawRectangle(Brushes.Red, null, rect);
-
-                        //setDistanceHands = "" + DistanceHelper.ObtenerDistancia(handLeft, handRight);
-                        //if(setDistanceHands != "0")
-                        //    DistanceHandHand.Text = setDistanceHands;
-                        //Console.WriteLine("La distancia es:" + setDistanceHands);
-
                     }
                 }
 
                 // prevent drawing outside of our render area
                 this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
-
-                
             }
-
         }
 
+        private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
+        {
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
+            {
+
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(0, RenderHeight - ClipBoundsThickness, RenderWidth, ClipBoundsThickness));
+            }
+
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Top))
+            {
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(0, 0, RenderWidth, ClipBoundsThickness));
+            }
+
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Left))
+            {
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(0, 0, ClipBoundsThickness, RenderHeight));
+            }
+
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Right))
+            {
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(RenderWidth - ClipBoundsThickness, 0, ClipBoundsThickness, RenderHeight));
+            }
+        }
+
+        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort sp = (SerialPort)sender;
+            string indata = sp.ReadExisting();
+            //Console.WriteLine(indata);
+            if (!string.IsNullOrEmpty(indata))
+            {
+                desvios.Add(new Angulos(indata));
+            }
+        }
+        
+        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (null != this.sensor)
+            {
+                this.sensor.Stop();
+            }
+            if (_serialPort.IsOpen)
+                _serialPort.Close();
+            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
+            Console.WriteLine("cierra por acá");
+            win.Show();
+            
+        }
+
+        
         private void DrawBonesAndJoints(Skeleton skeleton, DrawingContext drawingContext)
         {
             // Render Torso
@@ -565,37 +541,36 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         public void CalcularAngulosFinales()
         {
-            if (flagObjeto && !flagSkeleton)
+            
+            angulos = AngleHelper.SetValorAngulos(shoulderRight,
+            handRight, codoDer, hipRight, skelObjeto);
+            if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
             {
-                angulos = AngleHelper.SetValorAngulos(shoulderRight,
-                handRight, codoDer, hipRight, skelObjeto);
-                if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
+                //Console.WriteLine("no se puede alcanzar el objeto");
+                /*dc.DrawText(
+                new FormattedText("No se puede alcanzar el objeto",
+                            CultureInfo.GetCultureInfo("en-us"),
+                            FlowDirection.LeftToRight,
+                            new Typeface("Verdana"),
+                            25, System.Windows.Media.Brushes.Red),
+                            new Point(0,0));*/
+                flagSkeleton = false;
+            }
+            else
+            {
+                flagSkeleton = true;
+                //si se puede alcanzar el objeto,
+                try
                 {
-                    //Console.WriteLine("no se puede alcanzar el objeto");
-                    /*dc.DrawText(
-                    new FormattedText("No se puede alcanzar el objeto",
-                              CultureInfo.GetCultureInfo("en-us"),
-                              FlowDirection.LeftToRight,
-                              new Typeface("Verdana"),
-                              25, System.Windows.Media.Brushes.Red),
-                              new Point(0,0));*/
-                    flagSkeleton = false;
+                    this.ConfirmacionButton.IsEnabled = true;
+                    this.MensajesLabel.Content = "Angulos calculados";
                 }
-                else
+                catch (Exception)
                 {
-                    flagSkeleton = true;
-                    //si se puede alcanzar el objeto,
-                    try
-                    {
-                        this.ConfirmacionButton.IsEnabled = true;
-                        this.MensajesLabel.Content = "Angulos calculados";
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("Excepcion en escribir el angulo en arduino");
-                    }
+                    Console.WriteLine("Excepcion en escribir el angulo en arduino");
                 }
             }
+            
         }
 
 
