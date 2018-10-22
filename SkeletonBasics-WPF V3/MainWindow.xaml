@@ -68,13 +68,13 @@
             <Image Name="Image" Width="556" Height="480"/>
         </Viewbox>
         <Label Grid.Row="2" Grid.Column="0" x:Name="MensajesLabel">Calculando Angulos Finales</Label>
-        <Button Grid.Row="2" Grid.Column="1" x:Name="ConfirmacionButton" HorizontalAlignment="Left"   Width="110" Height="20" IsEnabled="False" Click="ConfirmacionButton_Click">Confirmar</Button>
-        <Button Grid.Row="3" Grid.Column="0" x:Name="CalcularButton" HorizontalAlignment="Left"   Width="110" Height="20" Click="CalcularButton_Click">Calcular Angulos</Button>
+        <Button Grid.Row="2" Grid.Column="1" x:Name="ConfirmacionButton" HorizontalAlignment="Left"   Width="205" Height="Auto" IsEnabled="False" Click="ConfirmacionButton_Click" Margin="0,22,0,0" Grid.RowSpan="2">Confirmar</Button>
+        <Button Grid.Row="2" Grid.Column="0" x:Name="CalcularButton" HorizontalAlignment="Left"   Width="231" Height="Auto" Click="CalcularButton_Click" Margin="0,21,0,0" Grid.RowSpan="2">Calcular Angulos</Button>
 
         <StatusBar Grid.Row="4" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
             <StatusBarItem Padding="0 0 0 10">
                 <TextBlock Name="statusBarText" Margin="-1 0 0 0"></TextBlock>
             </StatusBarItem>
-        </StatusBar>       
+        </StatusBar>
     </Grid>
 </Window>
