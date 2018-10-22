@@ -38,7 +38,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             WindowState = WindowState.Maximized;
             InitializeComponent();
             if (!resultado)
-                this.LabelResultado.Content = "El ejercicio ha fallado. ¿Desea repetir el ejercicio?";
+                this.LabelResultado.Text = "El ejercicio ha fallado. ¿Desea repetir el ejercicio?";
             this.listDesvio = desvios;
             this.flagToken = flagToken;
             this.result = resultado;

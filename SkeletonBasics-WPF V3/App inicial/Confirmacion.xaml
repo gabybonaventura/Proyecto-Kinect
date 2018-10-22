@@ -21,18 +21,6 @@
     <Grid>
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
             <DockPanel>
-                <Button Name="ExitBtn"
-                    DockPanel.Dock="Right"
-                    Width="55"
-                    Height="45" 
-                    Padding="0" 
-                    Click="ExitBtn_Click">
-                    <materialDesign:PackIcon 
-                        Kind="ExitToApp"
-                        Width="55"
-                        Height="45" 
-                        Padding="0"/>
-                </Button>
                 <StackPanel>
                     <TextBlock
                         Style="{DynamicResource MaterialDesignTitleTextBlock}"
@@ -46,26 +34,29 @@
         </materialDesign:ColorZone>
 
         <TextBlock x:Name="LabelResultado"
-               Margin="40,150,40,0" 
+               Margin="40,230,40,0" 
                VerticalAlignment="Top" 
-                   Height="65" 
-                   FontSize="36" 
-                   TextAlignment="Center">
-            ¡Ejercicio exitoso! ¿Desea repetir el ejercicio?
+                   Height="66" 
+                   FontSize="30" 
+                   TextAlignment="Center"
+                   Text="¡Ejercicio exitoso! ¿Desea repetir el ejercicio?">
         </TextBlock>
         <Button x:Name="SiBtn" 
                 Content="Si" 
-                HorizontalAlignment="Left" 
-                Margin="40,402,0,40" 
+                HorizontalAlignment="Center" 
+                Margin="40,402,412,0" 
                 Width="340" 
                 Click="SiBtn_Click" 
-                Height="Auto" 
-                FontSize="36"/>
+                Height="150" 
+                FontSize="40" 
+                VerticalAlignment="Top"/>
         <Button x:Name="NoBtn" 
                 Content="No" 
-                Margin="0,0,40,40" 
+                Margin="392,402,40,0" 
                 Click="NoBtn_Click" 
                 Height="150" 
-                FontSize="36" HorizontalAlignment="Right" Width="360" VerticalAlignment="Bottom"/>
+                FontSize="40" 
+                HorizontalAlignment="Center" 
+                Width="360" VerticalAlignment="Top"/>
     </Grid>
 </Window>

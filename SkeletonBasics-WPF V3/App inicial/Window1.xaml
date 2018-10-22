@@ -45,9 +45,9 @@
         <materialDesign:PackIcon 
             Kind="AccountKey" 
             VerticalAlignment="Top" 
-            HorizontalAlignment="Left" 
+            HorizontalAlignment="Center" 
             Height="74" 
-            Margin="39,150,0,0" 
+            Margin="40,230,667,0" 
             Width="86"/>
         <TextBox x:Name="TokenTextBox" 
             materialDesign:HintAssist.Hint="Ingrese Token de Sesión"
@@ -55,27 +55,31 @@
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="130,150,267,0" 
+            Margin="130,230,266,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
-             FontSize="35" FontWeight="Bold"/>
+             FontSize="30" 
+                 FontWeight="Bold" 
+                 HorizontalAlignment="Center" 
+                 Width="396"/>
         <Button Name="ValidarTokenBtn"
             Content="Validar token" 
-            HorizontalAlignment="Right" 
-            Margin="0,150,33,0" 
+            HorizontalAlignment="Center" 
+            Margin="537,230,33,0" 
             VerticalAlignment="Top" 
             Width="222" 
             Click="Button_Click" 
             Height="74" 
-            FontSize="20"/>
+            FontSize="30"/>
         <Button x:Name="IniRehabBtn" 
             Content="Iniciar rehabilitación" 
             IsEnabled="False" 
             Click="IniRehabBtn_Click" 
-            Margin="40,0,33,40" 
-            VerticalAlignment="Bottom" 
-            Height="135" 
-            FontSize="48"/>
+            Margin="40,412,34,0" 
+            Height="150" 
+            FontSize="40" 
+                HorizontalAlignment="Center" 
+                Width="718" VerticalAlignment="Top"/>
         <Label x:Name="ErrorLabel" 
             Foreground="Red" 
             Content="" 
