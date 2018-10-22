@@ -12,7 +12,10 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" WindowStyle="None" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        FontFamily="{DynamicResource MaterialDesignFont}" 
+        WindowStyle="None" 
+        WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized">
     <Grid>
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
             <DockPanel>
@@ -71,18 +74,13 @@
             Click="IniRehabBtn_Click" 
             Margin="40,0,33,40" 
             VerticalAlignment="Bottom" 
-             Height="135" FontSize="48"/>
+            Height="135" 
+            FontSize="48"/>
         <Label x:Name="ErrorLabel" 
             Foreground="Red" 
             Content="" 
             HorizontalAlignment="Left" 
             Margin="40,386,0,0" 
             VerticalAlignment="Top" Width="227"/>
-        <Label Name="EstadoLbl"
-               Content="Ingrese el código del token creado en la App Mobile." 
-               HorizontalAlignment="Left" 
-               Margin="39,224,0,0" 
-               VerticalAlignment="Top" FontSize="18"
-               />
     </Grid>
 </Window>
