@@ -9,7 +9,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontSize="30"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
@@ -18,7 +18,78 @@
         WindowStartupLocation="CenterScreen" 
         WindowState="Maximized">
     <Grid>
-       
+        <!--Encabezado-->
+        <materialDesign:ColorZone Background="#FFF44336" Padding="32">
+            <DockPanel>
+                <Button 
+                    Name="CerrarBtn" 
+                    DockPanel.Dock="Right"
+                    Width="55"
+                    Height="45" 
+                    Padding="0" Click="CerrarBtn_Click">
+                    <materialDesign:PackIcon 
+                            Kind="ExitToApp"
+                            Width="55"
+                            Height="45" 
+                            Padding="0"/>
+                </Button>
+                <StackPanel>
+                    <TextBlock
+                        Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                        Foreground="#FFF" 
+                        TextAlignment="Center" 
+                        FontSize="40">
+                        Ataxia Visión
+                    </TextBlock>
+                </StackPanel>
+            </DockPanel>
+        </materialDesign:ColorZone>
+        <!--Cuerpo-->
+        <materialDesign:PackIcon 
+            Kind="AccountKey" 
+            VerticalAlignment="Top" 
+            HorizontalAlignment="Center" 
+            Height="74" 
+            Margin="40,200,667,0" 
+            Width="86"/>
+        <TextBox 
+            x:Name="TokenTextBox" 
+            materialDesign:HintAssist.Hint="Ingrese Token de Sesión" 
+            materialDesign:HintAssist.FloatingScale=".8" 
+            materialDesign:HintAssist.FloatingOffset="1,-30"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+            Height="74" 
+            Margin="130,200,266,0" 
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            FontSize="30" 
+            FontWeight="Bold" 
+            HorizontalAlignment="Center" 
+            Width="396"/>
+        <Button 
+            Name="ValidarTokenBtn"
+            Content="Validar token" 
+            HorizontalAlignment="Center" 
+            Margin="537,200,33,0" 
+            VerticalAlignment="Top" 
+            Width="222" 
+            Height="74" 
+            FontSize="30" Click="ValidarTokenBtn_Click"/>
+        <Button 
+            x:Name="IniRehabBtn" 
+            Content="Iniciar rehabilitación" 
+            IsEnabled="False" 
+            Margin="40,412,34,0" 
+            Height="150" 
+            FontSize="40" 
+            HorizontalAlignment="Center" 
+            Width="718" 
+            VerticalAlignment="Top" Click="IniRehabBtn_Click"/>
+        <!-- Snackbar -->
+        <materialDesign:Snackbar
+            x:Name="EstadoSnackbar"
+            Message="Test"
+            IsActive="False"/>
     </Grid>
 </Window>
 
