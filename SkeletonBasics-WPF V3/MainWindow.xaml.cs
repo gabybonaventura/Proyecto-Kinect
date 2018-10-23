@@ -479,7 +479,6 @@
             Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
             Console.WriteLine("cierra por acá");
             win.Show();
-            
         }
 
         
