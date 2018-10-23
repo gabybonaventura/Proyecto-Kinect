@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AtaxiaVision.Desktop.Pantallas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,19 +16,19 @@ using System.Windows.Shapes;
 namespace AtaxiaVision.Pantallas
 {
     /// <summary>
-    /// Interaction logic for Principal.xaml
+    /// Interaction logic for Confirmacion.xaml
     /// </summary>
-    public partial class Principal : Window
+    public partial class Confirmacion : Window
     {
-        public Principal(bool flagToken, string token, int nroEj)
+        public Confirmacion()
         {
             InitializeComponent();
         }
 
-        private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
+        private void NoBtn_Click(object sender, RoutedEventArgs e)
         {
-            Confirmacion win = new Confirmacion();
-            win.Show();
+            Inicio inicio = new Inicio();
+            inicio.Show();
             Close();
         }
     }

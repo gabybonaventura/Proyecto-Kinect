@@ -1,4 +1,5 @@
 ﻿using AtaxiaVision.Models;
+using AtaxiaVision.Pantallas;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 using System;
@@ -175,8 +176,8 @@ namespace AtaxiaVision.Desktop.Pantallas
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
         {
             // PREGUNTAR. Siempre manda numero de ejercicio 1.
-            //MainWindow win = new MainWindow(flagTokenValidado, token, 1);
-            //win.Show();
+            Principal win = new Principal(Model.TokenValido, Model.Token, 1);
+            win.Show();
             Close();
         }
     }

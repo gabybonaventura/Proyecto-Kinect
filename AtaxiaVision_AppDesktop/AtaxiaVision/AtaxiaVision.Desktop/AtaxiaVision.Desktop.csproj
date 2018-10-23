@@ -89,8 +89,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\InicioViewModel.cs" />
+    <Compile Include="Models\PrincipalViewModel.cs" />
+    <Compile Include="Pantallas\Confirmacion.xaml.cs">
+      <DependentUpon>Confirmacion.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pantallas\Inicio.xaml.cs">
       <DependentUpon>Inicio.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pantallas\Principal.xaml.cs">
+      <DependentUpon>Principal.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -122,7 +129,15 @@
     <Folder Include="Archivos\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Pantallas\Confirmacion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pantallas\Inicio.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pantallas\Principal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
