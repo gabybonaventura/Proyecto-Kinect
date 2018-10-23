@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AtaxiaVision.Desktop")]
+[assembly: AssemblyTitle("AtaxiaVision")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Oracle Public Cloud")]
-[assembly: AssemblyProduct("AtaxiaVision.Desktop")]
-[assembly: AssemblyCopyright("Copyright © Oracle Public Cloud 2018")]
+[assembly: AssemblyCompany("2k Team")]
+[assembly: AssemblyProduct("AtaxiaVision")]
+[assembly: AssemblyCopyright("Copyright © 2k Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
