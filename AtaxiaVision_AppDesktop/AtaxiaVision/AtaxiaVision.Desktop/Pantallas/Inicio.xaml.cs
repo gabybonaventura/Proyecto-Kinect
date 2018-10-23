@@ -1,4 +1,5 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using AtaxiaVision.Models;
+using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,13 +24,19 @@ namespace AtaxiaVision.Desktop.Pantallas
     /// </summary>
     public partial class Inicio : Window
     {
-        public string token;
-        private bool flagTokenValidado;
+        // PREGUNTAR. El flag de tokenValido no se usa nunca, si todo ya se hace al tocar click.
+        private InicioViewModel Model = new InicioViewModel();
 
         public Inicio()
         {
             InitializeComponent();
             SincronizarDatos();
+        }
+
+        public Inicio(string token, int nroEjercicio)
+        {
+            Model.Token = token;
+            Model.Ejercicio = nroEjercicio;
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -113,15 +120,15 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void ValidarTokenBtn_Click(object sender, RoutedEventArgs e)
         {
-            token = TokenTextBox.Text;
-            if (String.IsNullOrEmpty(token))
+            Model.Token = TokenTextBox.Text;
+            if (String.IsNullOrEmpty(Model.Token))
             {
                 EstadoSnackBar("Por favor ingrese un token");
                 return;
             }
 
             // PREGUNTAR. Guardar en archivo Configuracion.txt 
-            string url = "https://ataxia-services-project.herokuapp.com/token/" + token;
+            string url = "https://ataxia-services-project.herokuapp.com/token/" + Model.Token;
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
             var content = string.Empty;
@@ -148,7 +155,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                     if (isValid.Equals("True"))
                     {
                         EstadoSnackBar("Token válido");
-                        flagTokenValidado = true;
+                        Model.TokenValido = true;
                         IniRehabBtn.IsEnabled = true;
                     }
                     else
@@ -160,7 +167,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             catch
             {
                 EstadoSnackBar("No hay conexión");
-                flagTokenValidado = false;
+                Model.TokenValido = false;
                 IniRehabBtn.IsEnabled = true;
             }
         }

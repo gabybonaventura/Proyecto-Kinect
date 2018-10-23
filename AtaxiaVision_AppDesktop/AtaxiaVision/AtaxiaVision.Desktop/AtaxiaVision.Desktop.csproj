@@ -88,6 +88,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\InicioViewModel.cs" />
     <Compile Include="Pantallas\Inicio.xaml.cs">
       <DependentUpon>Inicio.xaml</DependentUpon>
     </Compile>
@@ -119,7 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Archivos\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Pantallas\Inicio.xaml">
