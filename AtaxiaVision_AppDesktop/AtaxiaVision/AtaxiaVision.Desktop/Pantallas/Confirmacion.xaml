@@ -33,6 +33,15 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
+        <Button x:Name="SiBtn" 
+                Content="Si" 
+                HorizontalAlignment="Center" 
+                Margin="40,402,412,0" 
+                Width="340" 
+                
+                Height="150" 
+                FontSize="40" 
+                VerticalAlignment="Top"/>
         <Button x:Name="NoBtn" 
                 Content="No" 
                 Margin="392,402,40,0" 
