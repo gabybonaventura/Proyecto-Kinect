@@ -286,7 +286,7 @@
 
                     colorReceived = true;
 
-                    System.Drawing.Bitmap bmp = Helper.ImageToBitmap(colorFrame);
+                    System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
                     Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
                     // Copy the pixel data from the image to a temporary array
 
@@ -294,7 +294,7 @@
 
                     Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
                     imageHSVDest.Erode(100);
-                    VectorOfVectorOfPoint vectorOfPoint = Helper.FindContours(imageHSVDest);
+                    VectorOfVectorOfPoint vectorOfPoint = EmguCVHelper.FindContours(imageHSVDest);
 
                     for (int i = 0; i < vectorOfPoint.Size; i++)
                     {

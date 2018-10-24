@@ -4,16 +4,13 @@ using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using Microsoft.Kinect;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
 {
-    public static class Helper
+    public static class EmguCVHelper
     {
         public static VectorOfVectorOfPoint FindContours(this Image<Gray, byte> image, ChainApproxMethod method = ChainApproxMethod.ChainApproxSimple,
 Emgu.CV.CvEnum.RetrType type = RetrType.List)
