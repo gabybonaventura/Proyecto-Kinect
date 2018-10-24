@@ -45,6 +45,16 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
+        <ProgressBar
+            Style="{StaticResource MaterialDesignCircularProgressBar}"
+            IsIndeterminate="True" 
+            Visibility="Hidden"
+            Name="ProgressBar" 
+            Height="54" 
+            Margin="10,306,10,0" 
+            Width="80" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"/>
         <materialDesign:PackIcon 
             Kind="AccountKey" 
             VerticalAlignment="Top" 
@@ -74,7 +84,8 @@
             VerticalAlignment="Top" 
             Width="222" 
             Height="74" 
-            FontSize="30" Click="ValidarTokenBtn_Click"/>
+            FontSize="30" 
+            Click="ValidarTokenBtn_Click"/>
         <Button 
             x:Name="IniRehabBtn" 
             Content="Iniciar rehabilitación" 
