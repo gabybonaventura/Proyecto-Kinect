@@ -1,15 +1,15 @@
-﻿<Window x:Class="Microsoft.Samples.Kinect.SkeletonBasics.App_inicial.Window1"
+﻿<Window x:Class="AtaxiaVision.Desktop.Pantallas.Inicio"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AtaxiaVision.Desktop.Pantallas"
         mc:Ignorable="d"
-        Title="Ataxia vision" Height="600" Width="800" 
-        Icon="/SkeletonBasics-WPF;component/Images/Logo-AV.ico"
+        Title="Ataxia Vision" Height="600" Width="800"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontSize="30"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
@@ -18,19 +18,20 @@
         WindowStartupLocation="CenterScreen" 
         WindowState="Maximized">
     <Grid>
+        <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
             <DockPanel>
-                <Button Name="ExitBtn"
+                <Button 
+                    Name="CerrarBtn" 
                     DockPanel.Dock="Right"
                     Width="55"
                     Height="45" 
-                    Padding="0" 
-                    Click="ExitBtn_Click">
+                    Padding="0" Click="CerrarBtn_Click">
                     <materialDesign:PackIcon 
-                        Kind="ExitToApp"
-                        Width="55"
-                        Height="45" 
-                        Padding="0"/>
+                            Kind="ExitToApp"
+                            Width="55"
+                            Height="45" 
+                            Padding="0"/>
                 </Button>
                 <StackPanel>
                     <TextBlock
@@ -43,49 +44,63 @@
                 </StackPanel>
             </DockPanel>
         </materialDesign:ColorZone>
+        <!--Cuerpo-->
+        <ProgressBar
+            Style="{StaticResource MaterialDesignCircularProgressBar}"
+            IsIndeterminate="True" 
+            Visibility="Hidden"
+            Name="ProgressBar" 
+            Height="54" 
+            Margin="10,306,10,0" 
+            Width="80" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"/>
         <materialDesign:PackIcon 
             Kind="AccountKey" 
             VerticalAlignment="Top" 
             HorizontalAlignment="Center" 
             Height="74" 
-            Margin="40,230,667,0" 
+            Margin="40,200,667,0" 
             Width="86"/>
-        <TextBox x:Name="TokenTextBox" 
-            materialDesign:HintAssist.Hint="Ingrese Token de Sesión"
+        <TextBox 
+            x:Name="TokenTextBox" 
+            materialDesign:HintAssist.Hint="Ingrese Token de Sesión" 
             materialDesign:HintAssist.FloatingScale=".8" 
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="130,230,266,0" 
+            Margin="130,200,266,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
-             FontSize="30" 
-                 FontWeight="Bold" 
-                 HorizontalAlignment="Center" 
-                 Width="396"/>
-        <Button Name="ValidarTokenBtn"
+            FontSize="30" 
+            FontWeight="Bold" 
+            HorizontalAlignment="Center" 
+            Width="396"/>
+        <Button 
+            Name="ValidarTokenBtn"
             Content="Validar token" 
             HorizontalAlignment="Center" 
-            Margin="537,230,33,0" 
+            Margin="537,200,33,0" 
             VerticalAlignment="Top" 
             Width="222" 
-            Click="Button_Click" 
             Height="74" 
-            FontSize="30"/>
-        <Button x:Name="IniRehabBtn" 
+            FontSize="30" 
+            Click="ValidarTokenBtn_Click"/>
+        <Button 
+            x:Name="IniRehabBtn" 
             Content="Iniciar rehabilitación" 
             IsEnabled="False" 
-            Click="IniRehabBtn_Click" 
             Margin="40,412,34,0" 
             Height="150" 
             FontSize="40" 
-                HorizontalAlignment="Center" 
-                Width="718" VerticalAlignment="Top"/>
-        <Label x:Name="ErrorLabel" 
-            Foreground="Red" 
-            Content="" 
-            HorizontalAlignment="Left" 
-            Margin="40,386,0,0" 
-            VerticalAlignment="Top" Width="227"/>
+            HorizontalAlignment="Center" 
+            Width="718" 
+            VerticalAlignment="Top" Click="IniRehabBtn_Click"/>
+        <!-- Snackbar -->
+        <materialDesign:Snackbar
+            x:Name="EstadoSnackbar"
+            Message="Test"
+            IsActive="False"/>
     </Grid>
 </Window>
+

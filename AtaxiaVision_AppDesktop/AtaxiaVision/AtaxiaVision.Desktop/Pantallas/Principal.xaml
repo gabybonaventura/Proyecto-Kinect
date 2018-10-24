@@ -1,0 +1,54 @@
+﻿<Window x:Class="AtaxiaVision.Pantallas.Principal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AtaxiaVision.Desktop.Pantallas"
+        mc:Ignorable="d"
+        Title="Ataxia Vision" Height="600" Width="800"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="30"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}" 
+        WindowStyle="None" 
+        WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized">
+    <Grid>
+        <!--Encabezado-->
+        <materialDesign:ColorZone Background="#FFF44336" Padding="32">
+            <DockPanel>
+                <Button 
+                    Name="FinEjercicioBtn" 
+                    DockPanel.Dock="Right"
+                    Width="55"
+                    Height="45" 
+                    Padding="0" Click="FinEjercicioBtn_Click" >
+                    <materialDesign:PackIcon 
+                            Kind="ExitRun"
+                            Width="55"
+                            Height="45" 
+                            Padding="0"/>
+                </Button>
+                <StackPanel>
+                    <TextBlock
+                        Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                        Foreground="#FFF" 
+                        TextAlignment="Center" 
+                        FontSize="40">
+                        Ejercicio de rehabilitacion
+                    </TextBlock>
+                </StackPanel>
+            </DockPanel>
+        </materialDesign:ColorZone>
+        <!--Cuerpo-->
+        <!-- Snackbar -->
+        <materialDesign:Snackbar
+            x:Name="EstadoSnackbar"
+            Message="Test"
+            IsActive="False"/>
+    </Grid>
+</Window>
