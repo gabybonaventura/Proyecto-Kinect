@@ -13,6 +13,7 @@
     using Microsoft.Kinect;
     using Helpers;
     using AtaxiaVision.Models;
+    using MaterialDesignThemes.Wpf;
 
     /// <summary>
     /// Interaction logic for Principal.xaml
@@ -112,6 +113,7 @@
         {
 
         }
+
         public Principal(bool flagToken = true, string token = "1", int nroEj = 1)
         { 
             WindowState = WindowState.Maximized;
@@ -136,6 +138,13 @@
                 Console.WriteLine(ex.Message);
                 return;
             }
+        }
+
+        private void EstadoSnackBar(string mensaje)
+        {
+            Snackbar.IsActive = false;
+            Snackbar.Message = new SnackbarMessage() { Content = mensaje };
+            Snackbar.IsActive = true;
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
@@ -200,7 +209,9 @@
 
             if (null == this.sensor)
             {
-                //this.statusBarText.Text = Properties.Resources.NoKinectReady;
+                Image.Source = new BitmapImage(
+                    new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
+                EstadoSnackBar("Kinect no lista.");
             }
 
             try
@@ -224,7 +235,6 @@
                 return;
             }
         }
-
 
         private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
@@ -410,6 +420,7 @@
         {
             ArduinoHelper.EscribirAngulosArduino(_serialPort, angulos);
         }
+
         private void CalcularButton_Click(object sender, RoutedEventArgs e)
         {
             this.CalcularAngulosFinales();
@@ -515,7 +526,6 @@
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
         }
         #endregion DibujarHuesos
-
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {

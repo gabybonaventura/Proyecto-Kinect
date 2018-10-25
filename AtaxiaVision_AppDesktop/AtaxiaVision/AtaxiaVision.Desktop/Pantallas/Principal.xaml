@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AtaxiaVision.Desktop.Pantallas"
         mc:Ignorable="d"
-        Title="Ataxia Vision" Height="1000" Width="1000"
+        Title="Ataxia Vision" Height="768" Width="1366"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -46,13 +46,39 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
-        <Image x:Name="Image" HorizontalAlignment="Left" Margin="10,158,0,47.6"/>
-        <Button x:Name="ConfirmacionButton" HorizontalAlignment="Right"  Height="100" Width="200" IsEnabled="False" Click="ConfirmacionButton_Click" Content="Confirmar" Margin="0,100,50,200"/>
-        <Button x:Name="CalcularButton" HorizontalAlignment="Right"   Width="200" Height="100" Click="CalcularButton_Click" Content="Calcular Angulos" Margin="0,500,50,200"/>
+        <Image 
+            x:Name="Image" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="147,250,205,0" 
+            Width="640" 
+            Height="480" 
+            Source="/AtaxiaVision;component/Imagenes/KinectAV.png"/>
+        <Button 
+            x:Name="ConfirmacionButton" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Height="100" 
+            Width="301" 
+            IsEnabled="False" 
+            Click="ConfirmacionButton_Click" 
+            Content="Confirmar" 
+            FontSize="30"
+            Margin="486,130,205,0"/>
+        <Button 
+            x:Name="CalcularButton" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Width="300" 
+            Height="100" 
+            FontSize="30"
+            Click="CalcularButton_Click"
+            Content="Calcular Angulos" 
+            Margin="147,130,545,0"/>
 
         <!-- Snackbar -->
         <materialDesign:Snackbar
-            x:Name="EstadoSnackbar"
+            x:Name="Snackbar"
             Message="Test"
             IsActive="False"/>
     </Grid>

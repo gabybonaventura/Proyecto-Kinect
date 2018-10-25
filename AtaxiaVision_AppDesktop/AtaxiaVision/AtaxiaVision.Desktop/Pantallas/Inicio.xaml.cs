@@ -31,7 +31,7 @@ namespace AtaxiaVision.Desktop.Pantallas
         // PREGUNTAR. El flag de tokenValido no se usa nunca, si todo ya se hace al tocar click.
         private InicioViewModel Model = new InicioViewModel();
 
-        // Delegates
+        // Delegates (son como punteros de C, sirven para que entre hilos asincronicos puedan acceder a los componentes de la vista)
         public delegate void SnackBarDelegate(string msg);
         public SnackBarDelegate snackBarDelegate;
         public delegate void ProgressBarDelegate(Visibility visibility);
@@ -42,16 +42,11 @@ namespace AtaxiaVision.Desktop.Pantallas
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker(); 
 
+        // PREGUNTAR. Sirve de algo este constructor? En la pantalla de confirmacion, al poner que no, le mandamos esta info o mejor nada?
         public Inicio()
         {
             InitializeComponent();
             SincronizarDatos();
-        }
-
-        public Inicio(string token, int nroEjercicio)
-        {
-            Model.Token = token;
-            Model.Ejercicio = nroEjercicio;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -159,7 +154,5 @@ namespace AtaxiaVision.Desktop.Pantallas
                 ValidarToken();
             }
         }
-
-        
     }
 }
