@@ -26,7 +26,8 @@
                     DockPanel.Dock="Right"
                     Width="55"
                     Height="45" 
-                    Padding="0" Click="CerrarBtn_Click">
+                    Padding="0" 
+                    Click="CerrarBtn_Click">
                     <materialDesign:PackIcon 
                             Kind="ExitToApp"
                             Width="55"
@@ -38,7 +39,8 @@
                         Style="{DynamicResource MaterialDesignTitleTextBlock}"
                         Foreground="#FFF" 
                         TextAlignment="Center" 
-                        FontSize="40">
+                        FontSize="40" 
+                        Margin="55,0,0,0">
                         Ataxia Visión
                     </TextBlock>
                 </StackPanel>
@@ -50,8 +52,8 @@
             IsIndeterminate="True" 
             Visibility="Hidden"
             Name="ProgressBar" 
-            Height="54" 
-            Margin="10,306,10,0" 
+            Height="80" 
+            Margin="468,360,468,0" 
             Width="80" 
             VerticalAlignment="Top"
             HorizontalAlignment="Center"/>
@@ -60,27 +62,27 @@
             VerticalAlignment="Top" 
             HorizontalAlignment="Center" 
             Height="74" 
-            Margin="40,200,667,0" 
+            Margin="188,246,742,0" 
             Width="86"/>
         <TextBox 
             x:Name="TokenTextBox" 
-            materialDesign:HintAssist.Hint="Ingrese Token de Sesión" 
+            materialDesign:HintAssist.Hint="Token de Sesión" 
             materialDesign:HintAssist.FloatingScale=".8" 
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="130,200,266,0" 
+            Margin="279,246,426,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             FontSize="30" 
             FontWeight="Bold" 
             HorizontalAlignment="Center" 
-            Width="396" KeyDown="TokenTextBox_KeyDown"/>
+            Width="300" KeyDown="TokenTextBox_KeyDown"/>
         <Button 
             Name="ValidarTokenBtn"
             Content="Validar token" 
             HorizontalAlignment="Center" 
-            Margin="537,200,33,0" 
+            Margin="606,246,188,0" 
             VerticalAlignment="Top" 
             Width="222" 
             Height="74" 
@@ -90,11 +92,11 @@
             x:Name="IniRehabBtn" 
             Content="Iniciar rehabilitación" 
             IsEnabled="False" 
-            Margin="40,412,34,0" 
+            Margin="188,470,188,0" 
             Height="150" 
             FontSize="40" 
             HorizontalAlignment="Center" 
-            Width="718" 
+            Width="640" 
             VerticalAlignment="Top" Click="IniRehabBtn_Click"/>
         <!-- Snackbar -->
         <materialDesign:Snackbar

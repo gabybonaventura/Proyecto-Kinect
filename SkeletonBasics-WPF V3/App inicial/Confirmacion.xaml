@@ -33,13 +33,14 @@
             </DockPanel>
         </materialDesign:ColorZone>
 
-        <TextBlock x:Name="LabelResultado"
-               Margin="40,230,40,0" 
-               VerticalAlignment="Top" 
-                   Height="66" 
-                   FontSize="30" 
-                   TextAlignment="Center"
-                   Text="¡Ejercicio exitoso! ¿Desea repetir el ejercicio?">
+        <TextBlock 
+            x:Name="LabelResultado"
+            Margin="40,230,40,0" 
+            VerticalAlignment="Top" 
+            Height="66" 
+            FontSize="30" 
+            TextAlignment="Center"
+            Text="¡Ejercicio exitoso! ¿Desea repetir el ejercicio?">
         </TextBlock>
         <Button x:Name="SiBtn" 
                 Content="Si" 

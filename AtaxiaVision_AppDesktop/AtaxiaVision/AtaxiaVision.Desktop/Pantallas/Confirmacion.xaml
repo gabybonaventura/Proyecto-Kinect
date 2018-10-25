@@ -33,23 +33,35 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
-        <Button x:Name="SiBtn" 
-                Content="Si" 
-                HorizontalAlignment="Center" 
-                Margin="40,402,412,0" 
-                Width="340" 
-                
-                Height="150" 
-                FontSize="40" 
-                VerticalAlignment="Top"/>
-        <Button x:Name="NoBtn" 
-                Content="No" 
-                Margin="392,402,40,0" 
-                Click="NoBtn_Click" 
-                Height="150" 
-                FontSize="40" 
-                HorizontalAlignment="Center" 
-                Width="360" 
-                VerticalAlignment="Top"/>
+        <Label 
+            x:Name="PreguntaLabel"
+            Content="Pregunta" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,250,0,0" 
+            FontSize="40"
+            />
+        <Button 
+            x:Name="SiBtn" 
+            Content="Sí" 
+            HorizontalAlignment="Center" 
+            Margin="188,470,528,0" 
+            Width="300" 
+            Height="150" 
+            FontSize="40" 
+            VerticalAlignment="Top" 
+            Background="#FF4CAF50" BorderBrush="#FF4CAF50"
+            />
+        <Button 
+            x:Name="NoBtn" 
+            Content="No" 
+            Margin="528,470,188,0" 
+            Click="NoBtn_Click" 
+            Height="150" 
+            FontSize="40" 
+            HorizontalAlignment="Center" 
+            Width="300" 
+            VerticalAlignment="Top"/>
+        
     </Grid>
 </Window>
