@@ -30,6 +30,14 @@ namespace AtaxiaVision.Desktop.Pantallas
         // PREGUNTAR. El flag de tokenValido no se usa nunca, si todo ya se hace al tocar click.
         private InicioViewModel Model = new InicioViewModel();
 
+        // Delegates
+        public delegate void SnackBarDelegate(string msg);
+        public SnackBarDelegate snackBarDelegate;
+        public delegate void ProgressBarDelegate(Visibility visibility);
+        public ProgressBarDelegate progressBarDelegate;
+        public delegate void IniRehabBtnDelegate(bool state);
+        public IniRehabBtnDelegate iniRehabBtnDelegate;
+
         public Inicio()
         {
             InitializeComponent();
@@ -47,6 +55,16 @@ namespace AtaxiaVision.Desktop.Pantallas
             EstadoSnackbar.IsActive = false;
             EstadoSnackbar.Message = new SnackbarMessage() { Content = mensaje };
             EstadoSnackbar.IsActive = true;
+        }
+
+        private void EstadoProgressBar(Visibility visibility)
+        {
+            ProgressBar.Visibility = visibility;
+        }
+
+        private void EstadoIniciarRehabilitacion(bool state)
+        {
+            IniRehabBtn.IsEnabled = state;
         }
 
         private void SincronizarDatos()
@@ -77,8 +95,6 @@ namespace AtaxiaVision.Desktop.Pantallas
             win.Show();
             Close();
         }
-
-
 
         private void ValidarToken()
         {
@@ -114,6 +130,13 @@ namespace AtaxiaVision.Desktop.Pantallas
             {
                 ValidarToken();
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
+            progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
+            iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
         }
     }
 }

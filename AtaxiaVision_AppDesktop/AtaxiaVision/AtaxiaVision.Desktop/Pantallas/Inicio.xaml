@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized">
+        WindowState="Maximized" Loaded="Window_Loaded">
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
