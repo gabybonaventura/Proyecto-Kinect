@@ -119,6 +119,7 @@
     <Compile Include="Helpers\ArduinoHelper.cs" />
     <Compile Include="Helpers\DistanceHelper.cs" />
     <Compile Include="Helpers\EmguCVHelper.cs" />
+    <Compile Include="Helpers\ServerHelper.cs" />
     <Compile Include="Models\InicioViewModel.cs" />
     <Compile Include="Models\PrincipalViewModel.cs" />
     <Compile Include="Pantallas\Confirmacion.xaml.cs">
