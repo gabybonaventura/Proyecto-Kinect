@@ -128,7 +128,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             {
                 // Muestro la barra de cargando
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
-                Thread.Sleep(5000);
+                // Thread.Sleep(5000); // Es solo para ver como queda la animacion este sleep.
                 // Valido el token
                 int result = ServerHelper.ValidarToken(Model.Token);
                 // Muestro el Snackbar
