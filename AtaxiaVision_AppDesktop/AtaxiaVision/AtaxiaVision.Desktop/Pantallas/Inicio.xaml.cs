@@ -67,56 +67,7 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void ValidarTokenBtn_Click(object sender, RoutedEventArgs e)
         {
-            Model.Token = TokenTextBox.Text;
-            if (String.IsNullOrEmpty(Model.Token))
-            {
-                EstadoSnackBar("Por favor ingrese un token");
-                return;
-            }
-
-            // PREGUNTAR. Guardar en archivo Configuracion.txt 
-            string url = "https://ataxia-services-project.herokuapp.com/token/" + Model.Token;
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            var content = string.Empty;
-
-            try
-            {
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        using (var sr = new StreamReader(stream))
-                        {
-                            content = sr.ReadToEnd();
-                        }
-                    }
-                }
-                var rta = JsonConvert.DeserializeObject<dynamic>(content);
-                string status_code = rta.head.status_code;
-
-                //Console.WriteLine(rta.head.status_code);
-                if (status_code.Equals("200"))
-                {
-                    string isValid = rta.data.isValid;
-                    if (isValid.Equals("True"))
-                    {
-                        EstadoSnackBar("Token válido");
-                        Model.TokenValido = true;
-                        IniRehabBtn.IsEnabled = true;
-                    }
-                    else
-                    {
-                        EstadoSnackBar("Token inválido");
-                    }
-                }
-            }
-            catch
-            {
-                EstadoSnackBar("No hay conexión");
-                Model.TokenValido = false;
-                IniRehabBtn.IsEnabled = true;
-            }
+            ValidarToken();
         }
 
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
@@ -125,6 +76,44 @@ namespace AtaxiaVision.Desktop.Pantallas
             Principal win = new Principal(Model.TokenValido, Model.Token, 1);
             win.Show();
             Close();
+        }
+
+
+
+        private void ValidarToken()
+        {
+            Model.Token = TokenTextBox.Text;
+            if (String.IsNullOrEmpty(Model.Token))
+            {
+                EstadoSnackBar("Por favor ingrese un token");
+                return;
+            }
+
+            int result = ServerHelper.ValidarToken(Model.Token);
+            switch (result)
+            {
+                case ServerHelper.SIN_CONEXION:
+                    EstadoSnackBar("No hay conexión a internet para validar el token.");
+                    break;
+                case ServerHelper.TOKEN_INVALIDO:
+                    EstadoSnackBar("Token Inválido.");
+                    break;
+                case ServerHelper.TOKEN_VALIDO:
+                    EstadoSnackBar("Token Válido.");
+                    Model.TokenValido = true;
+                    IniRehabBtn.IsEnabled = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void TokenTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ValidarToken();
+            }
         }
     }
 }
