@@ -5,6 +5,7 @@ using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -38,6 +39,9 @@ namespace AtaxiaVision.Desktop.Pantallas
         public delegate void IniRehabBtnDelegate(bool state);
         public IniRehabBtnDelegate iniRehabBtnDelegate;
 
+        // Backgruond Worker
+        private BackgroundWorker backgroundWorker = new BackgroundWorker(); 
+
         public Inicio()
         {
             InitializeComponent();
@@ -50,11 +54,19 @@ namespace AtaxiaVision.Desktop.Pantallas
             Model.Ejercicio = nroEjercicio;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
+            progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
+            iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
+            ValidarTokenBackGruondWorker();
+        }
+
         private void EstadoSnackBar(string mensaje)
         {
-            EstadoSnackbar.IsActive = false;
-            EstadoSnackbar.Message = new SnackbarMessage() { Content = mensaje };
-            EstadoSnackbar.IsActive = true;
+            Snackbar.IsActive = false;
+            Snackbar.Message = new SnackbarMessage() { Content = mensaje };
+            Snackbar.IsActive = true;
         }
 
         private void EstadoProgressBar(Visibility visibility)
@@ -105,23 +117,39 @@ namespace AtaxiaVision.Desktop.Pantallas
                 return;
             }
 
-            int result = ServerHelper.ValidarToken(Model.Token);
-            switch (result)
+            if(!backgroundWorker.IsBusy)
+                backgroundWorker.RunWorkerAsync();
+        }
+
+        // Se agrega esta funcion para asignar el trabajo una sola vez, y despues dentro de "ValidarToken()" solo se llama a la misma.
+        private void ValidarTokenBackGruondWorker()
+        {
+            backgroundWorker.DoWork += (s, e) =>
             {
-                case ServerHelper.SIN_CONEXION:
-                    EstadoSnackBar("No hay conexión a internet para validar el token.");
-                    break;
-                case ServerHelper.TOKEN_INVALIDO:
-                    EstadoSnackBar("Token Inválido.");
-                    break;
-                case ServerHelper.TOKEN_VALIDO:
-                    EstadoSnackBar("Token Válido.");
-                    Model.TokenValido = true;
-                    IniRehabBtn.IsEnabled = true;
-                    break;
-                default:
-                    break;
-            }
+                // Muestro la barra de cargando
+                ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
+                Thread.Sleep(5000);
+                // Valido el token
+                int result = ServerHelper.ValidarToken(Model.Token);
+                // Muestro el Snackbar
+                switch (result)
+                {
+                    case ServerHelper.SIN_CONEXION:
+                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para validar el token.");
+                        break;
+                    case ServerHelper.TOKEN_INVALIDO:
+                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Inválido.");
+                        break;
+                    case ServerHelper.TOKEN_VALIDO:
+                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
+                        Model.TokenValido = true;
+                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
+                        break;
+                    default:
+                        break;
+                }
+                ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
+            };
         }
 
         private void TokenTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -132,11 +160,6 @@ namespace AtaxiaVision.Desktop.Pantallas
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
-            progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
-            iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
-        }
+        
     }
 }

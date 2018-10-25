@@ -98,7 +98,7 @@
             VerticalAlignment="Top" Click="IniRehabBtn_Click"/>
         <!-- Snackbar -->
         <materialDesign:Snackbar
-            x:Name="EstadoSnackbar"
+            x:Name="Snackbar"
             Message="Test"
             IsActive="False"/>
     </Grid>
