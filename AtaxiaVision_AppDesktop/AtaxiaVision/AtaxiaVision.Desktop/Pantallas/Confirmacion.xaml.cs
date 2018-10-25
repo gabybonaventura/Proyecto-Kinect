@@ -1,4 +1,5 @@
 ﻿using AtaxiaVision.Desktop.Pantallas;
+using AtaxiaVision.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,12 @@ namespace AtaxiaVision.Pantallas
         {
             InitializeComponent();
         }
+
+        public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token, int nroEj)
+        {
+           
+        }
+
 
         private void NoBtn_Click(object sender, RoutedEventArgs e)
         {

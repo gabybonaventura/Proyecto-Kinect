@@ -20,7 +20,6 @@
         #region Properties
 
 
-        Rect rect;
         private const float RenderWidth = 640.0f;
 
         private const float RenderHeight = 480.0f;
@@ -84,8 +83,6 @@
         Joint CodoDerecho;
         Joint HombroDerecho;
 
-        int contadorAuxiliarDepthFrame = 0;
-
         Hsv lowerLimit = new Hsv(40, 100, 100);
         Hsv upperLimit = new Hsv(80, 255, 255);
 
@@ -93,8 +90,6 @@
 
         // Intermediate storage for the depth data received from the sensor
         private DepthImagePixel[] depthPixels;
-        // Intermediate storage for the color data received from the camera
-        //private byte[] colorPixels;
         // Intermediate storage for the depth to color mapping
         private ColorImagePoint[] colorCoordinates;
         private int depthWidth;
@@ -106,8 +101,6 @@
         private const DepthImageFormat DepthFormat = DepthImageFormat.Resolution640x480Fps30;
         // Format we will use for the color stream
         private const ColorImageFormat ColorFormat = ColorImageFormat.RgbResolution640x480Fps30;
-
-
 
         //------------------------------------//
 
@@ -238,6 +231,7 @@
             
             bool depthReceived = false;
             bool colorReceived = false;
+
             using (DepthImageFrame framesDistancia = e.OpenDepthImageFrame())
             {
                 if (framesDistancia == null) return;
@@ -254,25 +248,6 @@
                     colorImagenDistancia = new byte[framesDistancia.PixelDataLength * 4];
 
                 framesDistancia.CopyPixelDataTo(datosDistancia);
-
-                // Calculo la posicion del vector Depth Frame obteniendo la posicion donde esta
-                // Alojada la profundidad del objeto.
-                //if (ObjetoX > 0 && ObjetoY > 0)
-                //{
-                //    int posicionDelObjetoEnVector = Convert.ToInt32(640 * ObjetoY + ObjetoX - 1);
-                //    ObjetoZ = datosDistancia[posicionDelObjetoEnVector] >> 3;
-                //    if (contadorAuxiliarDepthFrame == 100)
-                //    {
-                //        Console.WriteLine($"Z del objeto: {ObjetoZ}");
-                //        contadorAuxiliarDepthFrame = 0;
-                //    }
-                //    else
-                //        contadorAuxiliarDepthFrame++;
-                //}
-                //Console.WriteLine($"Z del objeto: {ObjetoZ}");
-                //Console.WriteLine($"Z del objeto SKEL: {skelObjeto.Z}");
-
-
             }
 
             using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
@@ -280,22 +255,19 @@
 
                 if (colorFrame != null)
                 {
-
-                    // Copy the pixel data from the image to a temporary array
                     colorFrame.CopyPixelDataTo(this.colorPixels);
 
                     colorReceived = true;
 
                     System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
                     Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
-                    // Copy the pixel data from the image to a temporary array
 
                     Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
 
                     Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
                     imageHSVDest.Erode(100);
                     VectorOfVectorOfPoint vectorOfPoint = EmguCVHelper.FindContours(imageHSVDest);
-
+                    
                     for (int i = 0; i < vectorOfPoint.Size; i++)
                     {
                         var contour = vectorOfPoint[i];
@@ -305,7 +277,6 @@
                             System.Drawing.Rectangle rec = CvInvoke.BoundingRectangle(contour);
                             Point p1 = new Point(rec.X, rec.Y);
                             Point p2 = new Point(rec.X + rec.Width, rec.Y + rec.Height);
-                            rect = new Rect(p1, p2);
                             ObjetoX = (p1.X + p2.X) / 2;
                             ObjetoY = (p1.Y + p2.Y) / 2;
 
@@ -324,12 +295,9 @@
 
                                 ObjetoZ = datosDistancia[depthIndex] >> 3;
 
-
-                                // scale color coordinates to depth resolution
                                 int X = (int)ObjetoX / this.colorToDepthDivisor;
                                 int Y = (int)ObjetoY / this.colorToDepthDivisor;
 
-                                // depthPixel is the depth for the (X,Y) pixel in the color frame
                             }
 
 
@@ -351,8 +319,6 @@
                         this.colorPixels,
                         this.colorBitmap.PixelWidth * sizeof(int),
                         0);
-                    
-
                 }
             }
 
@@ -374,8 +340,6 @@
                 {
                     foreach (Skeleton skel in skeletons)
                     {
-                        RenderClippedEdges(skel, dc);
-
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
@@ -398,10 +362,8 @@
                             if (flagObjeto && !flagSkeleton)
                                 CalcularAngulosFinales();
 
-
                             //Console.WriteLine($"Mano X Y Z {handRight.Position.X} {handRight.Position.Y} {handRight.Position.Z}");
                             //Console.WriteLine($"Objeto X Y Z {skelObjeto.X} {skelObjeto.Y} {skelObjeto.Z}");
-
 
                             if (DistanceHelper.ObtenerDistancia(ManoDerecha, skelObjeto) < 0.1)
                             {
@@ -416,42 +378,6 @@
 
                 // prevent drawing outside of our render area
                 this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
-            }
-        }
-
-        private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
-        {
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
-            {
-
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, RenderHeight - ClipBoundsThickness, RenderWidth, ClipBoundsThickness));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Top))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, RenderWidth, ClipBoundsThickness));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Left))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, ClipBoundsThickness, RenderHeight));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Right))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(RenderWidth - ClipBoundsThickness, 0, ClipBoundsThickness, RenderHeight));
             }
         }
 
@@ -479,7 +405,49 @@
             win.Show();
         }
 
-        
+        private void ConfirmacionButton_Click(object sender, RoutedEventArgs e)
+        {
+            ArduinoHelper.EscribirAngulosArduino(_serialPort, angulos);
+        }
+        private void CalcularButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.CalcularAngulosFinales();
+        }
+
+        public void CalcularAngulosFinales()
+        {
+            angulos = AngleHelper.SetValorAngulos(HombroDerecho,
+            ManoDerecha, CodoDerecho, skelObjeto);
+            if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
+            {
+                //Console.WriteLine("no se puede alcanzar el objeto");
+                /*dc.DrawText(
+                new FormattedText("No se puede alcanzar el objeto",
+                            CultureInfo.GetCultureInfo("en-us"),
+                            FlowDirection.LeftToRight,
+                            new Typeface("Verdana"),
+                            25, System.Windows.Media.Brushes.Red),
+                            new Point(0,0));*/
+                flagSkeleton = false;
+            }
+            else
+            {
+                flagSkeleton = true;
+                //si se puede alcanzar el objeto,
+                try
+                {
+                    this.ConfirmacionButton.IsEnabled = true;
+                    this.MensajesLabel.Content = "Angulos calculados";
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Excepcion en escribir el angulo en arduino");
+                }
+            } 
+        }
+
+        #region DibujarHuesos
+
         private void DrawBonesAndJoints(Skeleton skeleton, DrawingContext drawingContext)
         {
             // Render Torso
@@ -522,58 +490,9 @@
 
         private Point SkeletonPointToScreen(SkeletonPoint skelpoint)
         {
-            // Convert point to depth space.  
-            // We are not using depth directly, but we do want the points in our 640x480 output resolution.
             DepthImagePoint depthPoint = this.sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(skelpoint, DepthImageFormat.Resolution640x480Fps30);
             return new Point(depthPoint.X, depthPoint.Y);
         }
-
-        private void ConfirmacionButton_Click(object sender, RoutedEventArgs e)
-        {
-            ArduinoHelper.EscribirAngulosArduino(_serialPort, angulos);
-
-        }
-        private void CalcularButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.CalcularAngulosFinales();
-        }
-
-        public void CalcularAngulosFinales()
-        {
-            
-            angulos = AngleHelper.SetValorAngulos(HombroDerecho,
-            ManoDerecha, CodoDerecho, skelObjeto);
-            if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
-            {
-                //Console.WriteLine("no se puede alcanzar el objeto");
-                /*dc.DrawText(
-                new FormattedText("No se puede alcanzar el objeto",
-                            CultureInfo.GetCultureInfo("en-us"),
-                            FlowDirection.LeftToRight,
-                            new Typeface("Verdana"),
-                            25, System.Windows.Media.Brushes.Red),
-                            new Point(0,0));*/
-                flagSkeleton = false;
-            }
-            else
-            {
-                flagSkeleton = true;
-                //si se puede alcanzar el objeto,
-                try
-                {
-                    this.ConfirmacionButton.IsEnabled = true;
-                    this.MensajesLabel.Content = "Angulos calculados";
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Excepcion en escribir el angulo en arduino");
-                }
-            }
-            
-        }
-
-
-
         private void DrawBone(Skeleton skeleton, DrawingContext drawingContext, JointType jointType0, JointType jointType1)
         {
             Joint joint0 = skeleton.Joints[jointType0];
@@ -602,6 +521,6 @@
 
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
         }
-
+#endregion DibujarHuesos
     }
 }

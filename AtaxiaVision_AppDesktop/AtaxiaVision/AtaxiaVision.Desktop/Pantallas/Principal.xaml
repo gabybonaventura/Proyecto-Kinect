@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AtaxiaVision.Desktop.Pantallas"
         mc:Ignorable="d"
-        Title="Ataxia Vision" Height="600" Width="800"
+        Title="Ataxia Vision" Height="1000" Width="1000"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -16,7 +16,8 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized">
+        WindowState="Maximized"
+        Loaded="WindowLoaded">
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
@@ -45,6 +46,7 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
+        <Image x:Name="Image" Margin="0,117,-0.4,-0.4"/>
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="EstadoSnackbar"
