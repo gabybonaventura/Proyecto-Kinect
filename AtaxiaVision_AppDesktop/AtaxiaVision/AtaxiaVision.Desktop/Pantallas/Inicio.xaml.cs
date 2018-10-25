@@ -1,4 +1,5 @@
-﻿using AtaxiaVision.Models;
+﻿using AtaxiaVision.Helpers;
+using AtaxiaVision.Models;
 using AtaxiaVision.Pantallas;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
@@ -50,69 +51,13 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void SincronizarDatos()
         {
-            EstadoSnackBar("Sincronizando Datos...");
-            //reviso que el archivo exista.
-            // PREGUNTAR. Se puede guardar la ruta en un archivo de Configuracion?
-            if (File.Exists(@"\Archivos\ArchivoSinc.txt"))
+            if (ServerHelper.ExisteDatosOffline())
             {
-                // PREGUNTAR. Se puede hacer con la serializacion?
-                string jsonAux = "{\"ejercicios\":[";
-                //si existe, leo todos los datos para sincronizar:
-                string[] lines = System.IO.File.ReadAllLines(@"\Archivos\ArchivoSinc.txt");
-
-                //genero el json para enviar todos los datos:
-                foreach (string line in lines)
-                {
-                    jsonAux += line + ",";
-                    // Use a tab to indent each line of the file.
-                    Console.WriteLine("\t" + line);
-                }
-                jsonAux = jsonAux + "]}";
-
-                //lo envío:
-                string url = "https://ataxia-services-project.herokuapp.com/token/";
-                var request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-
-                try
-                {
-                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                    {
-                        streamWriter.Write(jsonAux);
-                        streamWriter.Flush();
-                        streamWriter.Close();
-                    }
-
-                    var httpResponse = (HttpWebResponse)request.GetResponse();
-                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                    {
-                        // PREGUNTAR. Para que se asigna la variable si nunca se usa?
-                        var result = streamReader.ReadToEnd();
-                        //revisar que dice result. Si envia ok o no ok.
-                        // PREGUNTAR. Por que esta condicion?
-                        if (1 == 1)
-                        {
-                            File.Delete(@"\Archivos\ArchivoSinc.txt");
-                        }
-                        else
-                        {
-                            MessageBox.Show("No se ha podido sincronizar los datos.", "Error sincronización");
-                        }
-                    }
-                    //si todo salió ok, elimino el archivo.
-                    EstadoSnackBar("Datos sincronizados");
-                }
-                catch (Exception)
-                {
-                    EstadoSnackBar("Error al sincronizar");
-                    MessageBox.Show("No se ha podido sincronizar los datos pendientes.", "Error sincronización");
-                }
+                if(ServerHelper.SincronizarDatosOffline())
+                    EstadoSnackBar("Datos sincronizados.");
+                else
+                    EstadoSnackBar("Error al sincronizar.");
             }
-            else
-            {
-                EstadoSnackBar("Sincronizacion finalizada");
-            }   
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
