@@ -108,6 +108,10 @@
 
         #endregion Properties
 
+        public Principal()
+        {
+
+        }
         public Principal(bool flagToken = true, string token = "1", int nroEj = 1)
         { 
             WindowState = WindowState.Maximized;
@@ -134,7 +138,6 @@
             }
         }
 
-        
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             // Create the drawing group we'll use for drawing
@@ -418,14 +421,6 @@
             ManoDerecha, CodoDerecho, skelObjeto);
             if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
             {
-                //Console.WriteLine("no se puede alcanzar el objeto");
-                /*dc.DrawText(
-                new FormattedText("No se puede alcanzar el objeto",
-                            CultureInfo.GetCultureInfo("en-us"),
-                            FlowDirection.LeftToRight,
-                            new Typeface("Verdana"),
-                            25, System.Windows.Media.Brushes.Red),
-                            new Point(0,0));*/
                 flagSkeleton = false;
             }
             else
@@ -434,7 +429,7 @@
                 //si se puede alcanzar el objeto,
                 try
                 {
-                    //this.ConfirmacionButton.IsEnabled = true;
+                    this.ConfirmacionButton.IsEnabled = true;
                     //this.MensajesLabel.Content = "Angulos calculados";
                 }
                 catch (Exception)

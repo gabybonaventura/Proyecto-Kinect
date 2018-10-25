@@ -46,7 +46,10 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
-        <Image x:Name="Image" Margin="0,117,-0.4,-0.4"/>
+        <Image x:Name="Image" HorizontalAlignment="Left" Margin="10,158,0,47.6"/>
+        <Button x:Name="ConfirmacionButton" HorizontalAlignment="Right"  Height="100" Width="200" IsEnabled="False" Click="ConfirmacionButton_Click" Content="Confirmar" Margin="0,100,50,200"/>
+        <Button x:Name="CalcularButton" HorizontalAlignment="Right"   Width="200" Height="100" Click="CalcularButton_Click" Content="Calcular Angulos" Margin="0,500,50,200"/>
+
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="EstadoSnackbar"
