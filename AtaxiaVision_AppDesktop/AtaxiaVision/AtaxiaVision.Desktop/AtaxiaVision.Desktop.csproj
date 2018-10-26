@@ -115,6 +115,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archivos\Configuracion.cs" />
     <Compile Include="Helpers\AngleHelper.cs" />
     <Compile Include="Helpers\ArduinoHelper.cs" />
     <Compile Include="Helpers\DistanceHelper.cs" />
@@ -159,9 +160,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Archivos\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="Pantallas\Confirmacion.xaml">
       <SubType>Designer</SubType>
