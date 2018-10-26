@@ -116,13 +116,13 @@
 
         }
 
-        public Principal(EjercicioViewModel ejercicio)
+        // FALTA NUMERO EJERCICIO
+        public Principal(SesionViewModel sesion)
         { 
-            flagTokenValidado = ejercicio.TokenValido;
-            this.valorToken = ejercicio.Token;
+            flagTokenValidado = sesion.TokenValido;
+            this.valorToken = sesion.Token;
             desvios = new List<Angulos>();
-            nro_ejercicio = ejercicio.Ejercicio;
-            nro_ejercicio++;
+            //nro_ejercicio = sesion.Ejercicio;
             InitializeComponent();
 
             try

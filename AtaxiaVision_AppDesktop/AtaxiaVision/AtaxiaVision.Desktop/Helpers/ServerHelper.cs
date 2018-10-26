@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AtaxiaVision.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,31 +18,39 @@ namespace AtaxiaVision.Helpers
         public const int TOKEN_VALIDO = 1;
         public const int TOKEN_INVALIDO = 0;
 
-        public static bool ExisteDatosOffline()
+        public static bool ExisteArchivoDatosOffile()
         {
             return File.Exists(archivoDatosOffile);
         }
 
-        private static string SerializarArchivoOffline()
+        public static string LeerArchivoDatosOffile()
         {
-            // PREGUNTAR. Se puede hacer con la serializacion? -- Mirar codigo de Confirmacion
-            string jsonAux = "{\"ejercicios\":[";
-            //si existe, leo todos los datos para sincronizar:
-            string[] lines = File.ReadAllLines(archivoDatosOffile);
-
-            //genero el json para enviar todos los datos:
-            foreach (string line in lines)
-            {
-                jsonAux += line + ",";
-                // Use a tab to indent each line of the file.
-                Console.WriteLine("\t" + line);
-            }
-
-            jsonAux = jsonAux + "]}";
-            return jsonAux;
+            return File.ReadAllText(archivoDatosOffile);
         }
 
-        private static bool Enviar(string data)
+        public static bool EscribirArchivoDatosOffile(List<EjercicioViewModel> ejercicios)
+        {
+            try
+            {
+                var datos = JsonConvert.SerializeObject(ejercicios);
+                File.AppendAllText(archivoDatosOffile, datos);
+                return true;
+            }
+            catch (Exception)
+            {
+                
+            }
+            return false;
+        }
+
+        public static List<EjercicioViewModel> DeserializarArchivoOffline()
+        {
+            string json = LeerArchivoDatosOffile();
+            var ejercicios = JsonConvert.DeserializeObject<List<EjercicioViewModel>>(json);
+            return ejercicios;
+        }
+
+        public static bool Enviar(string data)
         {
             try
             {
@@ -80,10 +89,9 @@ namespace AtaxiaVision.Helpers
 
         public static bool SincronizarDatosOffline()
         {
-            var data = SerializarArchivoOffline();
+            var data = LeerArchivoDatosOffile();
             var Envio = Enviar(data);
             return Envio;
-            // return Enviar(SerializarArchivoOffline());
         }
 
         public static int ValidarToken(string token)

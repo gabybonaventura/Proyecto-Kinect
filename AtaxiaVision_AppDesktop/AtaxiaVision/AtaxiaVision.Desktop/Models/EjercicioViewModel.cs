@@ -10,14 +10,8 @@ namespace AtaxiaVision.Models
     {
         public string Token { get; set; }
         public int Ejercicio { get; set; }
-        // Indica si el token es valido o invalido, una vez que se verifico con el servidor.
-        public bool TokenValido { get; set; }
-        // Indica si el token fue verificado contra el servidor.
-        public bool TokenVerificado { get; set; }
-
-        public EjercicioViewModel()
-        {
-            Ejercicio = 1;
-        }
+        public bool Resultado { get; set; }
+        public int Desvios { get; set; }
+        public decimal Promedio { get; set; }
     }
 }

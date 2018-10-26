@@ -30,7 +30,7 @@ namespace AtaxiaVision.Desktop.Pantallas
     {
         // PREGUNTAR. El flag de tokenValido no se usa nunca, 
         // si todo ya se hace al tocar click.
-        public EjercicioViewModel Ejercicio { get; set; }
+        public SesionViewModel Sesion { get; set; }
 
         // Delegates (son como punteros de C, sirven para que entre 
         // hilos asincronicos puedan acceder a los componentes de la vista)
@@ -59,7 +59,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
             ValidarTokenBackGruondWorker();
-            Ejercicio = new EjercicioViewModel();
+            Sesion = new SesionViewModel();
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -81,7 +81,7 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void SincronizarDatos()
         {
-            if (ServerHelper.ExisteDatosOffline())
+            if (ServerHelper.ExisteArchivoDatosOffile())
             {
                 if(ServerHelper.SincronizarDatosOffline())
                     EstadoSnackBar("Datos sincronizados.");
@@ -103,15 +103,15 @@ namespace AtaxiaVision.Desktop.Pantallas
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
         {
             // PREGUNTAR. Siempre manda numero de ejercicio 1.
-            Principal win = new Principal(Ejercicio);
+            Principal win = new Principal(Sesion);
             win.Show();
             Close();
         }
 
         private void ValidarToken()
         {
-            Ejercicio.Token = TokenTextBox.Text;
-            if (String.IsNullOrEmpty(Ejercicio.Token))
+            Sesion.Token = TokenTextBox.Text;
+            if (String.IsNullOrEmpty(Sesion.Token))
             {
                 EstadoSnackBar("Por favor ingrese un token");
                 return;
@@ -130,19 +130,24 @@ namespace AtaxiaVision.Desktop.Pantallas
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 // Thread.Sleep(5000); // Es solo para ver como queda la animacion este sleep.
                 // Valido el token
-                int result = ServerHelper.ValidarToken(Ejercicio.Token);
+                int result = ServerHelper.ValidarToken(Sesion.Token);
+                Sesion.TokenVerificado = true;
                 // Muestro el Snackbar
                 switch (result)
                 {
                     case ServerHelper.SIN_CONEXION:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para validar el token.");
+                        Sesion.TokenValido = false;
+                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                         break;
                     case ServerHelper.TOKEN_INVALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Inválido.");
+                        Sesion.TokenValido = false;
+                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, false);
                         break;
                     case ServerHelper.TOKEN_VALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
-                        Ejercicio.TokenValido = true;
+                        Sesion.TokenValido = true;
                         IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                         break;
                     default:
