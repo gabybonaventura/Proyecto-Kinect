@@ -50,7 +50,6 @@
             Height="150" 
             FontSize="40" 
             VerticalAlignment="Top" 
-            Background="#FF4CAF50" BorderBrush="#FF4CAF50"
             />
         <Button 
             x:Name="NoBtn" 

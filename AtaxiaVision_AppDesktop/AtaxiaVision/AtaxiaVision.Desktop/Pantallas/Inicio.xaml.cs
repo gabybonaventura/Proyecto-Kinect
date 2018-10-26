@@ -28,10 +28,12 @@ namespace AtaxiaVision.Desktop.Pantallas
     /// </summary>
     public partial class Inicio : Window
     {
-        // PREGUNTAR. El flag de tokenValido no se usa nunca, si todo ya se hace al tocar click.
-        private InicioViewModel Model = new InicioViewModel();
+        // PREGUNTAR. El flag de tokenValido no se usa nunca, 
+        // si todo ya se hace al tocar click.
+        public EjercicioViewModel Ejercicio { get; set; }
 
-        // Delegates (son como punteros de C, sirven para que entre hilos asincronicos puedan acceder a los componentes de la vista)
+        // Delegates (son como punteros de C, sirven para que entre 
+        // hilos asincronicos puedan acceder a los componentes de la vista)
         public delegate void SnackBarDelegate(string msg);
         public SnackBarDelegate snackBarDelegate;
         public delegate void ProgressBarDelegate(Visibility visibility);
@@ -40,9 +42,11 @@ namespace AtaxiaVision.Desktop.Pantallas
         public IniRehabBtnDelegate iniRehabBtnDelegate;
 
         // Backgruond Worker
-        private BackgroundWorker backgroundWorker = new BackgroundWorker(); 
+        private BackgroundWorker backgroundWorker = new BackgroundWorker();
 
-        // PREGUNTAR. Sirve de algo este constructor? En la pantalla de confirmacion, al poner que no, le mandamos esta info o mejor nada?
+        // PREGUNTAR. Sirve de algo este constructor?
+        // En la pantalla de confirmacion, al poner que no, 
+        // le mandamos esta info o mejor nada?
         public Inicio()
         {
             InitializeComponent();
@@ -55,6 +59,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
             ValidarTokenBackGruondWorker();
+            Ejercicio = new EjercicioViewModel();
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -98,15 +103,15 @@ namespace AtaxiaVision.Desktop.Pantallas
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
         {
             // PREGUNTAR. Siempre manda numero de ejercicio 1.
-            Principal win = new Principal(Model.TokenValido, Model.Token, 1);
+            Principal win = new Principal(Ejercicio);
             win.Show();
             Close();
         }
 
         private void ValidarToken()
         {
-            Model.Token = TokenTextBox.Text;
-            if (String.IsNullOrEmpty(Model.Token))
+            Ejercicio.Token = TokenTextBox.Text;
+            if (String.IsNullOrEmpty(Ejercicio.Token))
             {
                 EstadoSnackBar("Por favor ingrese un token");
                 return;
@@ -125,7 +130,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 // Thread.Sleep(5000); // Es solo para ver como queda la animacion este sleep.
                 // Valido el token
-                int result = ServerHelper.ValidarToken(Model.Token);
+                int result = ServerHelper.ValidarToken(Ejercicio.Token);
                 // Muestro el Snackbar
                 switch (result)
                 {
@@ -137,7 +142,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                         break;
                     case ServerHelper.TOKEN_VALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
-                        Model.TokenValido = true;
+                        Ejercicio.TokenValido = true;
                         IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                         break;
                     default:

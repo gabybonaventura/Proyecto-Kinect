@@ -24,7 +24,7 @@ namespace AtaxiaVision.Helpers
 
         private static string SerializarArchivoOffline()
         {
-            // PREGUNTAR. Se puede hacer con la serializacion?
+            // PREGUNTAR. Se puede hacer con la serializacion? -- Mirar codigo de Confirmacion
             string jsonAux = "{\"ejercicios\":[";
             //si existe, leo todos los datos para sincronizar:
             string[] lines = File.ReadAllLines(archivoDatosOffile);
@@ -57,10 +57,10 @@ namespace AtaxiaVision.Helpers
                 var httpResponse = (HttpWebResponse)request.GetResponse();
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
-                    // PREGUNTAR. Para que se asigna la variable si nunca se usa?
+                    // PREGUNTAR. Para que se asigna la variable si nunca se usa? -- no sabemos que devuelve result
                     var result = streamReader.ReadToEnd();
                     //revisar que dice result. Si envia ok o no ok.
-                    // PREGUNTAR. Por que esta condicion?
+                    // PREGUNTAR. Por que esta condicion? -- porque no puede comparar a result
                     if (1 == 1)
                     {
                         File.Delete(archivoDatosOffile);
@@ -88,7 +88,8 @@ namespace AtaxiaVision.Helpers
 
         public static int ValidarToken(string token)
         {
-            // PREGUNTAR. Guardar en archivo Configuracion.txt 
+            // PREGUNTAR. Guardar en archivo Configuracion.txt
+            // -- Hacerlo
             string urlToken = url + token;
             var request = (HttpWebRequest)WebRequest.Create(urlToken);
             request.Method = "GET";

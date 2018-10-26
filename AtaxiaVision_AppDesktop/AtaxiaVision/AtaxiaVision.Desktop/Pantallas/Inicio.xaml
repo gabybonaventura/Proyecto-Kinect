@@ -97,7 +97,8 @@
             FontSize="40" 
             HorizontalAlignment="Center" 
             Width="640" 
-            VerticalAlignment="Top" Click="IniRehabBtn_Click"/>
+            VerticalAlignment="Top" 
+            Click="IniRehabBtn_Click"/>
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="Snackbar"

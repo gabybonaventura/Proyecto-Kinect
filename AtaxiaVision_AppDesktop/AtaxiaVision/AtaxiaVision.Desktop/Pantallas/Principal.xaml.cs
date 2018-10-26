@@ -107,6 +107,8 @@
 
         //------------------------------------//
 
+        public EjercicioViewModel MyProperty { get; set; }
+
         #endregion Properties
 
         public Principal()
@@ -114,13 +116,12 @@
 
         }
 
-        public Principal(bool flagToken = true, string token = "1", int nroEj = 1)
+        public Principal(EjercicioViewModel ejercicio)
         { 
-            WindowState = WindowState.Maximized;
-            flagTokenValidado = flagToken;
-            this.valorToken = token;
+            flagTokenValidado = ejercicio.TokenValido;
+            this.valorToken = ejercicio.Token;
             desvios = new List<Angulos>();
-            nro_ejercicio = nroEj;
+            nro_ejercicio = ejercicio.Ejercicio;
             nro_ejercicio++;
             InitializeComponent();
 
