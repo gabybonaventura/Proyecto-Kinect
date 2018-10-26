@@ -28,8 +28,6 @@ namespace AtaxiaVision.Desktop.Pantallas
     /// </summary>
     public partial class Inicio : Window
     {
-        // PREGUNTAR. El flag de tokenValido no se usa nunca, 
-        // si todo ya se hace al tocar click.
         public SesionViewModel Sesion { get; set; }
 
         // Delegates (son como punteros de C, sirven para que entre 
@@ -43,14 +41,14 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
-
-        // PREGUNTAR. Sirve de algo este constructor?
-        // En la pantalla de confirmacion, al poner que no, 
-        // le mandamos esta info o mejor nada?
+        
         public Inicio()
         {
             InitializeComponent();
             SincronizarDatos();
+            // Test de grabacion json
+            ServerHelper.TestInicializarArchivo();
+            ServerHelper.TestLeerArchivo();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -102,7 +100,6 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
         {
-            // PREGUNTAR. Siempre manda numero de ejercicio 1.
             Principal win = new Principal(Sesion);
             win.Show();
             Close();

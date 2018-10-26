@@ -10,37 +10,79 @@ using System.Threading.Tasks;
 
 namespace AtaxiaVision.Helpers
 {
-    class ServerHelper
+    public class ServerHelper
     {
-        private const string archivoDatosOffile = @"\Archivos\ArchivoSinc.txt";
+        private const string archivoDatosOffile = @"C:\temp\AV_ArchivoDatosOffline.txt";
         private const string url = "https://ataxia-services-project.herokuapp.com/token/";
         public const int SIN_CONEXION = -1;
         public const int TOKEN_VALIDO = 1;
         public const int TOKEN_INVALIDO = 0;
+
+        // Test para probar como guardar el archivo
+        public static void TestInicializarArchivo()
+        {
+            //EliminarArchivoDatosOffile();
+            List<EjercicioViewModel> list = new List<EjercicioViewModel>();
+            list.Add(new EjercicioViewModel
+            {
+                Token = "11",
+                Ejercicio = 1,
+                Resultado = true,
+                Desvios = 4,
+                Promedio = Convert.ToDecimal(14.33)
+            });
+            list.Add(new EjercicioViewModel
+            {
+                Token = "11",
+                Ejercicio = 2,
+                Resultado = false,
+                Desvios = 21,
+                Promedio = Convert.ToDecimal(12)
+            });
+            list.Add(new EjercicioViewModel
+            {
+                Token = "12",
+                Ejercicio = 1,
+                Resultado = true,
+                Desvios = 2,
+                Promedio = Convert.ToDecimal(1)
+            });
+            EscribirArchivoDatosOffile(list);
+        }
+
+        public static void TestLeerArchivo()
+        {
+            var json = LeerArchivoDatosOffile();
+            var deserializado = DeserializarArchivoOffline();
+        }
 
         public static bool ExisteArchivoDatosOffile()
         {
             return File.Exists(archivoDatosOffile);
         }
 
+        public static void EliminarArchivoDatosOffile()
+        {
+            File.Delete(archivoDatosOffile);
+        }
+        
         public static string LeerArchivoDatosOffile()
         {
             return File.ReadAllText(archivoDatosOffile);
         }
 
-        public static bool EscribirArchivoDatosOffile(List<EjercicioViewModel> ejercicios)
+        public static void AgregarEjerciciosArchivoDatosOffline(List<EjercicioViewModel> ejercicios)
         {
-            try
-            {
-                var datos = JsonConvert.SerializeObject(ejercicios);
-                File.AppendAllText(archivoDatosOffile, datos);
-                return true;
-            }
-            catch (Exception)
-            {
-                
-            }
-            return false;
+            var lista = DeserializarArchivoOffline();
+            lista.AddRange(ejercicios);
+            EliminarArchivoDatosOffile();
+            EscribirArchivoDatosOffile(lista);
+        }
+
+        public static void EscribirArchivoDatosOffile(List<EjercicioViewModel> ejercicios)
+        {
+            var datos = JsonConvert.SerializeObject(ejercicios);
+            File.AppendAllText(archivoDatosOffile, datos);
         }
 
         public static List<EjercicioViewModel> DeserializarArchivoOffline()
@@ -66,10 +108,8 @@ namespace AtaxiaVision.Helpers
                 var httpResponse = (HttpWebResponse)request.GetResponse();
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
-                    // PREGUNTAR. Para que se asigna la variable si nunca se usa? -- no sabemos que devuelve result
                     var result = streamReader.ReadToEnd();
                     //revisar que dice result. Si envia ok o no ok.
-                    // PREGUNTAR. Por que esta condicion? -- porque no puede comparar a result
                     if (1 == 1)
                     {
                         File.Delete(archivoDatosOffile);
@@ -96,8 +136,6 @@ namespace AtaxiaVision.Helpers
 
         public static int ValidarToken(string token)
         {
-            // PREGUNTAR. Guardar en archivo Configuracion.txt
-            // -- Hacerlo
             string urlToken = url + token;
             var request = (HttpWebRequest)WebRequest.Create(urlToken);
             request.Method = "GET";
