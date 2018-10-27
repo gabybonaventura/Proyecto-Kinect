@@ -26,7 +26,7 @@ namespace AtaxiaVision.Pantallas
             InitializeComponent();
         }
 
-        public Confirmacion(bool flagToken, List<Angulos> desvios, bool resultado, string token, int nroEj)
+        public Confirmacion(bool flagToken, List<TensionServos> desvios, bool resultado, string token, int nroEj)
         {
            
         }

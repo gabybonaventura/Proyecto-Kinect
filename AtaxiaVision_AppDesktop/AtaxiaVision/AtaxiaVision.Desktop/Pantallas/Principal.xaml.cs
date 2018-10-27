@@ -79,7 +79,7 @@
         private string valorToken;
         private int nro_ejercicio;
 
-        List<Angulos> desvios /*= new List<Angulos>()*/;
+        List<TensionServos> desvios /*= new List<Angulos>()*/;
 
 
         Joint ManoDerecha;
@@ -121,7 +121,7 @@
         { 
             flagTokenValidado = sesion.TokenValido;
             this.valorToken = sesion.Token;
-            desvios = new List<Angulos>();
+            desvios = new List<TensionServos>();
             //nro_ejercicio = sesion.Ejercicio;
             InitializeComponent();
 
@@ -400,7 +400,7 @@
             //Console.WriteLine(indata);
             if (!string.IsNullOrEmpty(indata))
             {
-                desvios.Add(new Angulos(indata));
+                desvios.Add(new TensionServos(indata));
             }
         }
 
