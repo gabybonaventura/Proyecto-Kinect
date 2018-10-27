@@ -47,8 +47,8 @@ namespace AtaxiaVision.Desktop.Pantallas
             InitializeComponent();
             SincronizarDatos();
             // Test de grabacion json
-            ServerHelper.TestInicializarArchivo();
-            ServerHelper.TestLeerArchivo();
+            //ServerHelper.TestInicializarArchivo();
+            //ServerHelper.TestLeerArchivo();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -79,12 +79,17 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void SincronizarDatos()
         {
-            if (ServerHelper.ExisteArchivoDatosOffile())
+            var result = ServerHelper.SincronizarDatosOffline();
+            switch (result)
             {
-                if(ServerHelper.SincronizarDatosOffline())
+                case ServerHelper.ARCHIVOOFFLINE_SINCRONIZADO:
                     EstadoSnackBar("Datos sincronizados.");
-                else
+                    break;
+                case ServerHelper.ARCHIVOOFFLINE_NOSINCRONIZADO:
                     EstadoSnackBar("Error al sincronizar.");
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -132,7 +137,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                 // Muestro el Snackbar
                 switch (result)
                 {
-                    case ServerHelper.SIN_CONEXION:
+                    case ServerHelper.TOKEN_SINCONEXION:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para validar el token.");
                         Sesion.TokenValido = false;
                         IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);

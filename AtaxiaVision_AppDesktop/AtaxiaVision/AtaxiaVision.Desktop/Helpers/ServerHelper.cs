@@ -12,87 +12,50 @@ namespace AtaxiaVision.Helpers
 {
     public class ServerHelper
     {
-        private const string archivoDatosOffile = @"C:\temp\AV_ArchivoDatosOffline.txt";
+        private const string archivoDatosOffile = @"C:\Users\Public\Documents\AV_ArchivoDatosOffline.txt";
         private const string url = "https://ataxia-services-project.herokuapp.com/token/";
-        public const int SIN_CONEXION = -1;
+        public const int TOKEN_SINCONEXION = -1;
         public const int TOKEN_VALIDO = 1;
         public const int TOKEN_INVALIDO = 0;
-
-        // Test para probar como guardar el archivo
-        public static void TestInicializarArchivo()
-        {
-            //EliminarArchivoDatosOffile();
-            List<EjercicioViewModel> list = new List<EjercicioViewModel>();
-            list.Add(new EjercicioViewModel
-            {
-                Token = "11",
-                Ejercicio = 1,
-                Resultado = true,
-                Desvios = 4,
-                Promedio = Convert.ToDecimal(14.33)
-            });
-            list.Add(new EjercicioViewModel
-            {
-                Token = "11",
-                Ejercicio = 2,
-                Resultado = false,
-                Desvios = 21,
-                Promedio = Convert.ToDecimal(12)
-            });
-            list.Add(new EjercicioViewModel
-            {
-                Token = "12",
-                Ejercicio = 1,
-                Resultado = true,
-                Desvios = 2,
-                Promedio = Convert.ToDecimal(1)
-            });
-            EscribirArchivoDatosOffile(list);
-        }
-
-        public static void TestLeerArchivo()
-        {
-            var json = LeerArchivoDatosOffile();
-            var deserializado = DeserializarArchivoOffline();
-        }
-
-        public static bool ExisteArchivoDatosOffile()
+        public const int ARCHIVOOFFLINE_NOEXISTE = -1;
+        public const int ARCHIVOOFFLINE_SINCRONIZADO = 1;
+        public const int ARCHIVOOFFLINE_NOSINCRONIZADO = 0;
+        
+        #region Metodos privados
+        private static bool ExisteArchivoDatosOffile()
         {
             return File.Exists(archivoDatosOffile);
         }
 
-        public static void EliminarArchivoDatosOffile()
+        private static void EliminarArchivoDatosOffile()
         {
             File.Delete(archivoDatosOffile);
         }
-        
-        public static string LeerArchivoDatosOffile()
+
+        private static string LeerArchivoDatosOffile()
         {
-            return File.ReadAllText(archivoDatosOffile);
+            if (ExisteArchivoDatosOffile())
+                return File.ReadAllText(archivoDatosOffile);
+            else
+                return "";
         }
 
-        public static void AgregarEjerciciosArchivoDatosOffline(List<EjercicioViewModel> ejercicios)
-        {
-            var lista = DeserializarArchivoOffline();
-            lista.AddRange(ejercicios);
-            EliminarArchivoDatosOffile();
-            EscribirArchivoDatosOffile(lista);
-        }
-
-        public static void EscribirArchivoDatosOffile(List<EjercicioViewModel> ejercicios)
+        private static void EscribirArchivoDatosOffile(List<EjercicioViewModel> ejercicios)
         {
             var datos = JsonConvert.SerializeObject(ejercicios);
             File.AppendAllText(archivoDatosOffile, datos);
         }
 
-        public static List<EjercicioViewModel> DeserializarArchivoOffline()
+        private static List<EjercicioViewModel> DeserializarArchivoOffline()
         {
             string json = LeerArchivoDatosOffile();
             var ejercicios = JsonConvert.DeserializeObject<List<EjercicioViewModel>>(json);
+            if (ejercicios == null)
+                ejercicios = new List<EjercicioViewModel>();
             return ejercicios;
         }
 
-        public static bool Enviar(string data)
+        private static bool Enviar(string data)
         {
             try
             {
@@ -126,12 +89,25 @@ namespace AtaxiaVision.Helpers
                 return false;
             }
         }
-
-        public static bool SincronizarDatosOffline()
+        #endregion
+        
+        public static void AgregarEjercicioDatosOffile(EjercicioViewModel ejercicio)
         {
+            var lista = DeserializarArchivoOffline();
+            lista.Add(ejercicio);
+            EscribirArchivoDatosOffile(lista);
+        }
+        
+        public static int SincronizarDatosOffline()
+        {
+            if (!ExisteArchivoDatosOffile())
+                return ARCHIVOOFFLINE_NOEXISTE;
             var data = LeerArchivoDatosOffile();
             var Envio = Enviar(data);
-            return Envio;
+            if (Envio)
+                return ARCHIVOOFFLINE_SINCRONIZADO;
+            else
+                return ARCHIVOOFFLINE_NOSINCRONIZADO;
         }
 
         public static int ValidarToken(string token)
@@ -178,9 +154,47 @@ namespace AtaxiaVision.Helpers
                 //EstadoSnackBar("No hay conexión");
                 //Model.TokenValido = false;
                 //IniRehabBtn.IsEnabled = true;
-                return SIN_CONEXION;
+                return TOKEN_SINCONEXION;
             }
             return TOKEN_INVALIDO;
         }
+
+        #region Test
+        // Test para probar como guardar el archivo
+        public static void TestInicializarArchivo()
+        {
+            EliminarArchivoDatosOffile();
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "11",
+                Ejercicio = 1,
+                Resultado = true,
+                Desvios = 4,
+                Promedio = Convert.ToDecimal(14.33)
+            });
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "11",
+                Ejercicio = 2,
+                Resultado = false,
+                Desvios = 21,
+                Promedio = Convert.ToDecimal(12)
+            });
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "12",
+                Ejercicio = 1,
+                Resultado = true,
+                Desvios = 2,
+                Promedio = Convert.ToDecimal(1)
+            });
+        }
+
+        public static void TestLeerArchivo()
+        {
+            var json = LeerArchivoDatosOffile();
+            var deserializado = DeserializarArchivoOffline();
+        } 
+        #endregion
     }
 }
