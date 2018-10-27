@@ -38,7 +38,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
             WindowState = WindowState.Maximized;
             InitializeComponent();
             if (!resultado)
-                this.LabelResultado.Content = "El ejercicio ha fallado. ¿Desea repetir el ejercicio?";
+                this.LabelResultado.Text = "El ejercicio ha fallado. ¿Desea repetir el ejercicio?";
             this.listDesvio = desvios;
             this.flagToken = flagToken;
             this.result = resultado;
@@ -66,18 +66,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.App_inicial
 
         private void EnviarDatos()
         {
-
-             //DatosSesion datos = new DatosSesion("546", 1, true, 5, 2);
             DatosSesion datos = new DatosSesion(tokenID, nro_ejercicio, result, desvios, prom);
-
             GenerarJSON();
-
             string jsonAux = JsonConvert.SerializeObject(datos);
-
             listaDatos.Add(datos);
-
             json = JsonConvert.SerializeObject(listaDatos);
-
             string url = "https://ataxia-services-project.herokuapp.com/session";
 
             //es un path de mock server

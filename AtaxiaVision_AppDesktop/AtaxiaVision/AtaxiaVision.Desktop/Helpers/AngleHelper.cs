@@ -1,14 +1,10 @@
-﻿using Microsoft.Kinect;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System;
+using Microsoft.Kinect;
 
-namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
+namespace AtaxiaVision.Helpers
 {
     class AngleHelper
-    {        
+    {
         public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, SkeletonPoint skelObjeto)
         {
             double[] array = new double[4];
@@ -28,13 +24,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             float distHombroObj = DistanceHelper.ObtenerDistancia(hombro, skelObjeto);
 
             //calculamos la distancia entre las articulaciones:
-                //distancia entre hombro y mano
+            //distancia entre hombro y mano
             float distHombroMano = DistanceHelper.ObtenerDistancia(mano, hombro);
-                //distancia entre mano y codo
+            //distancia entre mano y codo
             float distCodoMano = DistanceHelper.ObtenerDistancia(mano, codo);
-                //distancia entre codo y hombro
+            //distancia entre codo y hombro
             float distHombroCodo = DistanceHelper.ObtenerDistancia(codo, hombro);
-                //distancia entre hombro y punto auxiliar del torso
+            //distancia entre hombro y punto auxiliar del torso
             float distTorsoHombro = DistanceHelper.ObtenerDistancia(hombro, puntoTorso);
 
             //distancia entre mano y objeto
@@ -44,7 +40,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
             Console.WriteLine($"Distancia Codo mano {distCodoMano}");
             Console.WriteLine($"Distancia Hombro Codo {distHombroCodo}");
             Console.WriteLine($"Distancia Hombro Objeto {distHombroObj}");
-            
+
 
 
             if (distHombroObj > (distCodoMano + distHombroCodo))
@@ -71,7 +67,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics.Helpers
                 {
                     anguloHombroArribaAbajoFut = 180 - anguloHombroArribaAbajoFut;
                 }
-                if(anguloHombroAdelanteAtrasFut < 90 && anguloHombroAdelanteAtrasFut > 0 &&
+                if (anguloHombroAdelanteAtrasFut < 90 && anguloHombroAdelanteAtrasFut > 0 &&
                     anguloCodoFut < 90 && anguloCodoFut > 0)
                 {
                     array[0] = anguloCodoFut;

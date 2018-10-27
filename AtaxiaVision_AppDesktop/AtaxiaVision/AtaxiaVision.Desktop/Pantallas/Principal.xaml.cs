@@ -1,8 +1,7 @@
-﻿namespace Microsoft.Samples.Kinect.SkeletonBasics
+﻿namespace AtaxiaVision.Pantallas
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
     using System.IO.Ports;
     using System.Windows;
@@ -12,10 +11,14 @@
     using Emgu.CV.Structure;
     using Emgu.CV.Util;
     using Microsoft.Kinect;
-    using Microsoft.Samples.Kinect.SkeletonBasics.App_inicial;
-    using Microsoft.Samples.Kinect.SkeletonBasics.Helpers;
+    using Helpers;
+    using AtaxiaVision.Models;
+    using MaterialDesignThemes.Wpf;
 
-    public partial class MainWindow : Window
+    /// <summary>
+    /// Interaction logic for Principal.xaml
+    /// </summary>
+    public partial class Principal : Window
     {
         #region Properties
 
@@ -59,9 +62,9 @@
         int ObjetoZ;
         SkeletonPoint skelObjeto;
         double[] angulos;
-        
+
         bool flagSkeleton = false;
-        
+
         bool flagObjeto = false;
 
         private SerialPort _serialPort = new SerialPort();
@@ -72,7 +75,7 @@
         private string _portName = "COM5";
         private StopBits _stopBits = StopBits.One;
 
-        private bool flagTokenValidado, resultado=false;
+        private bool flagTokenValidado, resultado = false;
         private string valorToken;
         private int nro_ejercicio;
 
@@ -104,19 +107,22 @@
 
         //------------------------------------//
 
+        public EjercicioViewModel MyProperty { get; set; }
+
         #endregion Properties
 
-
-        //se inicializa con un flag de la ventana anterior
-        //sirve para saber si se validó la sesión previamente.
-        public MainWindow(bool flagToken, string token, int nroEj)
+        public Principal()
         {
-            WindowState = WindowState.Maximized;
-            flagTokenValidado = flagToken;
-            this.valorToken = token;
+
+        }
+
+        // FALTA NUMERO EJERCICIO
+        public Principal(SesionViewModel sesion)
+        { 
+            flagTokenValidado = sesion.TokenValido;
+            this.valorToken = sesion.Token;
             desvios = new List<Angulos>();
-            nro_ejercicio = nroEj;
-            nro_ejercicio++;
+            //nro_ejercicio = sesion.Ejercicio;
             InitializeComponent();
 
             try
@@ -133,9 +139,14 @@
                 Console.WriteLine(ex.Message);
                 return;
             }
-
         }
 
+        private void EstadoSnackBar(string mensaje)
+        {
+            Snackbar.IsActive = false;
+            Snackbar.Message = new SnackbarMessage() { Content = mensaje };
+            Snackbar.IsActive = true;
+        }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
@@ -199,7 +210,9 @@
 
             if (null == this.sensor)
             {
-                this.statusBarText.Text = Properties.Resources.NoKinectReady;
+                Image.Source = new BitmapImage(
+                    new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
+                EstadoSnackBar("Kinect no lista.");
             }
 
             try
@@ -224,11 +237,10 @@
             }
         }
 
-
         private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
             Skeleton[] skeletons = new Skeleton[0];
-            
+
             bool depthReceived = false;
             bool colorReceived = false;
 
@@ -239,7 +251,7 @@
                 framesDistancia.CopyDepthImagePixelDataTo(this.depthPixels);
 
                 depthReceived = true;
-                
+
 
                 if (datosDistancia == null)
                     datosDistancia = new short[framesDistancia.PixelDataLength];
@@ -267,7 +279,7 @@
                     Image<Gray, Byte> imageHSVDest = currentFrameHSV.InRange(lowerLimit, upperLimit);
                     imageHSVDest.Erode(100);
                     VectorOfVectorOfPoint vectorOfPoint = EmguCVHelper.FindContours(imageHSVDest);
-                    
+
                     for (int i = 0; i < vectorOfPoint.Size; i++)
                     {
                         var contour = vectorOfPoint[i];
@@ -391,7 +403,7 @@
                 desvios.Add(new Angulos(indata));
             }
         }
-        
+
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (null != this.sensor)
@@ -409,6 +421,7 @@
         {
             ArduinoHelper.EscribirAngulosArduino(_serialPort, angulos);
         }
+
         private void CalcularButton_Click(object sender, RoutedEventArgs e)
         {
             this.CalcularAngulosFinales();
@@ -420,14 +433,6 @@
             ManoDerecha, CodoDerecho, skelObjeto);
             if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
             {
-                //Console.WriteLine("no se puede alcanzar el objeto");
-                /*dc.DrawText(
-                new FormattedText("No se puede alcanzar el objeto",
-                            CultureInfo.GetCultureInfo("en-us"),
-                            FlowDirection.LeftToRight,
-                            new Typeface("Verdana"),
-                            25, System.Windows.Media.Brushes.Red),
-                            new Point(0,0));*/
                 flagSkeleton = false;
             }
             else
@@ -437,13 +442,13 @@
                 try
                 {
                     this.ConfirmacionButton.IsEnabled = true;
-                    this.MensajesLabel.Content = "Angulos calculados";
+                    //this.MensajesLabel.Content = "Angulos calculados";
                 }
                 catch (Exception)
                 {
                     Console.WriteLine("Excepcion en escribir el angulo en arduino");
                 }
-            } 
+            }
         }
 
         #region DibujarHuesos
@@ -521,6 +526,13 @@
 
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
         }
-#endregion DibujarHuesos
+        #endregion DibujarHuesos
+
+        private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Confirmacion win = new Confirmacion();
+            win.Show();
+            Close();
+        }
     }
 }

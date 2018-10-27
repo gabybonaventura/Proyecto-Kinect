@@ -44,7 +44,9 @@ void loop() {
       inChar = Serial.read();
       inString += (char)inChar;
       CodoArribaAbajoPosicion = inString.toInt();
-
+      //Adapto el angulo real al angulo que tienen los servos
+      CodoArribaAbajoPosicion = abs(CodoArribaAbajoPosicion - 180);
+      
       inString = "";
       inChar = Serial.read();
       inString += (char)inChar;
@@ -62,7 +64,9 @@ void loop() {
       inChar = Serial.read();
       inString += (char)inChar;
       HombroArribaAbajoPosicion = inString.toInt();
-
+      //Adapto el angulo real al angulo que tienen los servos
+      HombroArribaAbajoPosicion = abs(HombroArribaAbajoPosicion - 90);
+      
       inString = "";
       inChar = Serial.read();
       inString += (char)inChar;
@@ -71,7 +75,9 @@ void loop() {
       inChar = Serial.read();
       inString += (char)inChar;
       HombroAdelanteAtrasPosicion = inString.toInt();
-
+      //Adapto el angulo real al angulo que tienen los servos
+      HombroAdelanteAtrasPosicion = abs(HombroAdelanteAtrasPosicion - 90);
+      
       Serial.print("Value:");
       Serial.println(CodoArribaAbajoPosicion);
       Serial.print("String: ");

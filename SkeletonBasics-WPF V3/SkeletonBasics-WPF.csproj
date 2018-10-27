@@ -144,8 +144,7 @@
     <Compile Include="Helpers\ArduinoHelper.cs" />
     <Compile Include="Helpers\DatosSesion.cs" />
     <Compile Include="Helpers\DistanceHelper.cs" />
-    <Compile Include="Helpers\Helper.cs" />
-    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\EmguCVHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
