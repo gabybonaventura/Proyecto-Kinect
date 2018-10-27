@@ -6,35 +6,35 @@ using System.Threading.Tasks;
 
 namespace AtaxiaVision.Models
 {
-    public class Angulos
+    public class TensionServos
     {
-        private double codoAA;
-        private double codoID;
-        private double hombroID;
-        private double hombroAA;
+        public double CodoArribaAbajo { get; set; }
+        public double CodoIzquierdaDerecha { get; set; }
+        public double HombroArribaAbajo { get; set; }
+        public double HombroAdelanteAtras { get; set; }
 
-        public Angulos(string datoArduino)
+        public TensionServos(string datoArduino)
         {
-            //debo dividir en partes:
-            //primero llega un *.
+            //el string llega en el formato:
+            //A: codoArribaAbajo
+            //B: codoIzquierdaDerecha
+            //C: hombroArribaAbajo
+            //D: hombroAdelanteAtras
+
+            //primero llega un *
             if (datoArduino[0].Equals("*"))
             {
-                int dato1 = datoArduino.IndexOf("A");
-                int dato2 = datoArduino.IndexOf("B");
-                int dato3 = datoArduino.IndexOf("C");
-                int dato4 = datoArduino.IndexOf("D");
+                //obtengo el index de las letras:
+                int indexA = datoArduino.IndexOf("A");
+                int indexB = datoArduino.IndexOf("B");
+                int indexC = datoArduino.IndexOf("C");
+                int indexD = datoArduino.IndexOf("D");
 
-                codoAA = double.Parse(datoArduino.Substring(dato1, dato2));
-                codoID = double.Parse(datoArduino.Substring(dato2, dato3));
-                hombroID = double.Parse(datoArduino.Substring(dato3, dato4));
-                hombroAA = double.Parse(datoArduino.Substring(dato4));
+                CodoArribaAbajo = double.Parse(datoArduino.Substring(indexA, indexB));
+                CodoIzquierdaDerecha = double.Parse(datoArduino.Substring(indexB, indexC));
+                HombroArribaAbajo = double.Parse(datoArduino.Substring(indexC, indexD));
+                HombroAdelanteAtras = double.Parse(datoArduino.Substring(indexD));
             }
-
         }
-
-        public double HombroAA { get => hombroAA; set => hombroAA = value; }
-        public double HombroID { get => hombroID; set => hombroID = value; }
-        public double CodoID { get => codoID; set => codoID = value; }
-        public double CodoAA { get => codoAA; set => codoAA = value; }
     }
 }
