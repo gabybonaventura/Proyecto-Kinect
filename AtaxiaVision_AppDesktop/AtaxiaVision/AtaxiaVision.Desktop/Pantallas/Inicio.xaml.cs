@@ -45,9 +45,9 @@ namespace AtaxiaVision.Desktop.Pantallas
         public Inicio()
         {
             InitializeComponent();
-            SincronizarDatos();
-            // Test de grabacion json
             //ServerHelper.TestInicializarArchivo();
+            //SincronizarDatos();
+            // Test de grabacion json
             //ServerHelper.TestLeerArchivo();
         }
 
@@ -140,21 +140,19 @@ namespace AtaxiaVision.Desktop.Pantallas
                     case ServerHelper.TOKEN_SINCONEXION:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para validar el token.");
                         Sesion.TokenValido = false;
-                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                         break;
                     case ServerHelper.TOKEN_INVALIDO:
-                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Inválido.");
+                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Inválido. Va a poder acceder, pero va a necesitar un arreglo en la App Mobile.");
                         Sesion.TokenValido = false;
-                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, false);
                         break;
                     case ServerHelper.TOKEN_VALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
                         Sesion.TokenValido = true;
-                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                         break;
                     default:
                         break;
                 }
+                IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
             };
         }
