@@ -15,7 +15,7 @@ namespace AtaxiaVision.Helpers
     {
         private const string ARCHIVO_OFFILE = @"C:\Users\Public\Documents\AV_ArchivoDatosOffline.txt";
         private const string URL = "https://ataxia-services-project.herokuapp.com/";
-        private const string API_SESSION = "session/";
+        private const string API_SESSION = "session";
         private const string API_TOKEN = "token/";
         private const string METHOD_POST = "POST";
         private const string METHOD_GET = "GET";
@@ -63,9 +63,9 @@ namespace AtaxiaVision.Helpers
             return ejercicios;
         }
 
-        private static RespuestaGET EnviarGet(string api, string data)
+        private static RespuestaServer EnviarGet(string api, string data)
         {
-            RespuestaGET result = new RespuestaGET();
+            RespuestaServer result = new RespuestaServer();
             var request = (HttpWebRequest)WebRequest.Create(URL + api + data);
             var content = string.Empty;
             using (var response = (HttpWebResponse)request.GetResponse())
@@ -80,7 +80,7 @@ namespace AtaxiaVision.Helpers
             }
             var rta = JsonConvert.DeserializeObject<dynamic>(content);
             string status_code = rta.head.status_code;
-            result.RespuestaCode = Convert.ToInt16(status_code);
+            result.RespuestaCode = Convert.ToInt32(status_code);
             if (result.RespuestaCode == SERVER_OK)
             {
                 string isValid = rta.data.isValid;
@@ -89,32 +89,40 @@ namespace AtaxiaVision.Helpers
             return result;
         }
 
-        private static int EnviarPost(string api, string data)
+        private static RespuestaServer EnviarPost(string api, string data)
         {
+            RespuestaServer result = new RespuestaServer();
             var request = (HttpWebRequest)WebRequest.Create(URL + api);
             request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentType = "application/json";
             request.ContentLength = data.Length;
-            var dataByte = Encoding.ASCII.GetBytes(data);
-            using (var stream = request.GetRequestStream())
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
-                stream.Write(dataByte, 0, data.Length);
+                streamWriter.Write(data);
+                streamWriter.Flush();
+                streamWriter.Close();
             }
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            return Convert.ToInt32(responseString);
+            var httpResponse = (HttpWebResponse)request.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var rtaSr = streamReader.ReadToEnd();
+                var rta = JsonConvert.DeserializeObject<dynamic>(rtaSr);
+                string status_code = rta.head.status;
+                result.RespuestaCode = Convert.ToInt32(status_code);
+            }
+            return result;
         }
 
-        private static int Enviar(string api, string method, string data)
+        private static RespuestaServer Enviar(string api, string method, string data)
         {
-            int resultado = SERVER_ERROR;
+            RespuestaServer resultado = new RespuestaServer();
             switch (method)
             {
                 case METHOD_GET:
-                    EnviarGet(api, data);
+                    resultado = EnviarGet(api, data);
                     break;
                 case METHOD_POST:
-                    EnviarPost(api, data);
+                    resultado = EnviarPost(api, LeerArchivoDatosOffile());
                     break;
                 default:
                     break;
@@ -136,10 +144,13 @@ namespace AtaxiaVision.Helpers
                 return ARCHIVOOFFLINE_NOEXISTE;
             var data = LeerArchivoDatosOffile();
             var Envio = Enviar(API_SESSION,METHOD_POST,data);
-            if (Envio == SERVER_OK)
+            if (Envio.RespuestaCode == SERVER_OK)
+            {
+                EliminarArchivoDatosOffile();
                 return ARCHIVOOFFLINE_SINCRONIZADO;
-            else
-                return ARCHIVOOFFLINE_NOSINCRONIZADO;
+            }
+
+            return ARCHIVOOFFLINE_NOSINCRONIZADO;
         }
 
         public static int ValidarToken(string token)
@@ -153,6 +164,11 @@ namespace AtaxiaVision.Helpers
                     return TOKEN_INVALIDO;
             }
             return TOKEN_SINCONEXION;
+        }
+
+        public static int EnviarEjercicio(EjercicioViewModel ejercicio)
+        {
+            return SERVER_OK;
         }
 
         #region Test

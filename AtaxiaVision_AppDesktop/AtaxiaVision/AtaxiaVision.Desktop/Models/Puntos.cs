@@ -14,6 +14,8 @@ namespace AtaxiaVision.Models
         public Joint Mano { get; set; }
         public SkeletonPoint Objeto { get; set; }
         public SkeletonPoint PuntoAuxHombroArribaAbajo { get; set; }
+
+        public Puntos() { }
         
         public Puntos(Joint hombro, Joint codo, Joint mano, SkeletonPoint objeto)
         {

@@ -45,8 +45,8 @@ namespace AtaxiaVision.Desktop.Pantallas
         public Inicio()
         {
             InitializeComponent();
-            //ServerHelper.TestInicializarArchivo();
-            //SincronizarDatos();
+            ServerHelper.TestInicializarArchivo();
+            SincronizarDatos();
             // Test de grabacion json
             //ServerHelper.TestLeerArchivo();
         }

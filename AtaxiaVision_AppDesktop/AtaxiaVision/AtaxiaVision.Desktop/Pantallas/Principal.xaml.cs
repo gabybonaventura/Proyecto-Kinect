@@ -107,7 +107,7 @@
 
         //------------------------------------//
 
-        public EjercicioViewModel MyProperty { get; set; }
+        public EjercicioViewModel Ejercicio { get; set; }
 
         #endregion Properties
 
@@ -117,8 +117,14 @@
         }
 
         // FALTA NUMERO EJERCICIO
-        public Principal(SesionViewModel sesion)
-        { 
+        public Principal(SesionViewModel sesion, int ejercicio = 1)
+        {
+            Ejercicio = new EjercicioViewModel()
+            {
+                Token = sesion.Token,
+                Ejercicio = ejercicio
+            };
+
             flagTokenValidado = sesion.TokenValido;
             this.valorToken = sesion.Token;
             desvios = new List<TensionServos>();
@@ -429,8 +435,9 @@
 
         public void CalcularAngulosFinales()
         {
-            angulos = AngleHelper.SetValorAngulos(HombroDerecho,
-            ManoDerecha, CodoDerecho, skelObjeto);
+            // ARREGLAR CAMI CASU
+            var x = new AngleHelper().SetValorAngulos(new Puntos());
+                //HombroDerecho, ManoDerecha, CodoDerecho, skelObjeto);
             if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
             {
                 flagSkeleton = false;
