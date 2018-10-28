@@ -23,6 +23,7 @@ namespace AtaxiaVision.Pantallas
     public partial class Confirmacion : Window
     {
         public EjercicioViewModel Ejercicio { get; set; }
+        public string Pregunta { get; set; }
         public Confirmacion()
         {
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace AtaxiaVision.Pantallas
 
         public Confirmacion(EjercicioViewModel ejercicio)
         {
+            InitializeComponent();
             Ejercicio = ejercicio;
             var status = ServerHelper.EnviarEjercicio(Ejercicio);
             switch (status)

@@ -418,7 +418,8 @@
             }
             if (_serialPort.IsOpen)
                 _serialPort.Close();
-            Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
+            //Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
+            Confirmacion win = new Confirmacion(Ejercicio);
             Console.WriteLine("cierra por acá");
             win.Show();
         }
@@ -537,7 +538,7 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            Confirmacion win = new Confirmacion();
+            Confirmacion win = new Confirmacion(Ejercicio);
             win.Show();
             Close();
         }

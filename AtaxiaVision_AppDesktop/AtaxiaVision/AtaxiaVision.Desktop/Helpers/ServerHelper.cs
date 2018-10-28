@@ -14,8 +14,8 @@ namespace AtaxiaVision.Helpers
     public class ServerHelper
     {
         private const string ARCHIVO_OFFILE = @"C:\Users\Public\Documents\AV_ArchivoDatosOffline.txt";
-        private const string URL = "https://ataxia-services-project.herokuapp.com/";
-        private const string API_SESSION = "session";
+        private const string URL = "http://api.ataxiavision.com/";
+        private const string API_SESSION = "session/";
         private const string API_TOKEN = "token/";
         private const string METHOD_POST = "POST";
         private const string METHOD_GET = "GET";
