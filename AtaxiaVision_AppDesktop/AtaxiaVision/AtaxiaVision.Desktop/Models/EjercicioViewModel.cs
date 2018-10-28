@@ -10,8 +10,7 @@ namespace AtaxiaVision.Models
     {
         public string Token { get; set; }
         public int Ejercicio { get; set; }
-        public bool Resultado { get; set; }
+        public bool FinalizoConExito { get; set; }
         public int Desvios { get; set; }
-        public decimal Promedio { get; set; }
     }
 }

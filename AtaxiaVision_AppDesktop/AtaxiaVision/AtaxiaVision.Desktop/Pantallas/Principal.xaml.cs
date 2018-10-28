@@ -79,7 +79,7 @@
         private string valorToken;
         private int nro_ejercicio;
 
-        List<TensionServos> desvios /*= new List<Angulos>()*/;
+        List<TensionServos> tensiones /*= new List<Angulos>()*/;
 
 
         Joint ManoDerecha;
@@ -127,7 +127,7 @@
 
             flagTokenValidado = sesion.TokenValido;
             this.valorToken = sesion.Token;
-            desvios = new List<TensionServos>();
+            tensiones = new List<TensionServos>();
             //nro_ejercicio = sesion.Ejercicio;
             InitializeComponent();
 
@@ -406,7 +406,7 @@
             //Console.WriteLine(indata);
             if (!string.IsNullOrEmpty(indata))
             {
-                desvios.Add(new TensionServos(indata));
+                tensiones.Add(new TensionServos(indata));
             }
         }
 
@@ -419,7 +419,7 @@
             if (_serialPort.IsOpen)
                 _serialPort.Close();
             //Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
-            Confirmacion win = new Confirmacion(Ejercicio);
+            Confirmacion win = new Confirmacion(Ejercicio, tensiones);
             Console.WriteLine("cierra por acá");
             win.Show();
         }
@@ -538,7 +538,7 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            Confirmacion win = new Confirmacion(Ejercicio);
+            Confirmacion win = new Confirmacion(Ejercicio, tensiones);
             win.Show();
             Close();
         }

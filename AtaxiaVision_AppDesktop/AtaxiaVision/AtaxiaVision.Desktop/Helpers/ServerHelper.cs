@@ -178,27 +178,38 @@ namespace AtaxiaVision.Helpers
             EliminarArchivoDatosOffile();
             ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
             {
-                Token = "22",
+                Token = "38662776_1",
                 Ejercicio = 1,
-                Resultado = true,
-                Desvios = 4,
-                Promedio = Convert.ToDecimal(14.33)
+                FinalizoConExito = true,
+                Desvios = 4
             });
             ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
             {
-                Token = "22",
+                Token = "38662776_1",
                 Ejercicio = 2,
-                Resultado = false,
-                Desvios = 21,
-                Promedio = Convert.ToDecimal(12)
+                FinalizoConExito = false,
+                Desvios = 21
             });
             ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
             {
-                Token = "233",
+                Token = "38662776_2",
                 Ejercicio = 1,
-                Resultado = true,
-                Desvios = 2,
-                Promedio = Convert.ToDecimal(1)
+                FinalizoConExito = true,
+                Desvios = 2
+            });
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "38662776_2",
+                Ejercicio = 2,
+                FinalizoConExito = true,
+                Desvios = 21
+            });
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "38662776_2",
+                Ejercicio = 3,
+                FinalizoConExito = false,
+                Desvios = 7
             });
         }
 

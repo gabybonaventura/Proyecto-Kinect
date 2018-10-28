@@ -121,6 +121,7 @@
     <Compile Include="Helpers\DistanceHelper.cs" />
     <Compile Include="Helpers\EmguCVHelper.cs" />
     <Compile Include="Helpers\ServerHelper.cs" />
+    <Compile Include="Helpers\TensionHelper.cs" />
     <Compile Include="Models\Angulos.cs" />
     <Compile Include="Models\Distancia.cs" />
     <Compile Include="Models\EjercicioViewModel.cs" />

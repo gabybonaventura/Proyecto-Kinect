@@ -29,7 +29,7 @@ namespace AtaxiaVision.Pantallas
             InitializeComponent();
         }
 
-        public Confirmacion(EjercicioViewModel ejercicio)
+        public Confirmacion(EjercicioViewModel ejercicio, List<TensionServos> tensiones)
         {
             InitializeComponent();
             Ejercicio = ejercicio;
