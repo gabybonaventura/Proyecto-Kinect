@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using Microsoft.Kinect;
 
 namespace AtaxiaVision.Helpers
@@ -14,8 +15,6 @@ namespace AtaxiaVision.Helpers
             return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2));                //Realiza el calculo de la distancia entre articulaciones
         }
 
-        //Método calculo ángulo donde: 
-        
         public static float ObtenerDistancia(Joint articulacion, SkeletonPoint objeto)
         {
             float Distancia_X = articulacion.Position.X - (float)objeto.X;
@@ -30,7 +29,16 @@ namespace AtaxiaVision.Helpers
             float Distancia_Y = punto1.Y - punto2.Y;
             float Distancia_Z = punto1.Z - punto2.Z;
 
-            return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2));                //Realiza el calculo de la distancia entre articulaciones
+            return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2));
+        }
+
+        public static float ObtenerDistancia(Point punto1, Point punto2)
+        {
+            float Distancia_X = (float)(punto1.X - punto2.X);
+            float Distancia_Y = (float)(punto1.Y - punto2.Y);
+            
+
+            return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2));              
         }
 
         public static double RadToDeg(double rad)

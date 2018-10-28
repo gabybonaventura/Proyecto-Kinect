@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using AtaxiaVision.Models;
 using Microsoft.Kinect;
 
@@ -50,6 +51,77 @@ namespace AtaxiaVision.Helpers
                 distancia.DistanciaManoCodo, distancia.DistanciaHombroCodo);
         }
 
+        private void CalcularAnguloHombroAdelanteAtras()
+        {
+            puntos.Hombro2d = new Point(puntos.Hombro.Position.X, puntos.Hombro.Position.Z);
+            puntos.Codo2d = new Point(puntos.Codo.Position.X, puntos.Codo.Position.Z);
+            puntos.Mano2d = new Point(puntos.Mano.Position.X, puntos.Mano.Position.Z);
+            puntos.Objeto2d = new Point(puntos.Objeto.X, puntos.Objeto.Z);
+
+            distancia.DistanciaManoHombro = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro2d, puntos.Mano2d);
+
+            distancia.DistanciaManoCodo = DistanceHelper.ObtenerDistancia(
+                puntos.Codo2d, puntos.Mano2d);
+
+            distancia.DistanciaHombroCodo = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro2d, puntos.Codo2d);
+
+            angulos.HombroAuxAtrasAdelante = CalcularAngulo(distancia.DistanciaManoCodo,
+                distancia.DistanciaManoHombro, distancia.DistanciaHombroCodo);
+
+            puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Hombro2d.X, puntos.Objeto2d.Y);
+
+            distancia.DistanciaObjetoAux = DistanceHelper.ObtenerDistancia(
+                puntos.Objeto2d, puntos.PuntoAuxHombroAtrasAdelante);
+
+            distancia.DistanciaHombroAux = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro2d, puntos.PuntoAuxHombroAtrasAdelante);
+
+            angulos.HombroObjAtrasAdelante = AnguloRectang(distancia.DistanciaHombroAux,
+                distancia.DistanciaObjetoAux);
+
+            if (puntos.Objeto2d.X < puntos.Hombro2d.X)
+                angulos.HombroObjAtrasAdelante = 180 - angulos.HombroObjAtrasAdelante;
+
+            angulos.HombroAdelanteAtras = angulos.HombroObjAtrasAdelante -
+                angulos.HombroAuxAtrasAdelante;
+        }
+
+        private void CalcularAnguloHombroArribaAbajo()
+        {
+            puntos.Hombro2d = new Point(puntos.Hombro.Position.Y, puntos.Hombro.Position.Z);
+            puntos.Codo2d = new Point(puntos.Codo.Position.Y, puntos.Codo.Position.Z);
+            puntos.Mano2d = new Point(puntos.Mano.Position.Y, puntos.Mano.Position.Z);
+            puntos.Objeto2d = new Point(puntos.Objeto.Y, puntos.Objeto.Z);
+
+            distancia.DistanciaManoHombro = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro2d, puntos.Mano2d);
+
+            distancia.DistanciaManoCodo = DistanceHelper.ObtenerDistancia(
+                puntos.Codo2d, puntos.Mano2d);
+
+            distancia.DistanciaHombroCodo = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro2d, puntos.Codo2d);
+
+            angulos.HombroAuxArribaAbajo= CalcularAngulo(distancia.DistanciaManoCodo,
+                distancia.DistanciaManoHombro, distancia.DistanciaHombroCodo);
+
+            puntos.PuntoAuxHombroArribaAbajo = new Point(puntos.Hombro2d.X, puntos.Objeto2d.Y);
+
+            distancia.DistanciaObjetoAux = DistanceHelper.ObtenerDistancia(
+                puntos.Objeto2d, puntos.PuntoAuxHombroAtrasAdelante);
+
+            distancia.DistanciaHombroAux = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro2d, puntos.PuntoAuxHombroAtrasAdelante);
+
+            angulos.HombroObjArribaAbajo = AnguloRectang(distancia.DistanciaHombroAux,
+                distancia.DistanciaObjetoAux);
+
+            angulos.HombroArribaAbajo = angulos.HombroObjArribaAbajo -
+                angulos.HombroAuxArribaAbajo;
+        }
+/*
         private void CalcularAnguloHombroAdelanteAtras()
         {
             //contiene el angulo entre hombro codo y mano.
@@ -108,7 +180,7 @@ namespace AtaxiaVision.Helpers
             angulos.HombroArribaAbajo = angulos.HombroObjArribaAbajo -
                 angulos.HombroAuxArribaAbajo;
 
-        }
+        }*/
 
         public double CalcularAngulo(float segmentoA, float segmentoB, float segmentoC)
         {
