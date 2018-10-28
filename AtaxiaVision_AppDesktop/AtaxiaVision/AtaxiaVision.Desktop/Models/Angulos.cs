@@ -14,6 +14,8 @@ namespace AtaxiaVision.Models
         public double HombroAdelanteAtras { get; set; }
         public double HombroAuxArribaAbajo { get; set; }
         public double HombroObjArribaAbajo { get; set; }
+        public double HombroAuxAtrasAdelante { get; set; }
+        public double HombroObjAtrasAdelante { get; set; }
 
         public Angulos()
         {
