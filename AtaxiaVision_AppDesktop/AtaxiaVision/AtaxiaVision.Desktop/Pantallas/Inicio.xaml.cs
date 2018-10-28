@@ -1,6 +1,7 @@
 ﻿using AtaxiaVision.Helpers;
 using AtaxiaVision.Models;
 using AtaxiaVision.Pantallas;
+using AtaxiaVision.Testing;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 using System;
@@ -44,6 +45,7 @@ namespace AtaxiaVision.Desktop.Pantallas
         
         public Inicio()
         {
+            PruebaAngulos p = new PruebaAngulos();
             InitializeComponent();
             ServerHelper.TestInicializarArchivo();
             SincronizarDatos();

@@ -1,6 +1,7 @@
 ﻿using AtaxiaVision.Desktop.Pantallas;
 using AtaxiaVision.Helpers;
 using AtaxiaVision.Models;
+using AtaxiaVision.Testing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace AtaxiaVision.Pantallas
 
         public Confirmacion(EjercicioViewModel ejercicio, List<TensionServos> tensiones)
         {
+            
             InitializeComponent();
             Ejercicio = ejercicio;
             var status = ServerHelper.EnviarEjercicio(Ejercicio);

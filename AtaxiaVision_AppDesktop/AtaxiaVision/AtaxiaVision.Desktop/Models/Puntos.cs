@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AtaxiaVision.Models
 {
@@ -13,8 +14,12 @@ namespace AtaxiaVision.Models
         public Joint Codo { get; set; }
         public Joint Mano { get; set; }
         public SkeletonPoint Objeto { get; set; }
-        public SkeletonPoint PuntoAuxHombroArribaAbajo { get; set; }
-        public SkeletonPoint PuntoAuxHombroAtrasAdelante { get; set; }
+        public Point Hombro2d { get; set; }
+        public Point Codo2d { get; set; }
+        public Point Mano2d { get; set; }
+        public Point Objeto2d { get; set; }
+        public Point PuntoAuxHombroArribaAbajo { get; set; }
+        public Point PuntoAuxHombroAtrasAdelante { get; set; }
 
         public Puntos() { }
         
