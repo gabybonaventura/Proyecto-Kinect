@@ -122,7 +122,9 @@
     <Compile Include="Helpers\EmguCVHelper.cs" />
     <Compile Include="Helpers\ServerHelper.cs" />
     <Compile Include="Models\Angulos.cs" />
+    <Compile Include="Models\Distancia.cs" />
     <Compile Include="Models\EjercicioViewModel.cs" />
+    <Compile Include="Models\Puntos.cs" />
     <Compile Include="Models\RespuestaGET.cs" />
     <Compile Include="Models\SesionViewModel.cs" />
     <Compile Include="Models\TensionServos.cs" />

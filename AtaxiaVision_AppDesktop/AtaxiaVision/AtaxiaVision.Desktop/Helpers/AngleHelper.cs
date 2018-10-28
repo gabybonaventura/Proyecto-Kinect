@@ -1,12 +1,36 @@
 ﻿using System;
+using AtaxiaVision.Models;
 using Microsoft.Kinect;
 
 namespace AtaxiaVision.Helpers
 {
     class AngleHelper
     {
-        public static double[] SetValorAngulos(Joint hombro, Joint mano, Joint codo, SkeletonPoint skelObjeto)
+        private Angulos angulos;
+        private Distancia distancia;
+        private Puntos puntos;
+
+        public Angulos SetValorAngulos(Puntos puntos)
         {
+            this.puntos = puntos;
+            angulos = new Angulos();
+
+            //calculo distancias para obtener el ANGULO del CODO ARRIBA ABAJO
+            CalcularAnguloCodoArribaAbajo();
+
+
+            
+            if (distancia.DistanciaHombroObjeto > distancia.DistanciaHombroCodo
+                + distancia.DistanciaManoCodo)
+                return angulos;
+
+            //calculo del angulo hombro ATRAS ADELANTE:
+
+            //Calculo del angulo hombro ARRIBA ABAJO:
+            CalcularAnguloHombroArribaAbajo();
+            
+            return angulos;
+            /*
             double[] array = new double[4];
             array[0] = -1;
             array[1] = -1;
@@ -76,7 +100,70 @@ namespace AtaxiaVision.Helpers
                     array[3] = anguloHombroArribaAbajoFut;
                 }
             }
-            return array;
+            return array;*/
+        }
+
+        private void CalcularAnguloCodoArribaAbajo()
+        {
+            distancia.DistanciaHombroCodo =
+                DistanceHelper.ObtenerDistancia(puntos.Hombro, puntos.Codo);
+            distancia.DistanciaManoCodo =
+                DistanceHelper.ObtenerDistancia(puntos.Mano, puntos.Codo);
+            /*distancia.DistanciaManoHombro =
+                DistanceHelper.ObtenerDistancia(puntos.Mano, puntos.Hombro);*/
+            distancia.DistanciaHombroObjeto =
+                DistanceHelper.ObtenerDistancia(puntos.Hombro, puntos.Objeto);
+
+            angulos.CodoArribaAbajo = CalcularAngulo(distancia.DistanciaHombroObjeto,
+                distancia.DistanciaManoCodo, distancia.DistanciaHombroCodo);
+        }
+
+        private void CalcularAnguloHombroArribaAbajo()
+        {
+            angulos.HombroAuxArribaAbajo = CalcularAngulo(distancia.DistanciaManoCodo,
+                distancia.DistanciaHombroObjeto, distancia.DistanciaHombroCodo);
+
+            //creo un punto auxiliar:
+            SkeletonPoint puntoAux = new SkeletonPoint()
+            { 
+                X = puntos.Objeto.X,
+                Y = puntos.Hombro.Position.Y,
+                Z = puntos.Hombro.Position.Z
+            };
+
+            distancia.DistanciaHombroAux = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro, puntos.PuntoAuxHombroArribaAbajo);
+            distancia.DistanciaObjetoAux = DistanceHelper.ObtenerDistancia(
+                puntos.Objeto, puntos.PuntoAuxHombroArribaAbajo);
+
+            angulos.HombroObjArribaAbajo = AnguloRectang(
+                distancia.DistanciaObjetoAux, distancia.DistanciaHombroAux);
+
+            angulos.HombroArribaAbajo = angulos.HombroObjArribaAbajo -
+                angulos.HombroAuxArribaAbajo;
+
+        }
+
+        public double CalcularAngulo(float segmentoA, float segmentoB, float segmentoC)
+        {
+            //se devuelve el ángulo del primer punto, es decir que si el hombro es "a",
+            //devuelve el angulo del hombro en relación al codo y mano.
+
+            float segA2 = (float)Math.Pow(segmentoA, 2);
+            float segB2 = (float)Math.Pow(segmentoB, 2);
+            float segC2 = (float)Math.Pow(segmentoC, 2);
+
+            double rad = Math.Acos((segA2 - segB2 - segC2) / ((-2) * segmentoB * segmentoC));
+
+            double deg = DistanceHelper.RadToDeg(rad);
+            return deg;
+        }
+
+        public static double AnguloRectang(float segH, float segA)
+        {
+            double rad = Math.Acos(segA / segH);
+            double deg = DistanceHelper.RadToDeg(rad);
+            return deg;
         }
     }
 }
