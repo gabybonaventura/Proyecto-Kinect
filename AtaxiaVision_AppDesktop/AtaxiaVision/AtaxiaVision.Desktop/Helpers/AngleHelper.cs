@@ -118,6 +118,39 @@ namespace AtaxiaVision.Helpers
                 distancia.DistanciaManoCodo, distancia.DistanciaHombroCodo);
         }
 
+        private void CalcularAnguloCodoAdelanteAtras()
+        {
+            //contiene el angulo entre hombro codo y mano.
+            angulos.HombroAuxAtrasAdelante = CalcularAngulo(distancia.DistanciaManoCodo,
+                distancia.DistanciaHombroObjeto, distancia.DistanciaHombroCodo);
+
+            //creo un punto auxiliar para calcular angulo que hay entre hombro y objeto.
+
+            puntos.PuntoAuxHombroAtrasAdelante = new SkeletonPoint()
+            {
+                X = puntos.Hombro.Position.X,
+                Y = puntos.Hombro.Position.Y,
+                Z = puntos.Objeto.Z
+            };
+
+            //calculo distancia entre hombro y puntoaux
+            distancia.DistanciaHombroAux = DistanceHelper.ObtenerDistancia(
+                puntos.Hombro, puntos.PuntoAuxHombroAtrasAdelante);
+
+            //calculo distancia entre objeto y puntoaux
+            distancia.DistanciaObjetoAux = DistanceHelper.ObtenerDistancia(
+                puntos.Objeto, puntos.PuntoAuxHombroAtrasAdelante);
+
+            //calculo angulo entre hombro, puntoaux y objeto:
+            angulos.HombroObjAtrasAdelante = CalcularAngulo(
+                distancia.DistanciaObjetoAux, distancia.DistanciaHombroAux,
+                distancia.DistanciaHombroObjeto);
+
+            angulos.HombroAdelanteAtras = angulos.HombroObjAtrasAdelante +
+                angulos.HombroAuxAtrasAdelante;
+
+        }
+
         private void CalcularAnguloHombroArribaAbajo()
         {
             angulos.HombroAuxArribaAbajo = CalcularAngulo(distancia.DistanciaManoCodo,
