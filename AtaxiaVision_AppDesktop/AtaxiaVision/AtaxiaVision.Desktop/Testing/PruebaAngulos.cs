@@ -30,7 +30,7 @@ namespace AtaxiaVision.Testing
             objeto = SetPosition(0.43, 2.64, 3);
             AngleHelper a = new AngleHelper();
 
-            a.SetValorAngulos(new Puntos(hombro, mano, codo, objeto));
+            a.SetValorAngulos(new Puntos(hombro,codo,mano,objeto));
 
         }
 
