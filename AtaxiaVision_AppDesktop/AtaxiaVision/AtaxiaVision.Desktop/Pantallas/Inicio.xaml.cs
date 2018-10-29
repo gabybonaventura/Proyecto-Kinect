@@ -48,7 +48,7 @@ namespace AtaxiaVision.Desktop.Pantallas
         {
             PruebaAngulos p = new PruebaAngulos();
             InitializeComponent();
-            ServerHelper.TestInicializarArchivo();
+            //ServerHelper.TestInicializarArchivo();
             SincronizarDatos();
             // Test de grabacion json
             //ServerHelper.TestLeerArchivo();
@@ -56,10 +56,10 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            ValidarTokenBackGruondWorker();
             snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
-            ValidarTokenBackGruondWorker();
             Sesion = new SesionViewModel();
             Ejercicio = new EjercicioViewModel();
         }

@@ -168,13 +168,19 @@ namespace AtaxiaVision.Helpers
 
         public static int EnviarEjercicio(EjercicioViewModel ejercicio)
         {
-            List<EjercicioViewModel> ejercicios = new List<EjercicioViewModel>();
-            ejercicios.Add(ejercicio);
+            // El metodo POST necesita una lista.
+            List<EjercicioViewModel> ejercicios = new List<EjercicioViewModel>
+            {
+                ejercicio
+            };
             var datos = JsonConvert.SerializeObject(ejercicios);
             var resultPost = Enviar(API_SESSION, METHOD_POST, datos);
-            if (resultPost.RespuestaCode == SERVER_OK)
-                return SERVER_OK;
-            return SERVER_ERROR;
+            if (resultPost.RespuestaCode == SERVER_ERROR)
+            {
+                AgregarEjercicioDatosOffile(ejercicio);
+                return SERVER_ERROR;
+            }
+            return SERVER_OK;
         }
 
         #region Test
