@@ -14,6 +14,7 @@
     using Helpers;
     using AtaxiaVision.Models;
     using MaterialDesignThemes.Wpf;
+    using AtaxiaVision.Controllers;
 
     /// <summary>
     /// Interaction logic for Principal.xaml
@@ -26,15 +27,7 @@
         private const float RenderWidth = 640.0f;
 
         private const float RenderHeight = 480.0f;
-
-        private const double JointThickness = 3;
-
-        private const double BodyCenterThickness = 10;
-
-        private const double ClipBoundsThickness = 10;
-
-        private readonly Brush centerPointBrush = Brushes.DarkRed;
-
+        
         private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
 
         private readonly Brush inferredJointBrush = Brushes.White;
@@ -53,8 +46,6 @@
 
         private byte[] colorPixels;
 
-        private readonly Pen HandHandPen = new Pen(Brushes.Red, 6);
-
         short[] datosDistancia = null;
         byte[] colorImagenDistancia = null;
         double ObjetoX;
@@ -67,14 +58,7 @@
 
         bool flagObjeto = false;
 
-        private SerialPort _serialPort = new SerialPort();
-        private int _baudRate = 9600;
-        private int _dataBits = 8;
-        private Handshake _handshake = Handshake.None;
-        private Parity _parity = Parity.None;
-        private string _portName = "COM5";
-        private StopBits _stopBits = StopBits.One;
-        
+        ArduinoController arduinoController;
         
         Joint ManoDerecha;
         Joint CodoDerecho;
@@ -101,7 +85,6 @@
 
         //------------------------------------//
 
-        private List<TensionServos> Tensiones { get; set; }
         private EjercicioViewModel Ejercicio { get; set; }
         private SesionViewModel Sesion { get; set; }
 
@@ -113,21 +96,8 @@
             InitializeComponent();
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
-            Tensiones = new List<TensionServos>();
-            try
-            {
-                _serialPort.BaudRate = _baudRate;
-                _serialPort.DataBits = _dataBits;
-                _serialPort.Handshake = _handshake;
-                _serialPort.Parity = _parity;
-                _serialPort.PortName = _portName;
-                _serialPort.StopBits = _stopBits;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
+            arduinoController = new ArduinoController();
+           
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -172,7 +142,6 @@
 
                 this.colorPixels = new byte[this.sensor.ColorStream.FramePixelDataLength];
                 this.colorBitmap = new WriteableBitmap(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
-                //this.Image.Source = this.colorBitmap;
 
                 this.colorCoordinates = new ColorImagePoint[this.sensor.DepthStream.FramePixelDataLength];
                 this.depthWidth = this.sensor.DepthStream.FrameWidth;
@@ -204,26 +173,8 @@
                 EstadoSnackBar("Kinect no lista.");
             }
 
-            try
-            {
-                _serialPort.BaudRate = _baudRate;
-                _serialPort.DataBits = _dataBits;
-                _serialPort.Handshake = _handshake;
-                _serialPort.Parity = _parity;
-                _serialPort.PortName = _portName;
-                _serialPort.StopBits = _stopBits;
-                _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-                _serialPort.Open();
-                if (_serialPort.IsOpen)
-                {
-                    _serialPort.Write("*110090040040");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
+            arduinoController.Inicializar();
+
         }
 
         private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
@@ -383,34 +334,22 @@
             }
         }
 
-        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
-        {
-            SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadExisting();
-            //Console.WriteLine(indata);
-            if (!string.IsNullOrEmpty(indata))
-            {
-                Tensiones.Add(new TensionServos(indata));
-            }
-        }
-
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (null != this.sensor)
             {
                 this.sensor.Stop();
             }
-            if (_serialPort.IsOpen)
-                _serialPort.Close();
+            arduinoController.CerrarPuerto();
             //Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
-            Confirmacion win = new Confirmacion(Sesion, Ejercicio, Tensiones);
+            Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             Console.WriteLine("cierra por acá");
             win.Show();
         }
 
         private void ConfirmacionButton_Click(object sender, RoutedEventArgs e)
         {
-            ArduinoHelper.EscribirAngulosArduino(_serialPort, angulos);
+            arduinoController.EscribirAngulosArduino(angulos);
         }
 
         private void CalcularButton_Click(object sender, RoutedEventArgs e)
@@ -522,7 +461,7 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            Confirmacion win = new Confirmacion(Sesion, Ejercicio, Tensiones);
+            Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             win.Show();
             Close();
         }

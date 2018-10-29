@@ -113,12 +113,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\ArduinoController.cs" />
     <Compile Include="Testing\PruebaAngulos.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archivos\Configuracion.cs" />
     <Compile Include="Helpers\AngleHelper.cs" />
-    <Compile Include="Helpers\ArduinoHelper.cs" />
     <Compile Include="Helpers\DistanceHelper.cs" />
     <Compile Include="Helpers\EmguCVHelper.cs" />
     <Compile Include="Helpers\ServerHelper.cs" />
