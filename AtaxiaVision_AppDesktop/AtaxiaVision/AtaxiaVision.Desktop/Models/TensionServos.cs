@@ -14,6 +14,8 @@ namespace AtaxiaVision.Models
         public int HombroArribaAbajo { get; set; }
         public int HombroAdelanteAtras { get; set; }
 
+        public TensionServos() { }
+
         public TensionServos(string datoArduino)
         {
             //el string llega en el formato:
