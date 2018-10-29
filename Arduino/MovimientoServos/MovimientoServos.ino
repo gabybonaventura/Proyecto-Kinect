@@ -77,7 +77,7 @@ void loop() {
       HombroAdelanteAtrasPosicion = inString.toInt();
       //Adapto el angulo real al angulo que tienen los servos
       HombroAdelanteAtrasPosicion = abs(HombroAdelanteAtrasPosicion - 90);
-      
+      /*
       Serial.print("Value:");
       Serial.println(CodoArribaAbajoPosicion);
       Serial.print("String: ");
@@ -94,6 +94,7 @@ void loop() {
       Serial.println(HombroAdelanteAtrasPosicion);
       Serial.print("String: ");
       Serial.println(inString);
+      */
 
       CodoArribaAbajoServo.write(CodoArribaAbajoPosicion);
       CodoIzquierdaDerechaServo.write(CodoIzquierdaDerechaPosicion);
