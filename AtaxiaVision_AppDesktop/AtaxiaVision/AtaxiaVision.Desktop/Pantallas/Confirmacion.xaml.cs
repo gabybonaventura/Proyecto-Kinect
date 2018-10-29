@@ -2,6 +2,7 @@
 using AtaxiaVision.Helpers;
 using AtaxiaVision.Models;
 using AtaxiaVision.Testing;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,43 +25,44 @@ namespace AtaxiaVision.Pantallas
     public partial class Confirmacion : Window
     {
         public EjercicioViewModel Ejercicio { get; set; }
+        public SesionViewModel Sesion { get; set; }
         public string Pregunta { get; set; }
-        public Confirmacion()
+
+        private void EstadoSnackBar(string mensaje)
         {
-            InitializeComponent();
+            Snackbar.IsActive = false;
+            Snackbar.Message = new SnackbarMessage() { Content = mensaje };
+            Snackbar.IsActive = true;
         }
 
-        public Confirmacion(EjercicioViewModel ejercicio, List<TensionServos> tensiones)
+        public Confirmacion(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM, List<TensionServos> tensiones)
         {
-            
             InitializeComponent();
-            Ejercicio = ejercicio;
+            Sesion = sesionVM;
+            Ejercicio = ejercicioVM;
+            Ejercicio.Desvios = TensionHelper.CalcularDesvios(tensiones);
             var status = ServerHelper.EnviarEjercicio(Ejercicio);
-            switch (status)
-            {
-                case ServerHelper.SERVER_ERROR:
-                    ServerHelper.AgregarEjercicioDatosOffile(Ejercicio);
-                    PreguntaLabel.Content = "Ejercicio finalizado con exito. Desea repetir el ejercicio?";
-                    break;
-                case ServerHelper.SERVER_OK:
-                    PreguntaLabel.Content = "Ejercicio no finalizado. Desea repetir el ejercicio?";
-                    break;
-                default:
-                    break;
-            }
+            if(status == ServerHelper.SERVER_ERROR)
+                ServerHelper.AgregarEjercicioDatosOffile(Ejercicio);
+            if (Ejercicio.FinalizoConExito)
+                PreguntaLabel.Content = "Ejercicio finalizado con éxito. ¿Desea repetir el ejercicio?";
+            else
+                PreguntaLabel.Content = "Ejercicio no finalizado. ¿Desea repetir el ejercicio?";
+            EstadoSnackBar("Fin ejercicio " + Ejercicio.Ejercicio);
             Ejercicio.Ejercicio++;
         }
-
-        public Confirmacion(bool flagToken, List<TensionServos> desvios, bool resultado, string token, int nroEj)
-        {
-           
-        }
-
 
         private void NoBtn_Click(object sender, RoutedEventArgs e)
         {
             Inicio inicio = new Inicio();
             inicio.Show();
+            Close();
+        }
+
+        private void SiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Principal win = new Principal(Sesion, Ejercicio);
+            win.Show();
             Close();
         }
     }

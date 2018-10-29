@@ -19,19 +19,32 @@ namespace AtaxiaVision.Helpers
                     tension.HombroArribaAbajo > TensionLimite);
         }
 
+        private static bool EsNuevoDesvio(int i, int indiceUltimoDesvio, int cantidadDesvioContinuo)
+        {
+            return indiceUltimoDesvio + cantidadDesvioContinuo == i;
+        }
+
         public static int CalcularDesvios(List<TensionServos> tensiones)
         {
             int desvios = 0;
             int indiceUltimoDesvio = -1;
+            int cantidadDesviosContinuos = 1;
             for (int i = 0; i < tensiones.Count; i++)
             {
                 var tension = tensiones.ElementAt(i);
                 if (HayDesvio(tension))
                 {
-
+                    if (EsNuevoDesvio(i, indiceUltimoDesvio, cantidadDesviosContinuos))
+                    {
+                        indiceUltimoDesvio = i;
+                        cantidadDesviosContinuos = 1;
+                        desvios++;
+                    }
+                    else
+                        cantidadDesviosContinuos++;
                 }
             }
-            return 0;
+            return desvios;
         }
     }
 }

@@ -30,6 +30,7 @@ namespace AtaxiaVision.Desktop.Pantallas
     public partial class Inicio : Window
     {
         public SesionViewModel Sesion { get; set; }
+        public EjercicioViewModel Ejercicio { get; set; }
 
         // Delegates (son como punteros de C, sirven para que entre 
         // hilos asincronicos puedan acceder a los componentes de la vista)
@@ -60,6 +61,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
             ValidarTokenBackGruondWorker();
             Sesion = new SesionViewModel();
+            Ejercicio = new EjercicioViewModel();
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -107,7 +109,7 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
         {
-            Principal win = new Principal(Sesion);
+            Principal win = new Principal(Sesion, Ejercicio);
             win.Show();
             Close();
         }
@@ -115,6 +117,8 @@ namespace AtaxiaVision.Desktop.Pantallas
         private void ValidarToken()
         {
             Sesion.Token = TokenTextBox.Text;
+            Ejercicio.Token = Sesion.Token;
+            Ejercicio.Ejercicio = 1;
             if (String.IsNullOrEmpty(Sesion.Token))
             {
                 EstadoSnackBar("Por favor ingrese un token");

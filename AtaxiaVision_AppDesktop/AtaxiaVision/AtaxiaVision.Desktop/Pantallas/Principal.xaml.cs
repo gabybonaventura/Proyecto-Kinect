@@ -74,14 +74,8 @@
         private Parity _parity = Parity.None;
         private string _portName = "COM5";
         private StopBits _stopBits = StopBits.One;
-
-        private bool flagTokenValidado, resultado = false;
-        private string valorToken;
-        private int nro_ejercicio;
-
-        List<TensionServos> tensiones /*= new List<Angulos>()*/;
-
-
+        
+        
         Joint ManoDerecha;
         Joint CodoDerecho;
         Joint HombroDerecho;
@@ -107,30 +101,19 @@
 
         //------------------------------------//
 
-        public EjercicioViewModel Ejercicio { get; set; }
+        private List<TensionServos> Tensiones { get; set; }
+        private EjercicioViewModel Ejercicio { get; set; }
+        private SesionViewModel Sesion { get; set; }
 
         #endregion Properties
-
-        public Principal()
-        {
-
-        }
-
+        
         // FALTA NUMERO EJERCICIO
-        public Principal(SesionViewModel sesion, int ejercicio = 1)
+        public Principal(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM)
         {
-            Ejercicio = new EjercicioViewModel()
-            {
-                Token = sesion.Token,
-                Ejercicio = ejercicio
-            };
-
-            flagTokenValidado = sesion.TokenValido;
-            this.valorToken = sesion.Token;
-            tensiones = new List<TensionServos>();
-            //nro_ejercicio = sesion.Ejercicio;
             InitializeComponent();
-
+            Sesion = sesionVM;
+            Ejercicio = ejercicioVM;
+            Tensiones = new List<TensionServos>();
             try
             {
                 _serialPort.BaudRate = _baudRate;
@@ -387,7 +370,8 @@
                             {
                                 //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
                                 //los datos.
-                                resultado = true;
+                                //resultado = true;
+                                Ejercicio.FinalizoConExito = true;
                                 this.Close();
                             }
                         }
@@ -406,7 +390,7 @@
             //Console.WriteLine(indata);
             if (!string.IsNullOrEmpty(indata))
             {
-                tensiones.Add(new TensionServos(indata));
+                Tensiones.Add(new TensionServos(indata));
             }
         }
 
@@ -419,7 +403,7 @@
             if (_serialPort.IsOpen)
                 _serialPort.Close();
             //Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
-            Confirmacion win = new Confirmacion(Ejercicio, tensiones);
+            Confirmacion win = new Confirmacion(Sesion, Ejercicio, Tensiones);
             Console.WriteLine("cierra por acá");
             win.Show();
         }
@@ -538,7 +522,7 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            Confirmacion win = new Confirmacion(Ejercicio, tensiones);
+            Confirmacion win = new Confirmacion(Sesion, Ejercicio, Tensiones);
             win.Show();
             Close();
         }

@@ -122,7 +122,7 @@ namespace AtaxiaVision.Helpers
                     resultado = EnviarGet(api, data);
                     break;
                 case METHOD_POST:
-                    resultado = EnviarPost(api, LeerArchivoDatosOffile());
+                    resultado = EnviarPost(api, data);
                     break;
                 default:
                     break;
@@ -155,7 +155,7 @@ namespace AtaxiaVision.Helpers
 
         public static int ValidarToken(string token)
         {
-            var resultGet = EnviarGet(API_TOKEN, token);
+            var resultGet = Enviar(API_TOKEN,METHOD_GET, token);
             if (resultGet.RespuestaCode == SERVER_OK)
             {
                 if (resultGet.PropiedadIsValid)
@@ -168,7 +168,13 @@ namespace AtaxiaVision.Helpers
 
         public static int EnviarEjercicio(EjercicioViewModel ejercicio)
         {
-            return SERVER_OK;
+            List<EjercicioViewModel> ejercicios = new List<EjercicioViewModel>();
+            ejercicios.Add(ejercicio);
+            var datos = JsonConvert.SerializeObject(ejercicios);
+            var resultPost = Enviar(API_SESSION, METHOD_POST, datos);
+            if (resultPost.RespuestaCode == SERVER_OK)
+                return SERVER_OK;
+            return SERVER_ERROR;
         }
 
         #region Test
@@ -183,34 +189,34 @@ namespace AtaxiaVision.Helpers
                 FinalizoConExito = true,
                 Desvios = 4
             });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            {
-                Token = "38662776_1",
-                Ejercicio = 2,
-                FinalizoConExito = false,
-                Desvios = 21
-            });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            {
-                Token = "38662776_2",
-                Ejercicio = 1,
-                FinalizoConExito = true,
-                Desvios = 2
-            });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            {
-                Token = "38662776_2",
-                Ejercicio = 2,
-                FinalizoConExito = true,
-                Desvios = 21
-            });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            {
-                Token = "38662776_2",
-                Ejercicio = 3,
-                FinalizoConExito = false,
-                Desvios = 7
-            });
+            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            //{
+            //    Token = "38662776_1",
+            //    Ejercicio = 2,
+            //    FinalizoConExito = false,
+            //    Desvios = 21
+            //});
+            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            //{
+            //    Token = "38662776_2",
+            //    Ejercicio = 1,
+            //    FinalizoConExito = true,
+            //    Desvios = 2
+            //});
+            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            //{
+            //    Token = "38662776_2",
+            //    Ejercicio = 2,
+            //    FinalizoConExito = true,
+            //    Desvios = 21
+            //});
+            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            //{
+            //    Token = "38662776_2",
+            //    Ejercicio = 3,
+            //    FinalizoConExito = false,
+            //    Desvios = 7
+            //});
         }
 
         public static void TestLeerArchivo()
