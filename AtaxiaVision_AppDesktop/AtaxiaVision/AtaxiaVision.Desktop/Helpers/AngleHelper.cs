@@ -33,7 +33,6 @@ namespace AtaxiaVision.Helpers
             angulos.CodoIzquierdaDerecha = 90.0;
             
             return angulos;
- 
         }
 
 
