@@ -77,7 +77,8 @@
             FontSize="30" 
             FontWeight="Bold" 
             HorizontalAlignment="Center" 
-            Width="300" KeyDown="TokenTextBox_KeyDown"/>
+            Width="300" 
+            KeyDown="TokenTextBox_KeyDown"/>
         <Button 
             Name="ValidarTokenBtn"
             Content="Validar token" 

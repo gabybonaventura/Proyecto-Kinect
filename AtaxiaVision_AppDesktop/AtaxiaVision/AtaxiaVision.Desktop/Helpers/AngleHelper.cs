@@ -71,7 +71,8 @@ namespace AtaxiaVision.Helpers
             angulos.HombroAuxAtrasAdelante = CalcularAngulo(distancia.DistanciaManoCodo,
                 distancia.DistanciaManoHombro, distancia.DistanciaHombroCodo);
 
-            puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Hombro2d.X, puntos.Objeto2d.Y);
+            //puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Hombro2d.X, puntos.Objeto2d.Y);
+            puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Objeto2d.X, puntos.Hombro2d.Y);
 
             distancia.DistanciaObjetoAux = DistanceHelper.ObtenerDistancia(
                 puntos.Objeto2d, puntos.PuntoAuxHombroAtrasAdelante);
