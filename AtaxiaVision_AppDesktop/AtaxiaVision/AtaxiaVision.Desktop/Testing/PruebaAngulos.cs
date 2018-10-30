@@ -17,17 +17,17 @@ namespace AtaxiaVision.Testing
         public PruebaAngulos()
         {
             mano = new Joint();
-            mano.Position = SetPosition(1.26, 2.2, 2.23);
+            mano.Position = SetPosition(1.0, 2.2, 2.23);
 
             codo = new Joint();
-            codo.Position = SetPosition(1.26, 0.98, 1.52);
+            codo.Position = SetPosition(1.5, 0.98, 1.52);
 
             hombro = new Joint();
-            hombro.Position = SetPosition(1.26, -0.46, 2.77);
+            hombro.Position = SetPosition(2, -0.46, 2.77);
 
             objeto = new SkeletonPoint();
 
-            objeto = SetPosition(0.43, 2.64, 3);
+            objeto = SetPosition(1.70, 2.64, 3);
             AngleHelper a = new AngleHelper();
 
             a.SetValorAngulos(new Puntos(hombro,codo,mano,objeto));
