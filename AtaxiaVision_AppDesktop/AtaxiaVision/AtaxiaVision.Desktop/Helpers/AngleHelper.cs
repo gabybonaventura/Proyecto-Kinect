@@ -28,8 +28,8 @@ namespace AtaxiaVision.Helpers
             CalcularAnguloHombroAdelanteAtras();
 
             //Calculo del angulo hombro ARRIBA ABAJO:
-            CalcularAnguloHombroArribaAbajo();
-
+            //            CalcularAnguloHombroArribaAbajo();
+            angulos.HombroArribaAbajo = 90.0;
             angulos.CodoIzquierdaDerecha = 90.0;
             
             return angulos;
@@ -55,21 +55,21 @@ namespace AtaxiaVision.Helpers
         private void CalcularAnguloHombroAdelanteAtras()
         {
             puntos.Hombro2d = new Point(puntos.Hombro.Position.Y, puntos.Hombro.Position.Z);
-            puntos.Codo2d = new Point(puntos.Codo.Position.Y, puntos.Codo.Position.Z);
-            puntos.Mano2d = new Point(puntos.Mano.Position.Y, puntos.Mano.Position.Z);
+        //    puntos.Codo2d = new Point(puntos.Codo.Position.Y, puntos.Codo.Position.Z);
+        //    puntos.Mano2d = new Point(puntos.Mano.Position.Y, puntos.Mano.Position.Z);
             puntos.Objeto2d = new Point(puntos.Objeto.Y, puntos.Objeto.Z);
 
-            distancia.DistanciaManoHombro = DistanceHelper.ObtenerDistancia(
-                puntos.Hombro2d, puntos.Mano2d);
+        //    distancia.DistanciaManoHombro = DistanceHelper.ObtenerDistancia(
+        //        puntos.Hombro2d, puntos.Mano2d);
 
-            distancia.DistanciaManoCodo = DistanceHelper.ObtenerDistancia(
-                puntos.Codo2d, puntos.Mano2d);
+        //    distancia.DistanciaManoCodo = DistanceHelper.ObtenerDistancia(
+               // puntos.Codo2d, puntos.Mano2d);
 
-            distancia.DistanciaHombroCodo = DistanceHelper.ObtenerDistancia(
-                puntos.Hombro2d, puntos.Codo2d);
+           // distancia.DistanciaHombroCodo = DistanceHelper.ObtenerDistancia(
+           //     puntos.Hombro2d, puntos.Codo2d);
 
             angulos.HombroAuxAtrasAdelante = CalcularAngulo(distancia.DistanciaManoCodo,
-                distancia.DistanciaManoHombro, distancia.DistanciaHombroCodo);
+                distancia.DistanciaHombroObjeto, distancia.DistanciaHombroCodo);
 
             //puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Hombro2d.X, puntos.Objeto2d.Y);
             puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Objeto2d.X, puntos.Hombro2d.Y);
@@ -80,28 +80,30 @@ namespace AtaxiaVision.Helpers
             distancia.DistanciaHombroAux = DistanceHelper.ObtenerDistancia(
                 puntos.Hombro2d, puntos.PuntoAuxHombroAtrasAdelante);
 
-            angulos.HombroObjAtrasAdelante = AnguloRectangCos(
-                distancia.DistanciaObjetoAux, distancia.DistanciaHombroAux);
+            angulos.HombroObjAtrasAdelante = CalcularAngulo(distancia.DistanciaManoCodo,
+                distancia.DistanciaHombroObjeto, distancia.DistanciaHombroCodo);
+                //AnguloRectangCos(
+                //distancia.DistanciaObjetoAux, distancia.DistanciaHombroAux);
 
             angulos.HombroAdelanteAtras = angulos.HombroObjAtrasAdelante -
                 angulos.HombroAuxAtrasAdelante;
         }
 
-        private void CalcularAnguloHombroArribaAbajo()
+        /*private void CalcularAnguloHombroArribaAbajo()
         {
             puntos.Hombro2d = new Point(puntos.Hombro.Position.X, puntos.Hombro.Position.Z);
-            puntos.Codo2d = new Point(puntos.Codo.Position.X, puntos.Codo.Position.Z);
-            puntos.Mano2d = new Point(puntos.Mano.Position.X, puntos.Mano.Position.Z);
+            //puntos.Codo2d = new Point(puntos.Codo.Position.X, puntos.Codo.Position.Z);
+            //puntos.Mano2d = new Point(puntos.Mano.Position.X, puntos.Mano.Position.Z);
             puntos.Objeto2d = new Point(puntos.Objeto.X, puntos.Objeto.Z);
 
-            distancia.DistanciaManoHombro = DistanceHelper.ObtenerDistancia(
-                puntos.Hombro2d, puntos.Mano2d);
+            //distancia.DistanciaManoHombro = DistanceHelper.ObtenerDistancia(
+             //   puntos.Hombro2d, puntos.Mano2d);
 
-            distancia.DistanciaManoCodo = DistanceHelper.ObtenerDistancia(
-                puntos.Codo2d, puntos.Mano2d);
+            //distancia.DistanciaManoCodo = DistanceHelper.ObtenerDistancia(
+              //  puntos.Codo2d, puntos.Mano2d);
 
-            distancia.DistanciaHombroCodo = DistanceHelper.ObtenerDistancia(
-                puntos.Hombro2d, puntos.Codo2d);
+            //distancia.DistanciaHombroCodo = DistanceHelper.ObtenerDistancia(
+              //  puntos.Hombro2d, puntos.Codo2d);
 
             angulos.HombroAuxArribaAbajo= CalcularAngulo(distancia.DistanciaManoCodo,
                 distancia.DistanciaManoHombro, distancia.DistanciaHombroCodo);
@@ -122,7 +124,7 @@ namespace AtaxiaVision.Helpers
 
             angulos.HombroArribaAbajo = angulos.HombroObjArribaAbajo -
                 angulos.HombroAuxArribaAbajo;
-        }
+        }*/
 /*
         private void CalcularAnguloHombroAdelanteAtras()
         {
