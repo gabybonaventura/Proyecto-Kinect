@@ -60,22 +60,22 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Height="100" 
-            Width="301" 
+            Width="640" 
             IsEnabled="False" 
             Click="ConfirmacionButton_Click" 
-            Content="Confirmar" 
+            Content="_Confirmar" 
             FontSize="30"
-            Margin="527,130,188,0"/>
+            Margin="188,130,188,0"/>
         <Button 
             x:Name="CalcularButton" 
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Width="300" 
+            Width="164" 
             Height="100" 
-            FontSize="30"
+            FontSize="15"
             Click="CalcularButton_Click"
-            Content="Calcular Ángulos" 
-            Margin="188,130,528,0"/>
+            Content="Calcular _Ángulos" 
+            Margin="10,130,842,0"/>
 
         <!-- Snackbar -->
         <materialDesign:Snackbar

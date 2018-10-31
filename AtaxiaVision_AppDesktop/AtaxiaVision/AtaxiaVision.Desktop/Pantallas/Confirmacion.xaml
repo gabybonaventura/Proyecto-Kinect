@@ -126,7 +126,6 @@
                     Grid.Column="2"
                     Content="Ejercicio: "
                     FontSize="25"
-                    
                     Foreground="#FFF"/>
                 <Label 
                     x:Name="DesviosLabel"
@@ -136,8 +135,16 @@
                     FontSize="25"
                     Foreground="#FFF"/>
                 <Label 
+                    x:Name="DuracionLabel"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Content="Duracion: "
+                    FontSize="25"
+                    Foreground="#FFF"/>
+                <Label 
                     x:Name="FechaLabel"
                     Grid.Row="4"
+                    Grid.ColumnSpan="2"
                     Content="Fecha: "
                     Margin="16 0 16 16"
                     FontSize="25"

@@ -96,6 +96,7 @@
             InitializeComponent();
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
+            Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             arduinoController = new ArduinoController();
         }
 
@@ -470,6 +471,14 @@
             if (e.Key == Key.Escape)
             {
                 FinEjercicioBtn_Click(sender,e);
+            }
+            if(ConfirmacionButton.IsEnabled && (e.Key == Key.C || e.Key == Key.Enter))
+            {
+                ConfirmacionButton_Click(sender, e);
+            }
+            if(e.Key == Key.A)
+            {
+                CalcularAngulosFinales();
             }
         }
     }

@@ -57,6 +57,8 @@ namespace AtaxiaVision.Pantallas
             InitializeComponent();
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
+            Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second) - Ejercicio.Duracion;
+            DuracionLabel.Content = "Duracion: " + Ejercicio.Duracion;
             Tensiones = tensiones;
             ContentTokenLabel(Ejercicio.Token);
             ContentEjercicioLabel(Ejercicio.Ejercicio + "");
