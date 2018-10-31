@@ -332,6 +332,7 @@
                                 //resultado = true;
                                 Ejercicio.FinalizoConExito = true;
                                 Cerrar();
+                                break;
                             }
                         }
                     }
