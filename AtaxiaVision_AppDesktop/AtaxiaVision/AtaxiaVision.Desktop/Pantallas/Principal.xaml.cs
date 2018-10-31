@@ -325,13 +325,13 @@
                             //Console.WriteLine($"Mano X Y Z {handRight.Position.X} {handRight.Position.Y} {handRight.Position.Z}");
                             //Console.WriteLine($"Objeto X Y Z {skelObjeto.X} {skelObjeto.Y} {skelObjeto.Z}");
 
-                            if (DistanceHelper.ObtenerDistancia(ManoDerecha, skelObjeto) < 0.1)
+                            if (DistanceHelper.ObtenerDistancia(ManoDerecha, skelObjeto) < 0.2)
                             {
                                 //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
                                 //los datos.
                                 //resultado = true;
                                 Ejercicio.FinalizoConExito = true;
-                                this.Close();
+                                Cerrar();
                             }
                         }
                     }
@@ -344,6 +344,11 @@
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Cerrar();
+        }
+
+        private void Cerrar()
+        {
             if (null != this.sensor)
             {
                 this.sensor.Stop();
@@ -353,6 +358,7 @@
             Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             Console.WriteLine("cierra por acá");
             win.Show();
+            Close();
         }
 
         private void ConfirmacionButton_Click(object sender, RoutedEventArgs e)
