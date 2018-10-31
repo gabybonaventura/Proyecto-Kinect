@@ -46,6 +46,8 @@ namespace AtaxiaVision.Pantallas
         public EjercicioCardDelegate ejercicioCardDelegate;
         public delegate void DesviosLabelDelegate(string resultado);
         public DesviosLabelDelegate desviosLabelDelegate;
+        public delegate void FechaLabelDelegate(DateTime date);
+        public FechaLabelDelegate fechaLabelDelegate;
 
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
@@ -71,6 +73,7 @@ namespace AtaxiaVision.Pantallas
             resultadoLabelDelegate = new ResultadoLabelDelegate(ContentResultadoLabel);
             ejercicioCardDelegate = new EjercicioCardDelegate(EstadoEjercicioCard);
             desviosLabelDelegate = new DesviosLabelDelegate(ContentDesviosLabel);
+            fechaLabelDelegate = new FechaLabelDelegate(FechaDesviosLabel);
             if (!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
         }
@@ -104,6 +107,7 @@ namespace AtaxiaVision.Pantallas
                 EjercicioCard.Dispatcher.Invoke(ejercicioCardDelegate, Visibility.Visible);
                 SiBtn.Dispatcher.Invoke(siBtnDelegate, true);
                 NoBtn.Dispatcher.Invoke(noBtnDelegate, true);
+                FechaLabel.Dispatcher.Invoke(fechaLabelDelegate, DateTime.Now);
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
             };
         }
@@ -159,6 +163,11 @@ namespace AtaxiaVision.Pantallas
         private void ContentDesviosLabel(string text)
         {
             DesviosLabel.Content = "Desvios: " + text;
+        }
+
+        private void FechaDesviosLabel(DateTime date)
+        {
+            FechaLabel.Content = "Fecha: " + date.ToString("dd/MM/yyyy hh:mm:ss");
         }
 
         private void NoBtn_Click(object sender, RoutedEventArgs e)

@@ -90,14 +90,12 @@
 
         #endregion Properties
         
-        // FALTA NUMERO EJERCICIO
         public Principal(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM)
         {
             InitializeComponent();
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
             arduinoController = new ArduinoController();
-           
         }
 
         private void EstadoSnackBar(string mensaje)

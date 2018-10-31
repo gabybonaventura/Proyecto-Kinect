@@ -31,6 +31,7 @@ namespace AtaxiaVision.Desktop.Pantallas
     {
         public SesionViewModel Sesion { get; set; }
         public EjercicioViewModel Ejercicio { get; set; }
+        public bool FlagFocusSesionTextBox { get; set; }
 
         // Delegates (son como punteros de C, sirven para que entre 
         // hilos asincronicos puedan acceder a los componentes de la vista)
@@ -62,6 +63,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
             Sesion = new SesionViewModel();
             Ejercicio = new EjercicioViewModel();
+            DNITextBox.Focus();
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -79,6 +81,7 @@ namespace AtaxiaVision.Desktop.Pantallas
         private void EstadoIniciarRehabilitacion(bool state)
         {
             IniRehabBtn.IsEnabled = state;
+            IniRehabBtn.Focus();
         }
 
         private void SincronizarDatos()
@@ -116,15 +119,19 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void ValidarToken()
         {
-            Sesion.Token = TokenTextBox.Text;
-            Ejercicio.Token = Sesion.Token;
-            Ejercicio.Ejercicio = 1;
-            if (String.IsNullOrEmpty(Sesion.Token))
+            if (String.IsNullOrEmpty(DNITextBox.Text))
             {
-                EstadoSnackBar("Por favor ingrese un token");
+                EstadoSnackBar("Por favor ingrese un DNI.");
                 return;
             }
-
+            if (String.IsNullOrEmpty(SesionTextBox.Text))
+            {
+                EstadoSnackBar("Por favor ingrese un numero de sesion.");
+                return;
+            }
+            Sesion.Token = DNITextBox.Text + "_" + SesionTextBox.Text;
+            Ejercicio.Token = Sesion.Token;
+            Ejercicio.Ejercicio = 1;
             if(!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
         }
@@ -162,8 +169,26 @@ namespace AtaxiaVision.Desktop.Pantallas
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
             };
         }
+        
+        private void DNITextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (FlagFocusSesionTextBox && DNITextBox.GetLineLength(0) == 8)
+            {
+                SesionTextBox.Focus();
+                FlagFocusSesionTextBox = false;
+            }
+        }
 
-        private void TokenTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void DNITextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            FlagFocusSesionTextBox = true;
+            if (e.Key == Key.Enter)
+            {
+                ValidarToken();
+            }
+        }
+
+        private void SesionTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

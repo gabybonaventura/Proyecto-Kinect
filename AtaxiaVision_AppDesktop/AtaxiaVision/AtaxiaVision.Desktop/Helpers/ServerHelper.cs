@@ -169,6 +169,7 @@ namespace AtaxiaVision.Helpers
         public static int EnviarEjercicio(EjercicioViewModel ejercicio)
         {
             // El metodo POST necesita una lista.
+            ejercicio.Fecha = DateTime.Now;
             List<EjercicioViewModel> ejercicios = new List<EjercicioViewModel>
             {
                 ejercicio
@@ -193,36 +194,41 @@ namespace AtaxiaVision.Helpers
                 Token = "38662776_1",
                 Ejercicio = 1,
                 FinalizoConExito = true,
-                Desvios = 4
+                Desvios = 4,
+                Fecha = DateTime.Now
             });
-            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            //{
-            //    Token = "38662776_1",
-            //    Ejercicio = 2,
-            //    FinalizoConExito = false,
-            //    Desvios = 21
-            //});
-            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            //{
-            //    Token = "38662776_2",
-            //    Ejercicio = 1,
-            //    FinalizoConExito = true,
-            //    Desvios = 2
-            //});
-            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            //{
-            //    Token = "38662776_2",
-            //    Ejercicio = 2,
-            //    FinalizoConExito = true,
-            //    Desvios = 21
-            //});
-            //ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
-            //{
-            //    Token = "38662776_2",
-            //    Ejercicio = 3,
-            //    FinalizoConExito = false,
-            //    Desvios = 7
-            //});
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "38662776_1",
+                Ejercicio = 2,
+                FinalizoConExito = false,
+                Desvios = 21,
+                Fecha = DateTime.Now
+            });
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "38662776_2",
+                Ejercicio = 1,
+                FinalizoConExito = true,
+                Desvios = 2,
+                Fecha = DateTime.Now
+            });
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "38662776_2",
+                Ejercicio = 2,
+                FinalizoConExito = true,
+                Desvios = 21,
+                Fecha = DateTime.Now
+            });
+            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            {
+                Token = "38662776_2",
+                Ejercicio = 3,
+                FinalizoConExito = false,
+                Desvios = 7,
+                Fecha = DateTime.Now
+            });
         }
 
         public static void TestLeerArchivo()

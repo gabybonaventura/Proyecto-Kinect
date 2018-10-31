@@ -16,7 +16,9 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized" Loaded="Window_Loaded">
+        WindowState="Maximized" 
+        Loaded="Window_Loaded"
+        >
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
@@ -65,20 +67,40 @@
             Margin="188,246,742,0" 
             Width="86"/>
         <TextBox 
-            x:Name="TokenTextBox" 
-            materialDesign:HintAssist.Hint="Token de Sesión" 
+            x:Name="DNITextBox" 
+            materialDesign:HintAssist.Hint="DNI Paciente" 
             materialDesign:HintAssist.FloatingScale=".8" 
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="279,246,426,0" 
+            Margin="274,246,542,0" 
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            FontSize="30" 
+            MaxLines="1"
+            MaxLength="8"
+            FontWeight="Bold" 
+            HorizontalAlignment="Center" 
+            Width="200" 
+            KeyUp="DNITextBox_KeyUp" 
+            KeyDown="DNITextBox_KeyDown" 
+            />
+        <TextBox 
+            x:Name="SesionTextBox" 
+            materialDesign:HintAssist.Hint="Sesion" 
+            materialDesign:HintAssist.FloatingScale=".8" 
+            materialDesign:HintAssist.FloatingOffset="1,-30"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+            Height="74" 
+            Margin="479,246,415,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             FontSize="30" 
             FontWeight="Bold" 
+            MaxLines="1"
+            MaxLength="4"
             HorizontalAlignment="Center" 
-            Width="300" 
-            KeyDown="TokenTextBox_KeyDown"/>
+            Width="122" KeyDown="SesionTextBox_KeyDown" />
         <Button 
             Name="ValidarTokenBtn"
             Content="Validar token" 
@@ -99,7 +121,8 @@
             HorizontalAlignment="Center" 
             Width="640" 
             VerticalAlignment="Top" 
-            Click="IniRehabBtn_Click"/>
+            Click="IniRehabBtn_Click"
+            />
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="Snackbar"

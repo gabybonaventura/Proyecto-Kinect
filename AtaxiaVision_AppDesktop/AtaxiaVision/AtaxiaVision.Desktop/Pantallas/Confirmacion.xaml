@@ -86,7 +86,7 @@
             x:Name="EjercicioCard"
             Background="#FFF44336"
             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
-            Width="650" 
+            Width="640" 
             Margin="0,450,0,0"
             Visibility="Hidden">
             <Grid>
@@ -97,8 +97,13 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="320"/>
+                    <ColumnDefinition Width="320"/>
+                </Grid.ColumnDefinitions>
                 <TextBlock
                     Grid.Row="0"
+                    Grid.ColumnSpan="2"
                     Margin="16 16 16 4"
                     FontSize="25"
                     Style="{StaticResource MaterialDesignHeadlineTextBlock}" 
@@ -117,15 +122,23 @@
                     Foreground="#FFF"/>
                 <Label 
                     x:Name="EjercicioLabel"
-                    Grid.Row="3"
+                    Grid.Row="2"
+                    Grid.Column="2"
                     Content="Ejercicio: "
+                    FontSize="25"
+                    
+                    Foreground="#FFF"/>
+                <Label 
+                    x:Name="DesviosLabel"
+                    Grid.Row="3"
+                    Content="Desvios: "
                     Margin="16 0 16 0"
                     FontSize="25"
                     Foreground="#FFF"/>
                 <Label 
-                    x:Name="DesviosLabel"
+                    x:Name="FechaLabel"
                     Grid.Row="4"
-                    Content="Desvios: "
+                    Content="Fecha: "
                     Margin="16 0 16 16"
                     FontSize="25"
                     Foreground="#FFF"/>
