@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized" Loaded="Window_Loaded" >
+        WindowState="Maximized" Loaded="Window_Loaded" KeyDown="Window_KeyDown" >
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
@@ -61,7 +61,7 @@
             />
         <Button 
             x:Name="SiBtn" 
-            Content="Sí" 
+            Content="_Sí" 
             HorizontalAlignment="Center" 
             Margin="188,270,528,0" 
             Width="300" 
@@ -73,7 +73,7 @@
             />
         <Button 
             x:Name="NoBtn" 
-            Content="No" 
+            Content="_No" 
             Margin="528,270,188,0" 
             Click="NoBtn_Click" 
             Height="150" 

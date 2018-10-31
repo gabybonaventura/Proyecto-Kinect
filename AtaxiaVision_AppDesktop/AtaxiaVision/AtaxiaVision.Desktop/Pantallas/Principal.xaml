@@ -17,7 +17,7 @@
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
         WindowState="Normal"
-        Loaded="WindowLoaded">
+        Loaded="WindowLoaded" KeyDown="Window_KeyDown">
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">

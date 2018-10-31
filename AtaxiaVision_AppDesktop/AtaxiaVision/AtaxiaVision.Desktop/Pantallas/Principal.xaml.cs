@@ -15,6 +15,7 @@
     using AtaxiaVision.Models;
     using MaterialDesignThemes.Wpf;
     using AtaxiaVision.Controllers;
+    using System.Windows.Input;
 
     /// <summary>
     /// Interaction logic for Principal.xaml
@@ -462,6 +463,14 @@
             Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             win.Show();
             Close();
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                FinEjercicioBtn_Click(sender,e);
+            }
         }
     }
 }
