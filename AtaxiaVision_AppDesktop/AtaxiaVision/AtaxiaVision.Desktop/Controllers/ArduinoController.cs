@@ -72,25 +72,25 @@ namespace AtaxiaVision.Controllers
                 _serialPort.Close();
         }
 
-        public bool EscribirAngulosArduino(Double[] angulos)
+        public bool EscribirAngulosArduino(Angulos angulos)
         {
             try
             {
                 if (_serialPort.IsOpen)
                 {
                     string rtaAngulos = "*";
-                    foreach (double ang in angulos)
-                    {
-                        string aux = null;
-                        aux = ang.ToString("000");
 
-                        rtaAngulos += aux;
-                    }
+                    rtaAngulos += angulos.CodoArribaAbajo.ToString("000");
+                    rtaAngulos += angulos.CodoIzquierdaDerecha.ToString("000");
+                    rtaAngulos += angulos.HombroArribaAbajo.ToString("000");
+                    rtaAngulos += angulos.HombroAdelanteAtras.ToString("000");
+
                     _serialPort.Write(rtaAngulos);
-                    Console.WriteLine("Angulo Codo Arriba Abajo : " + angulos[0]);
-                    Console.WriteLine("Angulo Codo Izq Der: " + angulos[1]);
-                    Console.WriteLine("Angulo Hombro Arriba Abajo: " + angulos[2]);
-                    Console.WriteLine("Angulo Hombro Adelante Atras: " + angulos[3]);
+                    //    Console.WriteLine("Angulo Codo Arriba Abajo : " + angulos[0]);
+                    //    Console.WriteLine("Angulo Codo Izq Der: " + angulos[1]);
+                    //    Console.WriteLine("Angulo Hombro Arriba Abajo: " + angulos[2]);
+                    //    Console.WriteLine("Angulo Hombro Adelante Atras: " + angulos[3]);
+                    //
                 }
 
                 _intentos = 0;

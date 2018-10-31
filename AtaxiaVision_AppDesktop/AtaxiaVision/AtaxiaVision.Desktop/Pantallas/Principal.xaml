@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized"
+        WindowState="Normal"
         Loaded="WindowLoaded" 
         KeyDown="Window_KeyDown">
     <Grid>

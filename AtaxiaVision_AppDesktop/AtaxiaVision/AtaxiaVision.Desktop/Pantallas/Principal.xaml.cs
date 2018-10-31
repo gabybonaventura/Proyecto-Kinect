@@ -53,7 +53,9 @@
         double ObjetoY;
         int ObjetoZ;
         SkeletonPoint skelObjeto;
-        double[] angulos = new double[4];
+        Angulos angulos;
+        Puntos puntos;
+        //double[] angulos = new double[4];
 
         bool flagSkeleton = false;
 
@@ -96,6 +98,8 @@
             InitializeComponent();
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
+            angulos = new Angulos();
+            puntos = new Puntos();
             Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             arduinoController = new ArduinoController();
         }
@@ -312,7 +316,11 @@
                                    && (CodoDerecho.TrackingState == JointTrackingState.Tracked))
                         {
                             if (flagObjeto && !flagSkeleton)
-                                CalcularAngulosFinales();
+                            {
+                                puntos = new Puntos(HombroDerecho, CodoDerecho, ManoDerecha, skelObjeto);
+                                CalcularAngulosFinales(puntos);
+                            }
+                                
 
                             //Console.WriteLine($"Mano X Y Z {handRight.Position.X} {handRight.Position.Y} {handRight.Position.Z}");
                             //Console.WriteLine($"Objeto X Y Z {skelObjeto.X} {skelObjeto.Y} {skelObjeto.Z}");
@@ -354,15 +362,15 @@
 
         private void CalcularButton_Click(object sender, RoutedEventArgs e)
         {
-            this.CalcularAngulosFinales();
+           this.CalcularAngulosFinales(puntos);
         }
 
-        public void CalcularAngulosFinales()
+        public void CalcularAngulosFinales(Puntos puntos)
         {
             // ARREGLAR CAMI CASU
-            var x = new AngleHelper().SetValorAngulos(new Puntos());
+            angulos = new AngleHelper().SetValorAngulos(puntos);
                 //HombroDerecho, ManoDerecha, CodoDerecho, skelObjeto);
-            if (angulos[0] == -1 || angulos[1] == -1 || angulos[2] == -1 || angulos[3] == -1)
+            if (angulos.CodoArribaAbajo == -1 || angulos.CodoIzquierdaDerecha == -1 || angulos.HombroAdelanteAtras == -1 || angulos.HombroArribaAbajo == -1)
             {
                 flagSkeleton = false;
             }
@@ -478,7 +486,7 @@
             }
             if(e.Key == Key.A)
             {
-                CalcularAngulosFinales();
+               CalcularAngulosFinales(puntos);
             }
         }
     }
