@@ -55,24 +55,15 @@ namespace AtaxiaVision.Helpers
         private void CalcularAnguloHombroAdelanteAtras()
         {
             puntos.Hombro2d = new Point(puntos.Hombro.Position.Y, puntos.Hombro.Position.Z);
-        //    puntos.Codo2d = new Point(puntos.Codo.Position.Y, puntos.Codo.Position.Z);
-        //    puntos.Mano2d = new Point(puntos.Mano.Position.Y, puntos.Mano.Position.Z);
+        
             puntos.Objeto2d = new Point(puntos.Objeto.Y, puntos.Objeto.Z);
 
-        //    distancia.DistanciaManoHombro = DistanceHelper.ObtenerDistancia(
-        //        puntos.Hombro2d, puntos.Mano2d);
-
-        //    distancia.DistanciaManoCodo = DistanceHelper.ObtenerDistancia(
-               // puntos.Codo2d, puntos.Mano2d);
-
-           // distancia.DistanciaHombroCodo = DistanceHelper.ObtenerDistancia(
-           //     puntos.Hombro2d, puntos.Codo2d);
 
             angulos.HombroAuxAtrasAdelante = CalcularAngulo(distancia.DistanciaManoCodo,
                 distancia.DistanciaHombroObjeto, distancia.DistanciaHombroCodo);
 
-            //puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Hombro2d.X, puntos.Objeto2d.Y);
-            puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Objeto2d.X, puntos.Hombro2d.Y);
+            puntos.PuntoAuxHombroAtrasAdelante = new Point(puntos.Objeto2d.X, 
+                puntos.Hombro2d.Y);
 
             distancia.DistanciaObjetoAux = DistanceHelper.ObtenerDistancia(
                 puntos.Objeto2d, puntos.PuntoAuxHombroAtrasAdelante);
@@ -80,11 +71,11 @@ namespace AtaxiaVision.Helpers
             distancia.DistanciaHombroAux = DistanceHelper.ObtenerDistancia(
                 puntos.Hombro2d, puntos.PuntoAuxHombroAtrasAdelante);
 
-            angulos.HombroObjAtrasAdelante = CalcularAngulo(distancia.DistanciaManoCodo,
-                distancia.DistanciaHombroObjeto, distancia.DistanciaHombroCodo);
-                //AnguloRectangCos(
-                //distancia.DistanciaObjetoAux, distancia.DistanciaHombroAux);
+            angulos.HombroObjAtrasAdelante = AnguloRectangCos(distancia.DistanciaObjetoAux,
+                distancia.DistanciaHombroAux);
 
+            if (puntos.Objeto.Y > puntos.Hombro.Position.Y)
+                angulos.HombroObjAtrasAdelante = 180 - angulos.HombroObjAtrasAdelante;
             angulos.HombroAdelanteAtras = angulos.HombroObjAtrasAdelante -
                 angulos.HombroAuxAtrasAdelante;
         }
