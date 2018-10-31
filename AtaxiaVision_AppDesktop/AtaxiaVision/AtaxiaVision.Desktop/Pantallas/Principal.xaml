@@ -64,7 +64,7 @@
             Width="640" 
             IsEnabled="False" 
             Click="ConfirmacionButton_Click" 
-            Content="_Confirmar" 
+            Content="_Iniciar rehabilitación" 
             FontSize="30"
             Margin="188,130,188,0"/>
         <Button 

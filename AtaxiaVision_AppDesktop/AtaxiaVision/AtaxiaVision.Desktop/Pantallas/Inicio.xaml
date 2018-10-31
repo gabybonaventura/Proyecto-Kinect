@@ -87,7 +87,7 @@
             />
         <TextBox 
             x:Name="SesionTextBox" 
-            materialDesign:HintAssist.Hint="Sesion" 
+            materialDesign:HintAssist.Hint="Sesión" 
             materialDesign:HintAssist.FloatingScale=".8" 
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
@@ -113,7 +113,7 @@
             Click="ValidarTokenBtn_Click"/>
         <Button 
             x:Name="IniRehabBtn" 
-            Content="Iniciar rehabilitación" 
+            Content="_Iniciar sesión" 
             IsEnabled="False" 
             Margin="188,470,188,0" 
             Height="150" 

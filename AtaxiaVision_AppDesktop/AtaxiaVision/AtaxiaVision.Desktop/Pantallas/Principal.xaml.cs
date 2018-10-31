@@ -472,7 +472,7 @@
             {
                 FinEjercicioBtn_Click(sender,e);
             }
-            if(ConfirmacionButton.IsEnabled && (e.Key == Key.C || e.Key == Key.Enter))
+            if(ConfirmacionButton.IsEnabled && (e.Key == Key.I || e.Key == Key.Enter))
             {
                 ConfirmacionButton_Click(sender, e);
             }

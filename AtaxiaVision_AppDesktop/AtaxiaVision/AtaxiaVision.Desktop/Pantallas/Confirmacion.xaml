@@ -88,6 +88,7 @@
             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
             Width="640" 
             Margin="0,450,0,0"
+            Height="300"
             Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
@@ -104,26 +105,28 @@
                 <TextBlock
                     Grid.Row="0"
                     Grid.ColumnSpan="2"
-                    Margin="16 16 16 4"
-                    FontSize="25"
+                    Margin="16 20 16 20"
+                    FontSize="40"
                     Style="{StaticResource MaterialDesignHeadlineTextBlock}" 
                     TextAlignment="Center">
                         Datos del ejercicio
                 </TextBlock>
                 <Separator
                     Grid.Row="1"
+                    Grid.ColumnSpan="2"
                     Style="{StaticResource MaterialDesignLightSeparator}" />
                 <Label 
                     x:Name="TokenLabel"
                     Grid.Row="2"
                     Content="Token: "
-                    Margin="16 0 16 0"
+                    Margin="16 10 16 10"
                     FontSize="25" 
                     Foreground="#FFF"/>
                 <Label 
                     x:Name="EjercicioLabel"
                     Grid.Row="2"
                     Grid.Column="2"
+                    Margin="16 10 16 10"
                     Content="Ejercicio: "
                     FontSize="25"
                     Foreground="#FFF"/>
@@ -131,22 +134,23 @@
                     x:Name="DesviosLabel"
                     Grid.Row="3"
                     Content="Desvios: "
-                    Margin="16 0 16 0"
+                    Margin="16 10 16 10"
                     FontSize="25"
                     Foreground="#FFF"/>
                 <Label 
                     x:Name="DuracionLabel"
                     Grid.Row="3"
                     Grid.Column="2"
-                    Content="Duracion: "
+                    Content="Duración: "
                     FontSize="25"
+                    Margin="16 10 16 10"
                     Foreground="#FFF"/>
                 <Label 
                     x:Name="FechaLabel"
                     Grid.Row="4"
                     Grid.ColumnSpan="2"
                     Content="Fecha: "
-                    Margin="16 0 16 16"
+                    Margin="16 10 16 10"
                     FontSize="25"
                     Foreground="#FFF"/>
             </Grid>

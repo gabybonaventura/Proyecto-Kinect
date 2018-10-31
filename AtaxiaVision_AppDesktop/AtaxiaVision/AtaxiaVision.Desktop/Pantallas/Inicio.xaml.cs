@@ -126,7 +126,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             }
             if (String.IsNullOrEmpty(SesionTextBox.Text))
             {
-                EstadoSnackBar("Por favor ingrese un numero de sesion.");
+                EstadoSnackBar("Por favor ingrese un número de sesión.");
                 return;
             }
             Sesion.Token = DNITextBox.Text + "_" + SesionTextBox.Text;
@@ -155,7 +155,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_INVALIDO:
-                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Inválido. Va a poder acceder, pero va a necesitar un arreglo en la App Mobile.");
+                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token inválido. Vas a poder utilizar la Aplicación sin problemas.");
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_VALIDO:
@@ -201,6 +201,10 @@ namespace AtaxiaVision.Desktop.Pantallas
             if (e.Key == Key.Escape)
             {
                 Close();
+            }   
+            if(e.Key == Key.I)
+            {
+                IniRehabBtn_Click(sender, e);
             }
         }
     }
