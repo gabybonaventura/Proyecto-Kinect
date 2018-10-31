@@ -53,7 +53,7 @@
         double ObjetoY;
         int ObjetoZ;
         SkeletonPoint skelObjeto;
-        double[] angulos;
+        double[] angulos = new double[4];
 
         bool flagSkeleton = false;
 

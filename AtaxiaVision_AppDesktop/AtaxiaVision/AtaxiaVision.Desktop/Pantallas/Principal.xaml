@@ -16,8 +16,9 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Normal"
-        Loaded="WindowLoaded" KeyDown="Window_KeyDown">
+        WindowState="Maximized"
+        Loaded="WindowLoaded" 
+        KeyDown="Window_KeyDown">
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
@@ -70,6 +71,7 @@
             x:Name="CalcularButton" 
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
+            Visibility="Hidden"
             Width="164" 
             Height="100" 
             FontSize="15"

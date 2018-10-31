@@ -87,7 +87,7 @@ namespace AtaxiaVision.Pantallas
                 // Muestro la barra de cargando
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 
-                Tensiones = TensionHelper.TestListaTension(4000);
+                //Tensiones = TensionHelper.TestListaTension(4000);
                 //Tensiones = TensionHelper.TestListaTensionManual();
                 Ejercicio.Desvios = TensionHelper.CalcularDesvios(Tensiones);
                 DesviosLabel.Dispatcher.Invoke(desviosLabelDelegate, Ejercicio.Desvios + "");
