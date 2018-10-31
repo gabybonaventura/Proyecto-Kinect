@@ -195,7 +195,8 @@ namespace AtaxiaVision.Helpers
                 Ejercicio = 1,
                 FinalizoConExito = true,
                 Desvios = 4,
-                Fecha = DateTime.Now
+                Fecha = DateTime.Now,
+                Duracion = new TimeSpan(0, 0, 32)
             });
             ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
             {
@@ -203,7 +204,8 @@ namespace AtaxiaVision.Helpers
                 Ejercicio = 2,
                 FinalizoConExito = false,
                 Desvios = 21,
-                Fecha = DateTime.Now
+                Fecha = DateTime.Now,
+                Duracion = new TimeSpan(0, 1, 4)
             });
             ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
             {
@@ -211,7 +213,8 @@ namespace AtaxiaVision.Helpers
                 Ejercicio = 1,
                 FinalizoConExito = true,
                 Desvios = 2,
-                Fecha = DateTime.Now
+                Fecha = DateTime.Now,
+                Duracion = new TimeSpan(0, 0, 24)
             });
             ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
             {
@@ -219,7 +222,8 @@ namespace AtaxiaVision.Helpers
                 Ejercicio = 2,
                 FinalizoConExito = true,
                 Desvios = 21,
-                Fecha = DateTime.Now
+                Fecha = DateTime.Now,
+                Duracion = new TimeSpan(0, 0, 21)
             });
             ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
             {
@@ -227,7 +231,8 @@ namespace AtaxiaVision.Helpers
                 Ejercicio = 3,
                 FinalizoConExito = false,
                 Desvios = 7,
-                Fecha = DateTime.Now
+                Fecha = DateTime.Now,
+                Duracion = new TimeSpan(0, 1, 32)
             });
         }
 

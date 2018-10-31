@@ -189,18 +189,24 @@ namespace AtaxiaVision.Pantallas
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            if (e.Key == Key.Escape || e.Key == Key.C || e.Key == Key.Enter)
             {
-                NoBtn_Click(sender,e);
+                //NoBtn_Click(sender,e);
+                Close();
             }
-            if (e.Key == Key.N)
-            {
-                NoBtn_Click(sender, e);
-            }
-            if (e.Key == Key.S)
-            {
-                SiBtn_Click(sender, e);
-            }
+            //if (e.Key == Key.N)
+            //{
+            //    NoBtn_Click(sender, e);
+            //}
+            //if (e.Key == Key.S)
+            //{
+            //    SiBtn_Click(sender, e);
+            //}
+        }
+
+        private void CerrarBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

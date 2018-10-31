@@ -47,19 +47,18 @@
 
         private byte[] colorPixels;
 
-        short[] datosDistancia = null;
-        byte[] colorImagenDistancia = null;
+        short[] datosDistancia;
+        byte[] colorImagenDistancia;
         double ObjetoX;
         double ObjetoY;
         int ObjetoZ;
         SkeletonPoint skelObjeto;
         Angulos angulos;
         Puntos puntos;
-        //double[] angulos = new double[4];
 
-        bool flagSkeleton = false;
+        bool flagSkeleton;
 
-        bool flagObjeto = false;
+        bool flagObjeto;
 
         ArduinoController arduinoController;
         
@@ -92,10 +91,18 @@
         private SesionViewModel Sesion { get; set; }
 
         #endregion Properties
-        
+
+        //Delegates
+        public delegate void ImagenDelegate(DrawingImage drawingImage);
+        public ImagenDelegate imagenDelegate;
+
         public Principal(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM)
         {
             InitializeComponent();
+            flagSkeleton = false;
+            flagObjeto = false;
+            datosDistancia = null;
+            colorImagenDistancia = null;
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
             angulos = new Angulos();
@@ -122,8 +129,6 @@
             // Display the drawing using our image control
             Image.Source = this.imageSource;
 
-
-
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
                 if (potentialSensor.Status == KinectStatus.Connected)
@@ -135,18 +140,12 @@
 
             if (null != this.sensor)
             {
-
-
                 // Turn on the skeleton stream to receive skeleton frames
                 this.sensor.SkeletonStream.Enable();
                 this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                 this.sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-
-
-
                 this.colorPixels = new byte[this.sensor.ColorStream.FramePixelDataLength];
                 this.colorBitmap = new WriteableBitmap(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
-
                 this.colorCoordinates = new ColorImagePoint[this.sensor.DepthStream.FramePixelDataLength];
                 this.depthWidth = this.sensor.DepthStream.FrameWidth;
                 this.depthHeight = this.sensor.DepthStream.FrameHeight;
@@ -154,9 +153,7 @@
                 int colorHeight = this.sensor.ColorStream.FrameHeight;
                 this.colorToDepthDivisor = colorWidth / this.depthWidth;
                 this.sensor.AllFramesReady += this.SensorAllFramesReady;
-
                 this.colorToDepthDivisor = colorWidth / this.depthWidth;
-
                 depthPixels = new DepthImagePixel[sensor.DepthStream.FramePixelDataLength];
 
                 // Start the sensor!
@@ -178,7 +175,6 @@
             }
 
             arduinoController.Inicializar();
-
         }
 
         private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
@@ -294,8 +290,9 @@
                 dc.DrawImage(this.colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
                 if (skeletons.Length != 0)
                 {
-                    foreach (Skeleton skel in skeletons)
-                    {
+                    //foreach (Skeleton skel in skeletons)
+                    //{
+                    Skeleton skel = skeletons[0];
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
@@ -327,15 +324,11 @@
 
                             if (DistanceHelper.ObtenerDistancia(ManoDerecha, skelObjeto) < 0.2)
                             {
-                                //significa que se llegó al objeto, por lo que se cierra la ventana y se envían
-                                //los datos.
-                                //resultado = true;
                                 Ejercicio.FinalizoConExito = true;
                                 Cerrar();
-                                break;
                             }
                         }
-                    }
+                    //}
                 }
 
                 // prevent drawing outside of our render area
@@ -359,7 +352,10 @@
             Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             Console.WriteLine("cierra por acá");
             win.Show();
-            Close();
+            this.Close();
+            this.Close();
+            this.Close();
+            this.Close();
         }
 
         private void ConfirmacionButton_Click(object sender, RoutedEventArgs e)
