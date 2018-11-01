@@ -37,10 +37,24 @@ namespace AtaxiaVision.Desktop.Pantallas
         // hilos asincronicos puedan acceder a los componentes de la vista)
         public delegate void SnackBarDelegate(string msg);
         public SnackBarDelegate snackBarDelegate;
+
         public delegate void ProgressBarDelegate(Visibility visibility);
         public ProgressBarDelegate progressBarDelegate;
+
         public delegate void IniRehabBtnDelegate(bool state);
         public IniRehabBtnDelegate iniRehabBtnDelegate;
+
+        public delegate void PacienteCardDelegate(Visibility visibility);
+        public PacienteCardDelegate pacienteCardDelegate;
+
+        public delegate void LabelEdadDelegate(int edad);
+        public LabelEdadDelegate labelEdadDelegate;
+
+        public delegate void LabelNombreDelegate(string nombre);
+        public LabelNombreDelegate labelNombreDelegate;
+
+        public delegate void LabelIdDelegate(int id);
+        public LabelIdDelegate labelIdDelegate;
 
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
@@ -61,9 +75,34 @@ namespace AtaxiaVision.Desktop.Pantallas
             snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
+            labelEdadDelegate = new LabelEdadDelegate(Edad);
+            labelNombreDelegate = new LabelNombreDelegate(Nombre);
+            labelIdDelegate = new LabelIdDelegate(Id);
+            pacienteCardDelegate = new PacienteCardDelegate(EstadoPacienteCard);
+
             Sesion = new SesionViewModel();
             Ejercicio = new EjercicioViewModel();
             DNITextBox.Focus();
+        }
+
+        private void Id(int id)
+        {
+            IdLabel.Content += id.ToString();
+        }
+
+        private void Nombre(string nombre)
+        {
+            NombreLabel.Content += nombre;
+        }
+
+        private void Edad(int edad)
+        {
+            EdadLabel.Content += edad.ToString();
+        }
+
+        private void EstadoPacienteCard(Visibility visibility)
+        {
+            PacienteCard.Visibility = visibility;
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -145,10 +184,10 @@ namespace AtaxiaVision.Desktop.Pantallas
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 // Thread.Sleep(5000); // Es solo para ver como queda la animacion este sleep.
                 // Valido el token DNI + Sesion
-                int result = ServerHelper.ValidarToken(Sesion.Token);
+                RespuestaServer result = ServerHelper.ValidarToken(Sesion.Token);
                 Sesion.TokenVerificado = true;
                 // Muestro el Snackbar
-                switch (result)
+                switch (result.CodigoTokenValid)
                 {
                     case ServerHelper.TOKEN_SINCONEXION:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para validar el token.");
@@ -161,10 +200,14 @@ namespace AtaxiaVision.Desktop.Pantallas
                     case ServerHelper.TOKEN_VALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
                         Sesion.TokenValido = true;
+                        IdLabel.Dispatcher.Invoke(labelIdDelegate, result.patient.IdPatient);
+                        NombreLabel.Dispatcher.Invoke(labelNombreDelegate, result.patient.Name);
+                        EdadLabel.Dispatcher.Invoke(labelEdadDelegate, result.patient.Age);
+                        PacienteCard.Dispatcher.Invoke(pacienteCardDelegate, Visibility.Visible);
                         break;
                     default:
                         break;
-                }
+                }                
                 IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
             };

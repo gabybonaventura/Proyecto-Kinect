@@ -64,7 +64,7 @@
             VerticalAlignment="Top" 
             HorizontalAlignment="Center" 
             Height="74" 
-            Margin="188,246,742,0" 
+            Margin="188,156,742,0" 
             Width="86"/>
         <TextBox 
             x:Name="DNITextBox" 
@@ -73,7 +73,7 @@
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="274,246,542,0" 
+            Margin="274,156,542,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             FontSize="30" 
@@ -92,7 +92,7 @@
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="479,246,415,0" 
+            Margin="479,156,415,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             FontSize="30" 
@@ -105,17 +105,80 @@
             Name="ValidarTokenBtn"
             Content="Validar token" 
             HorizontalAlignment="Center" 
-            Margin="606,246,188,0" 
+            Margin="606,156,188,0" 
             VerticalAlignment="Top" 
             Width="222" 
             Height="74" 
             FontSize="30" 
             Click="ValidarTokenBtn_Click"/>
+        <materialDesign:Card
+            x:Name="PacienteCard"
+            Background="#FFF44336"
+            Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+            Width="640" 
+            Margin="188,261,188,0"
+            Height="235"
+            Visibility="Hidden">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="320"/>
+                    <ColumnDefinition Width="320"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="16 20 16 20"
+                    FontSize="40"
+                    Style="{StaticResource MaterialDesignHeadlineTextBlock}" 
+                    TextAlignment="Center"><Run Text="Datos"/><Run Text=" del paciente"/></TextBlock>
+                <Separator
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource MaterialDesignLightSeparator}" />
+                <Label 
+                    x:Name="NombreLabel"
+                    Grid.Row="2"
+                    Content="Nombre: "
+                    Margin="16 10 16 10"
+                    FontSize="25" 
+                    Foreground="#FFF"/>
+                <Label 
+                    x:Name="IdLabel"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Margin="16 10 16 10"
+                    Content="Id: "
+                    FontSize="25"
+                    Foreground="#FFF"/>
+                <Label 
+                    x:Name="EdadLabel"
+                    Grid.Row="3"
+                    Content="Edad: "
+                    Margin="16 10 16 10"
+                    FontSize="25"
+                    Foreground="#FFF"/>
+                <Label 
+                    x:Name="FechaInicioLabel"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Content=""
+                    FontSize="25"
+                    Margin="16 10 16 10"
+                    Foreground="#FFF"/>
+            </Grid>
+        </materialDesign:Card>
         <Button 
             x:Name="IniRehabBtn" 
             Content="_Iniciar sesión" 
             IsEnabled="False" 
-            Margin="188,470,188,0" 
+            Margin="188,553,188,0" 
             Height="150" 
             FontSize="40" 
             HorizontalAlignment="Center" 

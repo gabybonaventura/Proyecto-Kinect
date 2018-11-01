@@ -124,6 +124,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\ArduinoController.cs" />
+    <Compile Include="Models\Patient.cs" />
     <Compile Include="Testing\PruebaAngulos.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,8 @@ namespace AtaxiaVision.Models
     {
         public int RespuestaCode { get; set; }
         public bool PropiedadIsValid { get; set; }
+        public Patient patient { get; set; }
+        public int CodigoTokenValid { get; set; }
 
         public RespuestaServer()
         {
