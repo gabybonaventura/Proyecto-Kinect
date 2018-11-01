@@ -16,6 +16,8 @@
     using MaterialDesignThemes.Wpf;
     using AtaxiaVision.Controllers;
     using System.Windows.Input;
+    using System.ComponentModel;
+    using System.Threading;
 
     /// <summary>
     /// Interaction logic for Principal.xaml
@@ -95,6 +97,85 @@
         //Delegates
         public delegate void ImagenDelegate(DrawingImage drawingImage);
         public ImagenDelegate imagenDelegate;
+        public delegate void ConsumoHombroArribaAbajoDelegate(int consumo);
+        public ConsumoHombroArribaAbajoDelegate consumoHombroArribaAbajoDelegate;
+        public delegate void ConsumoHombroAdelanteAtras(int consumo);
+        public ConsumoHombroAdelanteAtras consumoHombroAdelanteAtrasDelegate;
+        public delegate void ConsumoCodoArribaAbajo(int consumo);
+        public ConsumoCodoArribaAbajo consumoCodoArribaAbajoDelegate;
+        public delegate void ConsumoCodoDerechaIzquierda(int consumo);
+        public ConsumoCodoDerechaIzquierda consumoCodoDerechaIzquierdaDelegate;
+
+        //Para trabajar en background
+        private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
+
+        #region Metodos Delegates
+        private void SetConsumoHombroArribaAbajo(int consumo)
+        {
+            ConsumoHombroArribaAbajoLabel.Foreground = CalcularColor(consumo);
+            ConsumoHombroArribaAbajoLabel.Content = consumo + " mA";
+        }
+        private void SetConsumoHombroAdelanteAtras(int consumo)
+        {
+            ConsumoHombroAdelanteAtrasLabel.Foreground = CalcularColor(consumo);
+            ConsumoHombroAdelanteAtrasLabel.Content = consumo + " mA";
+        }
+        private void SetConsumoCodoArribaAbajo(int consumo)
+        {
+            ConsumoCodoArribaAbajoLabel.Foreground = CalcularColor(consumo);
+            ConsumoCodoArribaAbajoLabel.Content = consumo + " mA";
+        }
+        private void SetConsumoCodoDerechaIzquierda(int consumo)
+        {
+            ConsumoCodoDerechaIzquierdaLabel.Foreground = CalcularColor(consumo);
+            ConsumoCodoDerechaIzquierdaLabel.Content = consumo + " mA";
+        }
+
+        private Brush CalcularColor(int c)
+        {
+            if (c < 100)
+                // Azul
+                return new SolidColorBrush(Color.FromRgb(29, 22, 182));
+            if (c < 200)
+                // Verde
+                return new SolidColorBrush(Color.FromRgb(22,182,51));
+            if (c < 500)
+                // Naranja
+                return new SolidColorBrush(Color.FromRgb(226, 107, 25));
+            // Rojo
+            return new SolidColorBrush(Color.FromRgb(255, 0, 0));
+        }
+        #endregion
+
+        #region Metodos Background worker
+        private void TensionesServosBG()
+        {
+            TensionesServosBackgroundWorker.DoWork += (s, e) =>
+            {
+                while (true)
+                {   
+                    int consumoHombroArribaAbajo = 20;
+                    int consumoHombroAdelanteAtras = 100;
+                    int consumoCodoArribaAbajo = 205;
+                    int consumoCodoDerechaIzquierda = 550;
+                    if (arduinoController.UltimaTension != null)
+                    {
+                        consumoHombroArribaAbajo = arduinoController.UltimaTension.HombroArribaAbajo;
+                        consumoHombroAdelanteAtras = arduinoController.UltimaTension.HombroAdelanteAtras;
+                        consumoCodoArribaAbajo = arduinoController.UltimaTension.CodoArribaAbajo;
+                        consumoCodoDerechaIzquierda = arduinoController.UltimaTension.CodoIzquierdaDerecha;
+                    }
+                    ConsumoHombroArribaAbajoLabel.Dispatcher.Invoke(consumoHombroArribaAbajoDelegate, consumoHombroArribaAbajo);
+                    ConsumoHombroAdelanteAtrasLabel.Dispatcher.Invoke(consumoHombroAdelanteAtrasDelegate, consumoHombroAdelanteAtras);
+                    ConsumoCodoArribaAbajoLabel.Dispatcher.Invoke(consumoCodoArribaAbajoDelegate, consumoCodoArribaAbajo);
+                    ConsumoCodoDerechaIzquierdaLabel.Dispatcher.Invoke(consumoCodoDerechaIzquierdaDelegate, consumoCodoDerechaIzquierda);
+                    Thread.Sleep(1000);
+                }
+            };
+            if (!TensionesServosBackgroundWorker.IsBusy)
+                TensionesServosBackgroundWorker.RunWorkerAsync();
+        }
+        #endregion
 
         public Principal(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM)
         {
@@ -120,6 +201,12 @@
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            //Asigno lo delegates
+            consumoHombroArribaAbajoDelegate = new ConsumoHombroArribaAbajoDelegate(SetConsumoHombroArribaAbajo);
+            consumoHombroAdelanteAtrasDelegate = new ConsumoHombroAdelanteAtras(SetConsumoHombroAdelanteAtras);
+            consumoCodoArribaAbajoDelegate = new ConsumoCodoArribaAbajo(SetConsumoCodoArribaAbajo);
+            consumoCodoDerechaIzquierdaDelegate = new ConsumoCodoDerechaIzquierda(SetConsumoCodoDerechaIzquierda);
+
             // Create the drawing group we'll use for drawing
             this.drawingGroup = new DrawingGroup();
 
@@ -175,6 +262,7 @@
             }
 
             arduinoController.Inicializar();
+            TensionesServosBG();
         }
 
         private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)

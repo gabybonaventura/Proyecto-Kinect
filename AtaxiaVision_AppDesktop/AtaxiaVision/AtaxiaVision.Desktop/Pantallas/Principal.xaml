@@ -78,11 +78,84 @@
             Click="CalcularButton_Click"
             Content="Calcular _Ángulos" 
             Margin="10,130,842,0"/>
-
+        <!-- Labels informativos -->
+        <Label 
+            Content="Consumos" 
+            FontSize="25"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,250,852,0" 
+            Width="164" FontWeight="Bold" 
+            />
+        <Label 
+            Content="H. Arriba Abajo" 
+            FontSize="22"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,311,833,0" 
+            Width="183" 
+            />
+        <Label Name="ConsumoHombroArribaAbajoLabel"
+            Content="200 mA"
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,347,852,0" 
+            Width="164" Foreground="#DD000000" 
+            />
+        <Label 
+            Content="H. Adelante Atrás" 
+            FontSize="22"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,425,833,0" 
+            Width="183" 
+            />
+        <Label Name="ConsumoHombroAdelanteAtrasLabel"
+            Content="200 mA" 
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,461,852,0" 
+            Width="164" 
+            />
+        <Label 
+            Content="C. Arriba Abajo" 
+            FontSize="22"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,532,833,0" 
+            Width="183" 
+            />
+        <Label Name="ConsumoCodoArribaAbajoLabel"
+            Content="200 mA" 
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,568,852,0" 
+            Width="164" 
+            />
+        <Label 
+            Content="C. Derecha Izq" 
+            FontSize="22"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,648,833,0" 
+            Width="183" 
+            />
+        <Label Name="ConsumoCodoDerechaIzquierdaLabel"
+            Content="200 mA" 
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="0,684,852,0" 
+            Width="164" 
+            />
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="Snackbar"
             Message="Test"
             IsActive="False"/>
+
     </Grid>
 </Window>

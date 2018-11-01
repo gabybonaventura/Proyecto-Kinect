@@ -117,7 +117,7 @@ namespace ComunicacionArduino
             }
         }
 
-        private Color CalcularColor(int c)
+        private Brus CalcularColor(int c)
         {
             if (c < 100)
                 return Color.Blue;

@@ -13,6 +13,7 @@ namespace AtaxiaVision.Controllers
         private SerialPort _serialPort;
         int _intentos;
         public List<TensionServos> Tensiones;
+        public TensionServos UltimaTension;
 
 
         //Seteo con valores por default el constructor
@@ -62,7 +63,8 @@ namespace AtaxiaVision.Controllers
             //Console.WriteLine(indata);
             if (!string.IsNullOrEmpty(indata))
             {
-                Tensiones.Add(new TensionServos(indata));
+                UltimaTension = new TensionServos(indata);
+                Tensiones.Add(UltimaTension);
             }
         }
 
