@@ -66,26 +66,43 @@ namespace AtaxiaVision.Helpers
         private static RespuestaServer EnviarGet(string api, string data)
         {
             RespuestaServer result = new RespuestaServer();
-            var request = (HttpWebRequest)WebRequest.Create(URL + api + data);
-            var content = string.Empty;
-            using (var response = (HttpWebResponse)request.GetResponse())
+            try
             {
-                using (var stream = response.GetResponseStream())
+                
+                var request = (HttpWebRequest)WebRequest.Create(URL + api + data);
+                var content = string.Empty;
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    using (var sr = new StreamReader(stream))
+                    using (var stream = response.GetResponseStream())
                     {
-                        content = sr.ReadToEnd();
+                        using (var sr = new StreamReader(stream))
+                        {
+                            content = sr.ReadToEnd();
+                        }
+                    }
+                }
+                var rta = JsonConvert.DeserializeObject<dynamic>(content);
+                string status_code = rta.head.status_code;
+                result.RespuestaCode = Convert.ToInt32(status_code);
+                if (result.RespuestaCode == SERVER_OK)
+                {
+                    string isValid = rta.data.isValid;
+                    result.PropiedadIsValid = Convert.ToBoolean(isValid);
+                    if (result.PropiedadIsValid)
+                    {
+                        result.patient = new Patient();
+                        result.patient.Age = Convert.ToInt32(rta.data.patient.age);
+                        //result.patient.BeginDate = Convert.ToDateTime();
+                        result.patient.IdPatient = Convert.ToInt32(rta.data.patient.idPatient);
+                        result.patient.Name = rta.data.patient.name;
                     }
                 }
             }
-            var rta = JsonConvert.DeserializeObject<dynamic>(content);
-            string status_code = rta.head.status_code;
-            result.RespuestaCode = Convert.ToInt32(status_code);
-            if (result.RespuestaCode == SERVER_OK)
+            catch (Exception d)
             {
-                string isValid = rta.data.isValid;
-                result.PropiedadIsValid = Convert.ToBoolean(isValid);
+                result.RespuestaCode = SERVER_ERROR;
             }
+
             return result;
         }
 
@@ -153,17 +170,18 @@ namespace AtaxiaVision.Helpers
             return ARCHIVOOFFLINE_NOSINCRONIZADO;
         }
 
-        public static int ValidarToken(string token)
+        public static RespuestaServer ValidarToken(string token)
         {
             var resultGet = Enviar(API_TOKEN,METHOD_GET, token);
+            resultGet.CodigoTokenValid = TOKEN_SINCONEXION;
             if (resultGet.RespuestaCode == SERVER_OK)
             {
                 if (resultGet.PropiedadIsValid)
-                    return TOKEN_VALIDO;
+                    resultGet.CodigoTokenValid = TOKEN_VALIDO;
                 else
-                    return TOKEN_INVALIDO;
+                    resultGet.CodigoTokenValid = TOKEN_INVALIDO;
             }
-            return TOKEN_SINCONEXION;
+            return resultGet;
         }
 
         public static int EnviarEjercicio(EjercicioViewModel ejercicio)
