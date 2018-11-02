@@ -109,23 +109,31 @@ namespace AtaxiaVision.Helpers
         private static RespuestaServer EnviarPost(string api, string data)
         {
             RespuestaServer result = new RespuestaServer();
-            var request = (HttpWebRequest)WebRequest.Create(URL + api);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.ContentLength = data.Length;
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            try
             {
-                streamWriter.Write(data);
-                streamWriter.Flush();
-                streamWriter.Close();
+
+                var request = (HttpWebRequest)WebRequest.Create(URL + api);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.ContentLength = data.Length;
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(data);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                var httpResponse = (HttpWebResponse)request.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var rtaSr = streamReader.ReadToEnd();
+                    var rta = JsonConvert.DeserializeObject<dynamic>(rtaSr);
+                    string status_code = rta.head.status;
+                    result.RespuestaCode = Convert.ToInt32(status_code);
+                }
             }
-            var httpResponse = (HttpWebResponse)request.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            catch (Exception)
             {
-                var rtaSr = streamReader.ReadToEnd();
-                var rta = JsonConvert.DeserializeObject<dynamic>(rtaSr);
-                string status_code = rta.head.status;
-                result.RespuestaCode = Convert.ToInt32(status_code);
+                result.RespuestaCode = SERVER_ERROR;
             }
             return result;
         }

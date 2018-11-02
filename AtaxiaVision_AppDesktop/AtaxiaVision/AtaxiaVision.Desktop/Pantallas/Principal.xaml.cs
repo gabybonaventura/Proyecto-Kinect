@@ -378,9 +378,9 @@
                 dc.DrawImage(this.colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
                 if (skeletons.Length != 0)
                 {
-                    //foreach (Skeleton skel in skeletons)
-                    //{
-                    Skeleton skel = skeletons[0];
+                    foreach (Skeleton skel in skeletons)
+                    {
+                        //Skeleton skel = skeletons[0];
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
@@ -416,7 +416,7 @@
                                 Cerrar();
                             }
                         }
-                    //}
+                    }
                 }
 
                 // prevent drawing outside of our render area
