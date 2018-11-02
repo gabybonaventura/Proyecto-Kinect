@@ -58,6 +58,7 @@
             VerticalAlignment="Top"
             Margin="0,210,0,0" 
             FontSize="30"
+            Visibility="Hidden"
             />
         <Button 
             x:Name="CerrarBtn" 

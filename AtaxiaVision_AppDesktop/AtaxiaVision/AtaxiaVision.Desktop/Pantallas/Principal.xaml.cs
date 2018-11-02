@@ -461,7 +461,10 @@
             // ARREGLAR CAMI CASU
             angulos = new AngleHelper().SetValorAngulos(puntos);
                 //HombroDerecho, ManoDerecha, CodoDerecho, skelObjeto);
-            if (angulos.CodoArribaAbajo == -1 || angulos.CodoIzquierdaDerecha == -1 || angulos.HombroAdelanteAtras == -1 || angulos.HombroArribaAbajo == -1)
+            if (angulos.CodoArribaAbajo == -1 
+                || angulos.CodoIzquierdaDerecha == -1 
+                || angulos.HombroAdelanteAtras == -1 
+                || angulos.HombroArribaAbajo == -1)
             {
                 flagSkeleton = false;
             }
