@@ -12,7 +12,7 @@ namespace AtaxiaVision.Helpers
             float Distancia_Y = firstJoint.Position.Y - secondJoint.Position.Y;
             float Distancia_Z = firstJoint.Position.Z - secondJoint.Position.Z;
 
-            return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2));                //Realiza el calculo de la distancia entre articulaciones
+            return (float)(1.3 * Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2) + Math.Pow(Distancia_Z, 2)));                //Realiza el calculo de la distancia entre articulaciones
         }
 
         public static float ObtenerDistancia(Joint articulacion, SkeletonPoint objeto)
@@ -38,7 +38,7 @@ namespace AtaxiaVision.Helpers
             float Distancia_Y = (float)(punto1.Y - punto2.Y);
             
 
-            return (float)Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2));              
+            return (float)(1.3*Math.Sqrt(Math.Pow(Distancia_X, 2) + Math.Pow(Distancia_Y, 2)));              
         }
 
         public static double RadToDeg(double rad)
