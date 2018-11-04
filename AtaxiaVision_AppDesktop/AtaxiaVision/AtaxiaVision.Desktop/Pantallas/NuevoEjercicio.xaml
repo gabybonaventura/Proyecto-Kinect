@@ -91,6 +91,7 @@
             HorizontalAlignment="Center" 
             Width="996"/>
         <Button 
+            Name="GuardarEstadoInicialBtn"
             Content="Guardar Estado Inicial" 
             HorizontalAlignment="Center" 
             Margin="10,300,776,0" 
@@ -99,6 +100,7 @@
             Height="75" 
             FontSize="20" />
         <Button 
+            Name="VerEstadoInicialBtn"
             Content="Ir Estado Inicial" 
             HorizontalAlignment="Center" 
             Margin="258,300,528,0" 
@@ -110,6 +112,7 @@
             Foreground="#FFF44336" 
             BorderBrush="White"/>
         <Button 
+            Name="VerEstadoFinalBtn"
             Content="Ir Estado Final" 
             HorizontalAlignment="Center" 
             Margin="528,300,258,0" 
@@ -121,6 +124,7 @@
             Foreground="#FFF44336" 
             BorderBrush="White"/>
         <Button 
+            Name="GuardarEstadoFinalBtn"
             Content="Guardar Estado Final" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
@@ -155,6 +159,7 @@
             Height="40" RenderTransformOrigin="0.517,0.725" 
             />
         <Button 
+            Name="AnguloHombroArribaAbajoDefaultBtn"
             Content="Ángulo descanso" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
@@ -174,7 +179,7 @@
             Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,530,528,0"
+            Margin="188,514,528,0"
             FontSize="25" 
             Width="300">
             <ComboBox.ItemsPanel>
@@ -185,19 +190,19 @@
         </ComboBox>
         <Label Name="ConsumoHombroAdelanteAtrasLabel"
             Content="20 mA" 
-            
             FontSize="25"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,589,708,0" 
+            Margin="188,573,708,0" 
             Width="120"
             Height="40"   
             />
         <Button 
+            Name="AnguloHombroAdelanteAtrasDefaultBtn"
             Content="Ángulo descanso" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
-            Margin="313,589,528,0" 
+            Margin="313,573,528,0" 
             Padding="2,2,2,2"
             Width="175" 
             Height="40"  
@@ -232,6 +237,7 @@
             Height="40" 
             />
         <Button 
+            Name="AnguloCodoArribaAbajoDefaultBtn"
             Content="Ángulo descanso" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
@@ -251,7 +257,7 @@
             Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="528,530,188,0"
+            Margin="528,514,188,0"
             FontSize="25" 
             Width="300">
             <ComboBox.ItemsPanel>
@@ -265,15 +271,16 @@
             FontSize="25"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="528,589,368,0" 
+            Margin="528,573,368,0" 
             Width="120"
             Height="40" 
             />
         <Button 
+            Name="AnguloCodoDerechaIzquierdaDefaultBtn"
             Content="Ángulo descanso" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
-            Margin="653,589,188,0" 
+            Margin="653,573,188,0" 
             Padding="2,2,2,2"
             Width="175" 
             Height="40" 
@@ -282,9 +289,10 @@
             Foreground="#FFF44336" 
             BorderBrush="White" />
         <Button 
+            Name="GuardarEjercicioBtn"
             Content="Guardar ejercicio" 
             HorizontalAlignment="Center" 
-            Margin="188,670,188,0" 
+            Margin="188,635,188,0" 
             VerticalAlignment="Top" 
             Width="640" 
             Height="80" 

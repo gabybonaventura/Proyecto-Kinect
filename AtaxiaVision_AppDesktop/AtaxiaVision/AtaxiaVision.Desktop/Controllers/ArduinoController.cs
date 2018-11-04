@@ -37,7 +37,6 @@ namespace AtaxiaVision.Controllers
                 StopBits = stopBits
             };
             _intentos = 0;
-
         }
 
         public void Inicializar()
