@@ -109,6 +109,9 @@
         //Para trabajar en background
         private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
 
+        VideoController videoController;
+        List<System.Drawing.Bitmap> framesBmp;
+
         #region Metodos Delegates
         private void SetConsumoHombroArribaAbajo(int consumo)
         {
@@ -190,6 +193,8 @@
             puntos = new Puntos();
             Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             arduinoController = new ArduinoController();
+            videoController = new VideoController();
+            framesBmp = new List<System.Drawing.Bitmap>();
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -300,6 +305,11 @@
                     colorReceived = true;
 
                     System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
+
+                    videoController.InicioGrabacion = DateTime.Now.Ticks;
+
+                    framesBmp.Add(bmp);
+
                     Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
 
                     Image<Gray, Byte> grayFrame = currentFrameHSV.Convert<Gray, Byte>();
@@ -440,6 +450,10 @@
             Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             Console.WriteLine("cierra por acá");
             win.Show();
+
+            videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
+            framesBmp = new List<System.Drawing.Bitmap>();
+
             this.Close();
             this.Close();
             this.Close();
@@ -563,6 +577,8 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
+            videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
+            framesBmp = new List<System.Drawing.Bitmap>();
             Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             win.Show();
             Close();

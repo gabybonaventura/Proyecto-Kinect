@@ -16,6 +16,7 @@ namespace AtaxiaVision.Controllers
         public TensionServos UltimaTension;
         private const string BRAZO_GB = "*110090040040";
         private const string BRAZO_CC = "*140090050030";
+        private const string BRAZO_MATIVEGA = "*140090040050";
 
         //Seteo con valores por default el constructor
         public ArduinoController(int baudRate = 9600, 
@@ -47,7 +48,7 @@ namespace AtaxiaVision.Controllers
                 _serialPort.Open();
                 if (_serialPort.IsOpen)
                 {
-                    _serialPort.Write(BRAZO_CC);
+                    _serialPort.Write(BRAZO_GB);
                 }
             }
             catch (Exception ex)
