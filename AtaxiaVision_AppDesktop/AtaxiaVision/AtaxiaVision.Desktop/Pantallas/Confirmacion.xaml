@@ -48,23 +48,22 @@
             Content="Aguarde un momento" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="0,130,0,0" 
-            FontSize="50"
+            Margin="0,120,0,0" 
+            FontSize="40"
             />
         <Label 
             x:Name="PreguntaLabel"
             Content="Calculando desvios" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="0,210,0,0" 
+            Margin="389,589,364,0" 
             FontSize="30"
-            Visibility="Hidden"
             />
         <Button 
             x:Name="CerrarBtn" 
             Content="_Cerrar Aplicación" 
             HorizontalAlignment="Center" 
-            Visibility="Visible"
+            Visibility="Hidden"
             Margin="189,270,188.6,0" 
             Width="640" 
             Height="150" 
@@ -72,39 +71,14 @@
             VerticalAlignment="Top" 
             Click="CerrarBtn_Click" 
             />
-        <Button 
-            x:Name="SiBtn" 
-            Content="_Sí" 
-            HorizontalAlignment="Center" 
-            Visibility="Hidden"
-            Margin="188,270,528,0" 
-            Width="300" 
-            Height="150" 
-            FontSize="40" 
-            IsEnabled="False"
-            VerticalAlignment="Top" 
-            Click="SiBtn_Click" 
-            />
-        <Button 
-            x:Name="NoBtn" 
-            Content="_No" 
-            Margin="528,270,188,0" 
-            Click="NoBtn_Click" 
-            Visibility="Hidden"
-            Height="150" 
-            FontSize="40" 
-            HorizontalAlignment="Center" 
-            Width="300" 
-            IsEnabled="False"
-            VerticalAlignment="Top"/>
         <materialDesign:Card
             x:Name="EjercicioCard"
             Background="#FFF44336"
             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
             Width="640" 
-            Margin="0,450,0,0"
-            Height="300"
-            Visibility="Hidden">
+            Margin="0,180,0,0"
+            Height="250"
+            Visibility="Visible">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -120,8 +94,8 @@
                 <TextBlock
                     Grid.Row="0"
                     Grid.ColumnSpan="2"
-                    Margin="16 20 16 20"
-                    FontSize="40"
+                    Margin="16 5 16 5"
+                    FontSize="30"
                     Style="{StaticResource MaterialDesignHeadlineTextBlock}" 
                     TextAlignment="Center">
                         Datos del ejercicio
@@ -170,6 +144,43 @@
                     Foreground="#FFF"/>
             </Grid>
         </materialDesign:Card>
+        <TextBox
+            Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+            Margin="188,446,188,0"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Height="134"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            materialDesign:HintAssist.Hint="Comentarios"
+            Width="640"
+            FontSize="25"/>
+        <Button 
+            x:Name="SiBtn" 
+            Content="_Sí" 
+            HorizontalAlignment="Center" 
+            Visibility="Visible"
+            Margin="188,640,528,0" 
+            Width="300" 
+            Height="100" 
+            FontSize="40" 
+            IsEnabled="False"
+            VerticalAlignment="Top" 
+            Click="SiBtn_Click" 
+            />
+        <Button 
+            x:Name="NoBtn" 
+            Content="_No" 
+            Margin="528,640,188,0" 
+            Click="NoBtn_Click" 
+            Visibility="Visible"
+            Height="100" 
+            FontSize="40" 
+            HorizontalAlignment="Center" 
+            Width="300" 
+            IsEnabled="False"
+            VerticalAlignment="Top"/>
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="Snackbar"

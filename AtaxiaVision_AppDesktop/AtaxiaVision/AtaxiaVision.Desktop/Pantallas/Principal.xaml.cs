@@ -306,7 +306,7 @@
 
                     System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
 
-                    videoController.InicioGrabacion = DateTime.Now.Ticks;
+                    //videoController.InicioGrabacion = DateTime.Now.Ticks;
 
                     framesBmp.Add(bmp);
 
@@ -451,7 +451,8 @@
             Console.WriteLine("cierra por acá");
             win.Show();
 
-            videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
+            // Comento linea porque no tengo kinect y se rompe. Despues fijate gabi. (Ari)
+            //videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
             framesBmp = new List<System.Drawing.Bitmap>();
 
             this.Close();
@@ -577,7 +578,7 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
+            //videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
             framesBmp = new List<System.Drawing.Bitmap>();
             Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
             win.Show();

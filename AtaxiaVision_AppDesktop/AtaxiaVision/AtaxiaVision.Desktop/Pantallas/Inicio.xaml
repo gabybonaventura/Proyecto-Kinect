@@ -24,6 +24,19 @@
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
             <DockPanel>
                 <Button 
+                    Name="NuevoEjercicioBtn" 
+                    DockPanel.Dock="Left"
+                    Width="55"
+                    Height="45" 
+                    Padding="0" Click="NuevoEjercicioBtn_Click" 
+                    >
+                    <materialDesign:PackIcon 
+                            Kind="Add"
+                            Width="55"
+                            Height="45" 
+                            Padding="0"/>
+                </Button>
+                <Button 
                     Name="CerrarBtn" 
                     DockPanel.Dock="Right"
                     Width="55"
@@ -42,7 +55,7 @@
                         Foreground="#FFF" 
                         TextAlignment="Center" 
                         FontSize="40" 
-                        Margin="55,0,0,0">
+                        Margin="0,0,0,0">
                         Ataxia Visión
                     </TextBlock>
                 </StackPanel>
