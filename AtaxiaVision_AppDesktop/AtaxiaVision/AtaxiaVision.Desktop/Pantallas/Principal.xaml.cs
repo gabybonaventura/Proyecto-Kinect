@@ -444,19 +444,18 @@
             if (null != this.sensor)
             {
                 this.sensor.Stop();
+                this.sensor.Dispose();
             }
+            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+            videoController.GuardarVideo(framesBmp, nombreArchivo);
             arduinoController.CerrarPuerto();
             //Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
-            Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
+            Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
             Console.WriteLine("cierra por acá");
             win.Show();
 
-            videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
             framesBmp = new List<System.Drawing.Bitmap>();
 
-            this.Close();
-            this.Close();
-            this.Close();
             this.Close();
         }
 
@@ -577,11 +576,18 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            videoController.GuardarVideo(framesBmp, $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}");
-            framesBmp = new List<System.Drawing.Bitmap>();
-            Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones);
-            win.Show();
-            Close();
+            //if (null != this.sensor)
+            //{
+            //    this.sensor.Stop();
+            //    this.sensor.Dispose();
+            //}
+            //string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+            //videoController.GuardarVideo(framesBmp, nombreArchivo);
+            //framesBmp = new List<System.Drawing.Bitmap>();
+            //Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
+            //win.Show();
+            //Close();
+            Cerrar();
         }
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

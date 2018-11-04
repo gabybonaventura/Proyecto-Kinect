@@ -60,17 +60,25 @@
             FontSize="30"
             Visibility="Hidden"
             />
+        <Image 
+            x:Name="Image" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="-37,200,488.6,0" 
+            Width="566" 
+            Height="250" 
+            Source="/AtaxiaVision;component/Imagenes/KinectAV.png"/>
         <Button 
             x:Name="CerrarBtn" 
             Content="_Cerrar Aplicación" 
             HorizontalAlignment="Center" 
             Visibility="Visible"
-            Margin="189,270,188.6,0" 
-            Width="640" 
+            Margin="566,270,39.6,0" 
+            Width="412" 
             Height="150" 
             FontSize="40" 
             VerticalAlignment="Top" 
-            Click="CerrarBtn_Click" 
+            Click="CerrarBtn_Click" RenderTransformOrigin="0.445,2.875" 
             />
         <Button 
             x:Name="SiBtn" 

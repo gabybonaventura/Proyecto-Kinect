@@ -17,6 +17,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Emgu.CV;
+using System.Threading;
+using System.Windows.Interop;
 
 namespace AtaxiaVision.Pantallas
 {
@@ -25,6 +28,15 @@ namespace AtaxiaVision.Pantallas
     /// </summary>
     public partial class Confirmacion : Window
     {
+        VideoCapture videocapture;
+        int TotalFrames;
+        int FrameInicioBoomerang;
+        int FrameFinBoomerang;
+        int CurrentFrameNo;
+        Mat CurrentFrame;
+        int FPS;
+        bool Adelante = true;
+
         public EjercicioViewModel Ejercicio { get; set; }
         public SesionViewModel Sesion { get; set; }
         public List<TensionServos> Tensiones { get; set; }
@@ -48,13 +60,17 @@ namespace AtaxiaVision.Pantallas
         public DesviosLabelDelegate desviosLabelDelegate;
         public delegate void FechaLabelDelegate(DateTime date);
         public FechaLabelDelegate fechaLabelDelegate;
-
+        public string nombreArchivo;
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
 
-        public Confirmacion(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM, List<TensionServos> tensiones)
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
+
+        public Confirmacion(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM, List<TensionServos> tensiones, string nombreArchivo)
         {
             InitializeComponent();
+            this.nombreArchivo = nombreArchivo;
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
             Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second) - Ejercicio.Duracion;
@@ -62,6 +78,16 @@ namespace AtaxiaVision.Pantallas
             Tensiones = tensiones;
             ContentTokenLabel(Ejercicio.Token);
             ContentEjercicioLabel(Ejercicio.Ejercicio + "");
+
+            videocapture = new VideoCapture($"C://Users//Public/Videos//{nombreArchivo}.avi");
+            TotalFrames = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount));
+            FrameInicioBoomerang = TotalFrames - 51;
+            FrameFinBoomerang = TotalFrames - 1;
+            FPS = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
+            CurrentFrame = new Mat();
+            CurrentFrameNo = 0;
+            PlayVideo();
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -78,6 +104,7 @@ namespace AtaxiaVision.Pantallas
             fechaLabelDelegate = new FechaLabelDelegate(FechaDesviosLabel);
             if (!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
+
         }
 
         private void TareasBackGruondWorker()
@@ -185,6 +212,65 @@ namespace AtaxiaVision.Pantallas
             Principal win = new Principal(Sesion, Ejercicio);
             win.Show();
             Close();
+        }
+
+        private async void PlayVideo()
+        {
+            if (videocapture == null)
+            {
+                return;
+            }
+            try
+            {               
+                CurrentFrameNo = TotalFrames - 51;
+                while (CurrentFrameNo < TotalFrames)
+                {
+                    videocapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames, CurrentFrameNo);
+                    videocapture.Read(CurrentFrame);
+                    
+                    //Tener cuidado con este puntero porque sobre carga la memoria
+                    IntPtr handle = CurrentFrame.Bitmap.GetHbitmap();
+
+                    try
+                    {
+
+                        ImageSource imageSource = Imaging
+                            .CreateBitmapSourceFromHBitmap(handle,
+                            IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+
+                        this.Image.Source = imageSource;
+                        if (CurrentFrameNo == FrameInicioBoomerang)
+                            Adelante = true;
+                        if (CurrentFrameNo == FrameFinBoomerang)
+                            Adelante = false;
+
+                        if (Adelante)
+                            CurrentFrameNo += 5;
+                        else
+                            CurrentFrameNo -= 5;
+
+                        await Task.Delay(1000 / FPS);
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+                    finally
+                    {
+                        //Tengo que marcar el objeto como borrado, para que el garbage collector lo borre
+                        //Sino colapsa la memoria
+
+                        DeleteObject(handle);
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

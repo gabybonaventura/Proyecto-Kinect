@@ -31,7 +31,7 @@ namespace ReproductorVideoWinForm
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Video Files (*.mp4, *.flv)| *.mp4;*.flv";
+            ofd.Filter = "Video Files (*.mp4, *.flv, *.avi)| *.mp4;*.flv;*.avi";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -66,25 +66,32 @@ namespace ReproductorVideoWinForm
                 //    CurrentFrameNo += 1;
                 //    await Task.Delay(500 / FPS);
                 //}
-                CurrentFrameNo = 800;
+                CurrentFrameNo = 1;
 
-                while (IsPlaying == true && CurrentFrameNo < TotalFrames)
+                //while (IsPlaying == true && CurrentFrameNo < TotalFrames)
+                //{
+                //    videocapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames, CurrentFrameNo);
+                //    videocapture.Read(CurrentFrame);
+                //    Bitmap bitmap = CurrentFrame.Bitmap;
+                //}
+
+                    while (IsPlaying == true && CurrentFrameNo < TotalFrames)
                 {
                     videocapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames, CurrentFrameNo);
                     videocapture.Read(CurrentFrame);
                     pictureBox1.Image = CurrentFrame.Bitmap;
                     trackBar1.Value = CurrentFrameNo;
-                    if (CurrentFrameNo == 1000)
-                        Adelante = false;
-                    if (CurrentFrameNo == 950)
+                    if (CurrentFrameNo == 0)
                         Adelante = true;
+                    if (CurrentFrameNo == 50)
+                        Adelante = false;
 
                     if(Adelante)
                         CurrentFrameNo += 1;
                     else
                         CurrentFrameNo -= 1;
 
-                    await Task.Delay(250 / FPS);
+                    await Task.Delay(125 / FPS);
                 }
             }
             catch (Exception ex)
@@ -135,6 +142,11 @@ namespace ReproductorVideoWinForm
             {
                 CurrentFrame.Save("C:\\Users\\Public\\Videos\\" + CurrentFrameNo.ToString() + ".jpg");
             }
+        }
+
+        private void FormLoadAllFrames_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
