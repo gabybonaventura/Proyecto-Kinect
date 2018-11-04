@@ -34,7 +34,7 @@ namespace AtaxiaVision.Pantallas
             }
         }
 
-
+        
         #region Delegates
         public delegate void SnackBarDelegate(string msg);
         public SnackBarDelegate snackBarDelegate;
@@ -140,6 +140,7 @@ namespace AtaxiaVision.Pantallas
             try
             {
                 Arduino = new ArduinoController();
+                Arduino.Inicializar(ArduinoController.BRAZO_CC);
             }
             catch (Exception)
             {
