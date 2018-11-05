@@ -154,7 +154,7 @@
         </materialDesign:Card>
         <TextBox
             Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-            Margin="188,446,188,0"
+            Margin="10,446,10,0"
             VerticalAlignment="Top"
             HorizontalAlignment="Center"
             Height="134"
@@ -162,7 +162,7 @@
             TextWrapping="Wrap"
             VerticalScrollBarVisibility="Auto"
             materialDesign:HintAssist.Hint="Comentarios"
-            Width="640"
+            Width="996"
             FontSize="25"/>
         <Button 
             x:Name="SiBtn" 
