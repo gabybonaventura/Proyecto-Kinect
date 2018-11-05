@@ -249,6 +249,17 @@ namespace AtaxiaVision.Desktop.Pantallas
             {
                 IniRehabBtn_Click(sender, e);
             }
+            if (e.Key == Key.Add)
+            {
+                NuevoEjercicioBtn_Click(sender, e);
+            }
+        }
+
+        private void NuevoEjercicioBtn_Click(object sender, RoutedEventArgs e)
+        {
+            NuevoEjercicio win = new NuevoEjercicio();
+            win.Show();
+            Close();
         }
     }
 }

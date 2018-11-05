@@ -576,17 +576,6 @@
 
         private void FinEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            //if (null != this.sensor)
-            //{
-            //    this.sensor.Stop();
-            //    this.sensor.Dispose();
-            //}
-            //string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
-            //videoController.GuardarVideo(framesBmp, nombreArchivo);
-            //framesBmp = new List<System.Drawing.Bitmap>();
-            //Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
-            //win.Show();
-            //Close();
             Cerrar();
         }
 

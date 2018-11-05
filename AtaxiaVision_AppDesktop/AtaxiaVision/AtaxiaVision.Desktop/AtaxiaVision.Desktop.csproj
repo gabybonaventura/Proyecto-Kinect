@@ -129,7 +129,11 @@
     </Compile>
     <Compile Include="Controllers\ArduinoController.cs" />
     <Compile Include="Controllers\VideoController.cs" />
+    <Compile Include="Helpers\ArduinoHelper.cs" />
     <Compile Include="Models\Patient.cs" />
+    <Compile Include="Pantallas\NuevoEjercicio.xaml.cs">
+      <DependentUpon>NuevoEjercicio.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Testing\PruebaAngulos.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pantallas\Inicio.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pantallas\NuevoEjercicio.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -253,18 +253,14 @@ namespace AtaxiaVision.Pantallas
                     }
                     catch (Exception)
                     {
-
                         throw;
                     }
                     finally
                     {
                         //Tengo que marcar el objeto como borrado, para que el garbage collector lo borre
                         //Sino colapsa la memoria
-
                         DeleteObject(handle);
-                    }
-
-
+                    }                    
                 }
             }
             catch (Exception ex)

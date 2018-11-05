@@ -42,35 +42,36 @@ namespace AtaxiaVision.Controllers
 
         public void GuardarVideo(List<Bitmap> frames, string nombreArchivo)
         {
-            int width = 640;
-            int height = 480;
-            FinGrabacion = DateTime.Now.Ticks;
-
-            int Duracion = (int)(new TimeSpan(FinGrabacion - InicioGrabacion)).TotalSeconds;
-
-
-            int framRate = frames.Count / Duracion;
-
-            // create instance of video writer
-            using (var vFWriter = new VideoFileWriter())
+            if(frames.Count != 0)
             {
-                // create new video file
-                vFWriter.Open($"C://Users//Public/Videos//{nombreArchivo}.avi", width, height, framRate, VideoCodec.Raw);
+                int width = 640;
+                int height = 480;
+                FinGrabacion = DateTime.Now.Ticks;
+
+                int Duracion = (int)(new TimeSpan(FinGrabacion - InicioGrabacion)).TotalSeconds;
 
 
-                //loop throught all images in the collection
-                foreach (var frameBmp in frames)
+                int framRate = frames.Count / Duracion;
+
+                // create instance of video writer
+                using (var vFWriter = new VideoFileWriter())
                 {
-                    //what's the current image data?
+                    // create new video file
+                    vFWriter.Open($"C://Users//Public/Videos//{nombreArchivo}.avi", width, height, framRate, VideoCodec.Raw);
 
-                    var bmpReduced = ReduceBitmap(frameBmp, width, height);
 
-                    vFWriter.WriteVideoFrame(bmpReduced);
+                    //loop throught all images in the collection
+                    foreach (var frameBmp in frames)
+                    {
+                        //what's the current image data?
+
+                        var bmpReduced = ReduceBitmap(frameBmp, width, height);
+
+                        vFWriter.WriteVideoFrame(bmpReduced);
+                    }
+                    vFWriter.Close();
                 }
-                vFWriter.Close();
             }
-
-
         }
     }
 }
