@@ -30,7 +30,7 @@ namespace AtaxiaVision.Desktop.Pantallas
     public partial class Inicio : Window
     {
         public SesionViewModel Sesion { get; set; }
-        public EjercicioViewModel Ejercicio { get; set; }
+        public RepeticionViewModel Ejercicio { get; set; }
         public bool FlagFocusSesionTextBox { get; set; }
 
         // Delegates (son como punteros de C, sirven para que entre 
@@ -81,7 +81,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             pacienteCardDelegate = new PacienteCardDelegate(EstadoPacienteCard);
 
             Sesion = new SesionViewModel();
-            Ejercicio = new EjercicioViewModel();
+            Ejercicio = new RepeticionViewModel();
             DNITextBox.Focus();
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AtaxiaVision.Models
 {
-    public class EjercicioViewModel
+    public class RepeticionViewModel
     {
         public string Token { get; set; }
         public int Ejercicio { get; set; }

@@ -37,7 +37,7 @@ namespace AtaxiaVision.Pantallas
         int FPS;
         bool Adelante = true;
 
-        public EjercicioViewModel Ejercicio { get; set; }
+        public RepeticionViewModel Ejercicio { get; set; }
         public SesionViewModel Sesion { get; set; }
         public List<TensionServos> Tensiones { get; set; }
         public string Pregunta { get; set; }
@@ -67,7 +67,7 @@ namespace AtaxiaVision.Pantallas
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
 
-        public Confirmacion(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM, List<TensionServos> tensiones, string nombreArchivo)
+        public Confirmacion(SesionViewModel sesionVM, RepeticionViewModel ejercicioVM, List<TensionServos> tensiones, string nombreArchivo)
         {
             InitializeComponent();
             this.nombreArchivo = nombreArchivo;

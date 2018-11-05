@@ -47,19 +47,19 @@ namespace AtaxiaVision.Helpers
                 return "";
         }
 
-        private static void EscribirArchivoDatosOffile(List<EjercicioViewModel> ejercicios)
+        private static void EscribirArchivoDatosOffile(List<RepeticionViewModel> ejercicios)
         {
             EliminarArchivoDatosOffile();
             var datos = JsonConvert.SerializeObject(ejercicios);
             File.AppendAllText(ARCHIVO_OFFILE, datos);
         }
 
-        private static List<EjercicioViewModel> DeserializarArchivoOffline()
+        private static List<RepeticionViewModel> DeserializarArchivoOffline()
         {
             string json = LeerArchivoDatosOffile();
-            var ejercicios = JsonConvert.DeserializeObject<List<EjercicioViewModel>>(json);
+            var ejercicios = JsonConvert.DeserializeObject<List<RepeticionViewModel>>(json);
             if (ejercicios == null)
-                ejercicios = new List<EjercicioViewModel>();
+                ejercicios = new List<RepeticionViewModel>();
             return ejercicios;
         }
 
@@ -156,7 +156,7 @@ namespace AtaxiaVision.Helpers
         }
         #endregion
         
-        public static void AgregarEjercicioDatosOffile(EjercicioViewModel ejercicio)
+        public static void AgregarEjercicioDatosOffile(RepeticionViewModel ejercicio)
         {
             var lista = DeserializarArchivoOffline();
             lista.Add(ejercicio);
@@ -192,11 +192,11 @@ namespace AtaxiaVision.Helpers
             return resultGet;
         }
 
-        public static int EnviarEjercicio(EjercicioViewModel ejercicio)
+        public static int EnviarEjercicio(RepeticionViewModel ejercicio)
         {
             // El metodo POST necesita una lista.
             ejercicio.Fecha = DateTime.Now;
-            List<EjercicioViewModel> ejercicios = new List<EjercicioViewModel>
+            List<RepeticionViewModel> ejercicios = new List<RepeticionViewModel>
             {
                 ejercicio
             };
@@ -215,7 +215,7 @@ namespace AtaxiaVision.Helpers
         public static void TestInicializarArchivo()
         {
             EliminarArchivoDatosOffile();
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
                 Token = "38662776_1",
                 Ejercicio = 1,
@@ -224,7 +224,7 @@ namespace AtaxiaVision.Helpers
                 Fecha = DateTime.Now,
                 Duracion = new TimeSpan(0, 0, 32)
             });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
                 Token = "38662776_1",
                 Ejercicio = 2,
@@ -233,7 +233,7 @@ namespace AtaxiaVision.Helpers
                 Fecha = DateTime.Now,
                 Duracion = new TimeSpan(0, 1, 4)
             });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
                 Token = "38662776_2",
                 Ejercicio = 1,
@@ -242,7 +242,7 @@ namespace AtaxiaVision.Helpers
                 Fecha = DateTime.Now,
                 Duracion = new TimeSpan(0, 0, 24)
             });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
                 Token = "38662776_2",
                 Ejercicio = 2,
@@ -251,7 +251,7 @@ namespace AtaxiaVision.Helpers
                 Fecha = DateTime.Now,
                 Duracion = new TimeSpan(0, 0, 21)
             });
-            ServerHelper.AgregarEjercicioDatosOffile(new EjercicioViewModel
+            ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
                 Token = "38662776_2",
                 Ejercicio = 3,

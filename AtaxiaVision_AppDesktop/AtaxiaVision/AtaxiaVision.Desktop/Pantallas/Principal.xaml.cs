@@ -89,7 +89,7 @@
 
         //------------------------------------//
 
-        private EjercicioViewModel Ejercicio { get; set; }
+        private RepeticionViewModel Ejercicio { get; set; }
         private SesionViewModel Sesion { get; set; }
 
         #endregion Properties
@@ -180,7 +180,7 @@
         }
         #endregion
 
-        public Principal(SesionViewModel sesionVM, EjercicioViewModel ejercicioVM)
+        public Principal(SesionViewModel sesionVM, RepeticionViewModel ejercicioVM)
         {
             InitializeComponent();
             flagSkeleton = false;
