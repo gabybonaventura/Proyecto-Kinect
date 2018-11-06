@@ -1,0 +1,95 @@
+﻿<Window x:Class="AtaxiaVision.Pantallas.ListaEjercicios"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AtaxiaVision.Pantallas"
+        mc:Ignorable="d"
+        Title="ListaEjercicios" Height="768" Width="1024"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="30"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}" 
+        WindowStyle="None" 
+        WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized" >
+    <Grid>
+        <!--Encabezado-->
+        <materialDesign:ColorZone Background="#FFF44336" Padding="32">
+            <DockPanel>
+                <Button 
+                    Name="CerrarBtn" 
+                    DockPanel.Dock="Right"
+                    Width="55"
+                    Height="45" 
+                    Padding="0" Click="CerrarBtn_Click" >
+                    <materialDesign:PackIcon 
+                            Kind="ExitToApp"
+                            Width="55"
+                            Height="45" 
+                            Padding="0"/>
+                </Button>
+                <StackPanel>
+                    <TextBlock
+                        Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                        Foreground="#FFF" 
+                        TextAlignment="Center" 
+                        FontSize="40" 
+                        Margin="55,0,0,0">
+                        Ejercicios
+                    </TextBlock>
+                </StackPanel>
+            </DockPanel>
+        </materialDesign:ColorZone>
+        <!--Cuerpo-->
+        <Button 
+            Name="GuardarEjercicioBtn"
+            Content="Crear ejercicio" 
+            HorizontalAlignment="Center" 
+            Margin="20,117,646,0" 
+            VerticalAlignment="Top" 
+            Width="350" 
+            Height="70" 
+            FontSize="20" />
+        <DataGrid 
+            Name="EjerciciosDatGrid"
+            materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+            materialDesign:DataGridAssist.ColumnHeaderPadding="8" 
+            Margin="-6,200,32,50"
+            IsReadOnly="True" 
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding TestCollection}"
+            FontSize="20" 
+            HorizontalAlignment="Center" 
+            Width="990">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="300" Header="Nombre" Binding="{Binding Nombre}" FontWeight="Bold"></DataGridTextColumn>
+                <DataGridTextColumn Width="50"  Header="Nivel" Binding="{Binding Dificultad}" FontSize="15"></DataGridTextColumn>
+                <DataGridTemplateColumn Width="150" Header="Dificultad">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <materialDesign:RatingBar Value="{Binding Dificultad}" IsEnabled="True" FontSize="20" IsManipulationEnabled="False"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="350" FontSize="15" Header="Descripcion" Binding="{Binding Descripcion}"></DataGridTextColumn>
+                <DataGridTemplateColumn Width="90" Header="Editar">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="EditarBtn" Click="EditarBtn_Click">Editar</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <!-- Snackbar -->
+        <materialDesign:Snackbar
+            x:Name="Snackbar"
+            Message="Test"
+            IsActive="False"/>
+    </Grid>
+</Window>
