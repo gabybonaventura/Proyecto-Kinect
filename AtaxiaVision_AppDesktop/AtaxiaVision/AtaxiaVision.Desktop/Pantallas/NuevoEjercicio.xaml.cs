@@ -28,6 +28,7 @@ namespace AtaxiaVision.Pantallas
     {
         public ArduinoController Arduino { get; set; }
         public AngulosServos Angulos { get; set; }
+        public AngulosServos AngulosDefault { get; set; }
         public EjercicioViewModel Ejercicio { get; set; }
         public List<int> AngulosDisponibles {
             get
@@ -136,13 +137,34 @@ namespace AtaxiaVision.Pantallas
             AnguloCodoArribaAbajoComboBox.ItemsSource = AngulosDisponibles;
             AnguloCodoDerechaIzquierdaComboBox.ItemsSource = AngulosDisponibles;
         }
-
+        public void SetEjercicio(EjercicioViewModel ejercicio)
+        {
+            if(ejercicio != null)
+            {
+                Ejercicio = new EjercicioViewModel
+                {
+                    Nombre = ejercicio.Nombre,
+                    Descripcion = ejercicio.Descripcion,
+                    Dificultad = ejercicio.Dificultad,
+                    EstadoFinal = ejercicio.EstadoFinal,
+                    EstadoInicial = ejercicio.EstadoInicial
+                };
+            }
+            else
+            {
+                Ejercicio = new EjercicioViewModel();
+            }
+        }
         private void InicializarArduino()
         {
+            AngulosDefault = new AngulosServos(ArduinoController.BRAZO_GB);
             try
             {
                 Arduino = new ArduinoController();
-                Angulos = new AngulosServos(ArduinoController.BRAZO_GB);
+                if(String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+                    Angulos = new AngulosServos(AngulosDefault.ToString());
+                else
+                    Angulos = new AngulosServos(Ejercicio.EstadoInicial);
                 Arduino.Inicializar(Angulos.ToString());
             }
             catch (Exception)
@@ -150,21 +172,33 @@ namespace AtaxiaVision.Pantallas
                 Arduino = null;
             }
         }
-
-        public void SetAngulosAPantalla()
+        public void LlenarCampos()
+        {
+            NombreEjercicioTextBox.Text = Ejercicio.Nombre;
+            DescripcionEjercicioTextBox.Text = Ejercicio.Descripcion;
+            DificultadRatingBar.Value = Ejercicio.Dificultad;
+            if (String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+                VerEstadoInicialBtn.IsEnabled = false;
+            if (String.IsNullOrEmpty(Ejercicio.EstadoFinal))
+                VerEstadoFinalBtn.IsEnabled = false;
+        }
+        public void SetAngulos()
         {
             AnguloHombroArribaAbajoComboBox.SelectedValue = Angulos.HomroArribaAbajo;
             AnguloHombroAdelanteAtrasComboBox.SelectedValue = Angulos.HomroAdelanteAtras;
             AnguloCodoArribaAbajoComboBox.SelectedValue = Angulos.CodoArribaAbajo;
             AnguloCodoDerechaIzquierdaComboBox.SelectedValue = Angulos.CodoDerechaIzquierda;
+            Arduino.EnviarAngulosFromAngulosServos(Angulos);
         }
 
-        public NuevoEjercicio()
+        public NuevoEjercicio(EjercicioViewModel ejercicio = null)
         {
-            InitializeComponent();
-            AsignarListasAngulos();
-            InicializarArduino();
-            SetAngulosAPantalla();
+            InitializeComponent();      // Inicializar componentes
+            AsignarListasAngulos();     // Asigna los 180 grados de las listas
+            SetEjercicio(ejercicio);    // Setea el EjercicioViewModel
+            InicializarArduino();       // Envia los datos iniciales al exoesqueleto
+            LlenarCampos();             // Llena campos en base al EjercicioViewModel
+            SetAngulos();               // Setea los grados a la vista y al exoesqueleto
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
@@ -197,11 +231,94 @@ namespace AtaxiaVision.Pantallas
             #endregion
         }
 
-        private void EnviarAngulos()
+        #region Botones Angulos default
+        private void AnguloHombroArribaAbajoDefaultBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            Angulos.HomroArribaAbajo = AngulosDefault.HomroArribaAbajo;
+            SetAngulos();
         }
 
+        private void AnguloCodoArribaAbajoDefaultBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Angulos.CodoArribaAbajo = AngulosDefault.CodoArribaAbajo;
+            SetAngulos();
+        }
 
+        private void AnguloHombroAdelanteAtrasDefaultBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Angulos.HomroAdelanteAtras = AngulosDefault.HomroAdelanteAtras;
+            SetAngulos();
+        }
+
+        private void AnguloCodoDerechaIzquierdaDefaultBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Angulos.CodoDerechaIzquierda = AngulosDefault.CodoDerechaIzquierda;
+            SetAngulos();
+        }
+        #endregion
+
+        private void AnguloHombroArribaAbajoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(AnguloHombroArribaAbajoComboBox.SelectedItem != null)
+            {
+                var a = AnguloHombroArribaAbajoComboBox.SelectedItem;
+                Angulos.HomroArribaAbajo = Convert.ToInt32(a);
+                SetAngulos();
+            }
+        }
+
+        private void AnguloHombroAdelanteAtrasComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AnguloHombroAdelanteAtrasComboBox.SelectedItem != null)
+            {
+                var a = AnguloHombroAdelanteAtrasComboBox.SelectedItem;
+                Angulos.HomroAdelanteAtras = Convert.ToInt32(a);
+                SetAngulos();
+            }
+        }
+
+        private void AnguloCodoArribaAbajoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AnguloCodoArribaAbajoComboBox.SelectedItem != null)
+            {
+                var a = AnguloCodoArribaAbajoComboBox.SelectedItem;
+                Angulos.CodoArribaAbajo = Convert.ToInt32(a);
+                SetAngulos();
+            }
+        }
+
+        private void AnguloCodoDerechaIzquierdaComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AnguloCodoDerechaIzquierdaComboBox.SelectedItem != null)
+            {
+                var a = AnguloCodoDerechaIzquierdaComboBox.SelectedItem;
+                Angulos.CodoDerechaIzquierda = Convert.ToInt32(a);
+                SetAngulos();
+            }
+        }
+
+        private void GuardarEstadoInicialBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Ejercicio.EstadoInicial = Angulos.ToString();
+            VerEstadoInicialBtn.IsEnabled = true;
+        }
+
+        private void GuardarEstadoFinalBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Ejercicio.EstadoFinal = Angulos.ToString();
+            VerEstadoFinalBtn.IsEnabled = true;
+        }
+
+        private void VerEstadoInicialBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Angulos = new AngulosServos(Ejercicio.EstadoInicial);
+            SetAngulos();
+        }
+
+        private void VerEstadoFinalBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Angulos = new AngulosServos(Ejercicio.EstadoFinal);
+            SetAngulos();
+        }
     }
 }

@@ -71,7 +71,7 @@
             FontSize="25"
             Width="122"/>
         <materialDesign:RatingBar
-            x:Name="BasicRatingBar" 
+            x:Name="DificultadRatingBar" 
             VerticalAlignment="Top" 
             HorizontalAlignment="Center" 
             Value="0" 
@@ -98,11 +98,12 @@
             VerticalAlignment="Top" 
             Width="230" 
             Height="75" 
-            FontSize="20" />
+            FontSize="20" Click="GuardarEstadoInicialBtn_Click" />
         <Button 
             Name="VerEstadoInicialBtn"
             Content="Ir Estado Inicial" 
-            HorizontalAlignment="Center" 
+            HorizontalAlignment="Center"
+ 
             Margin="258,300,528,0" 
             VerticalAlignment="Top" 
             Width="230" 
@@ -110,7 +111,7 @@
             FontSize="20"
             Background="White" 
             Foreground="#FFF44336" 
-            BorderBrush="White"/>
+            BorderBrush="White" Click="VerEstadoInicialBtn_Click"/>
         <Button 
             Name="VerEstadoFinalBtn"
             Content="Ir Estado Final" 
@@ -122,7 +123,7 @@
             FontSize="20"
             Background="White" 
             Foreground="#FFF44336" 
-            BorderBrush="White"/>
+            BorderBrush="White" Click="VerEstadoFinalBtn_Click"/>
         <Button 
             Name="GuardarEstadoFinalBtn"
             Content="Guardar Estado Final" 
@@ -131,7 +132,7 @@
             Margin="776,300,10,0" 
             Width="230" 
             Height="75" 
-            FontSize="20" />
+            FontSize="20" Click="GuardarEstadoFinalBtn_Click" />
         <ComboBox 
             Name="AnguloHombroArribaAbajoComboBox"
             materialDesign:HintAssist.Hint="Hombro Arriba abajo"
@@ -142,7 +143,7 @@
             VerticalAlignment="Top"
             Margin="188,400,528,0"
             FontSize="25" 
-            Width="300">
+            Width="300" SelectionChanged="AnguloHombroArribaAbajoComboBox_SelectionChanged">
             <ComboBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />
@@ -160,6 +161,7 @@
             />
         <Button 
             Name="AnguloHombroArribaAbajoDefaultBtn"
+            
             Content="Ángulo descanso" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
@@ -170,7 +172,8 @@
             FontSize="20" 
             Background="White" 
             Foreground="#FFF44336" 
-            BorderBrush="White" />
+            BorderBrush="White" 
+            Click="AnguloHombroArribaAbajoDefaultBtn_Click" />
         <ComboBox 
             Name="AnguloHombroAdelanteAtrasComboBox"
             materialDesign:HintAssist.Hint="Hombro Adelante atrás"
@@ -181,7 +184,8 @@
             VerticalAlignment="Top"
             Margin="188,514,528,0"
             FontSize="25" 
-            Width="300">
+            Width="300" 
+            SelectionChanged="AnguloHombroAdelanteAtrasComboBox_SelectionChanged">
             <ComboBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />
@@ -209,7 +213,8 @@
             FontSize="20" 
             Background="White" 
             Foreground="#FFF44336" 
-            BorderBrush="White" />
+            BorderBrush="White" 
+            Click="AnguloHombroAdelanteAtrasDefaultBtn_Click" />
         <ComboBox 
             Name="AnguloCodoArribaAbajoComboBox"
             materialDesign:HintAssist.Hint="Codo Arriba abajo"
@@ -220,7 +225,8 @@
             VerticalAlignment="Top"
             Margin="528,400,188,0"
             FontSize="25" 
-            Width="300">
+            Width="300" 
+            SelectionChanged="AnguloCodoArribaAbajoComboBox_SelectionChanged">
             <ComboBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />
@@ -248,7 +254,8 @@
             FontSize="20" 
             Background="White" 
             Foreground="#FFF44336" 
-            BorderBrush="White" />
+            BorderBrush="White" 
+            Click="AnguloCodoArribaAbajoDefaultBtn_Click" />
         <ComboBox 
             Name="AnguloCodoDerechaIzquierdaComboBox"
             materialDesign:HintAssist.Hint="Codo Derecha izquierda"
@@ -259,7 +266,8 @@
             VerticalAlignment="Top"
             Margin="528,514,188,0"
             FontSize="25" 
-            Width="300">
+            Width="300" 
+            SelectionChanged="AnguloCodoDerechaIzquierdaComboBox_SelectionChanged">
             <ComboBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />
@@ -287,7 +295,8 @@
             FontSize="20" 
             Background="White" 
             Foreground="#FFF44336" 
-            BorderBrush="White" />
+            BorderBrush="White" 
+            Click="AnguloCodoDerechaIzquierdaDefaultBtn_Click" />
         <Button 
             Name="GuardarEjercicioBtn"
             Content="Guardar ejercicio" 

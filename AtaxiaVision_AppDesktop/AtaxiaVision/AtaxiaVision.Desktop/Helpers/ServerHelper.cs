@@ -98,7 +98,7 @@ namespace AtaxiaVision.Helpers
                     }
                 }
             }
-            catch (Exception d)
+            catch (Exception)
             {
                 result.RespuestaCode = SERVER_ERROR;
             }

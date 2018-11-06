@@ -37,10 +37,10 @@ namespace AtaxiaVision.Models
         public override string ToString()
         {
             return "*"
-                + CodoArribaAbajo
-                + CodoDerechaIzquierda
-                + HomroArribaAbajo
-                + HomroAdelanteAtras;
+                + CodoArribaAbajo.ToString("D3")
+                + CodoDerechaIzquierda.ToString("D3")
+                + HomroArribaAbajo.ToString("D3")
+                + HomroAdelanteAtras.ToString("D3");
         }
     }
 }

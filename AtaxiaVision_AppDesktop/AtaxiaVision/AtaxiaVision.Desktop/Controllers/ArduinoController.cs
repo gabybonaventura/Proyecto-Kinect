@@ -75,6 +75,22 @@ namespace AtaxiaVision.Controllers
                 _serialPort.Close();
         }
 
+        public bool EnviarAngulosFromAngulosServos(AngulosServos angulos)
+        {
+            try
+            {
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Write(angulos.ToString());
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
         public bool EscribirAngulosArduino(Angulos angulos)
         {
             try
