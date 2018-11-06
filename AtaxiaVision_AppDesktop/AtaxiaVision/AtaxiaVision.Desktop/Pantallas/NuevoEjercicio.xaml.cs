@@ -256,10 +256,11 @@ namespace AtaxiaVision.Pantallas
             SetAngulos();
         }
         #endregion
-
+        
+        #region Metodos angulos combo box + btns
         private void AnguloHombroArribaAbajoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(AnguloHombroArribaAbajoComboBox.SelectedItem != null)
+            if (AnguloHombroArribaAbajoComboBox.SelectedItem != null)
             {
                 var a = AnguloHombroArribaAbajoComboBox.SelectedItem;
                 Angulos.HomroArribaAbajo = Convert.ToInt32(a);
@@ -319,6 +320,7 @@ namespace AtaxiaVision.Pantallas
         {
             Angulos = new AngulosServos(Ejercicio.EstadoFinal);
             SetAngulos();
-        }
+        } 
+        #endregion
     }
 }

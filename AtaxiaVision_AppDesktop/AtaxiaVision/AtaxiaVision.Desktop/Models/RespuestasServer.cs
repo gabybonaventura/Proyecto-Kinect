@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace AtaxiaVision.Models
 {
-    public class RespuestaServer
+    public class RespuestaToken
     {
-        public int RespuestaCode { get; set; }
-        public bool PropiedadIsValid { get; set; }
-        public Patient patient { get; set; }
         public int CodigoTokenValid { get; set; }
+        public Patient Patient { get; set; }
 
-        public RespuestaServer()
+        public RespuestaToken()
         {
-            RespuestaCode = ServerHelper.SERVER_ERROR;
+            CodigoTokenValid = ServerHelper.TOKEN_SINCONEXION;
         }
     }
+    
 }

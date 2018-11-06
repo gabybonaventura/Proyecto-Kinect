@@ -8,12 +8,18 @@ namespace AtaxiaVision.Models
 {
     public class Patient
     {
-        public int Age { get; set; }
-        public DateTime BeginDate { get; set; }
-        public int IdPatient { get; set; }
-        public string Name { get; set; }
+        public int Edad { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public int PacienteId { get; set; }
+        public string Nombre { get; set; }
 
-        public Patient() { }
+        public Patient(dynamic patient)
+        {
+            Edad = Convert.ToInt32(patient.age);
+            FechaInicio = DateTime.Now;
+            PacienteId = Convert.ToInt32(patient.idPatient);
+            Nombre = patient.name;
+        }
     }
 
     

@@ -63,7 +63,7 @@ namespace AtaxiaVision.Desktop.Pantallas
         {
             //PruebaAngulos p = new PruebaAngulos();
             InitializeComponent();
-            //ServerHelper.TestInicializarArchivo();
+            ServerHelper.TestInicializarArchivo();
             SincronizarDatos();
             // Test de grabacion json
             //ServerHelper.TestLeerArchivo();
@@ -184,7 +184,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 // Thread.Sleep(5000); // Es solo para ver como queda la animacion este sleep.
                 // Valido el token DNI + Sesion
-                RespuestaServer result = ServerHelper.ValidarToken(Sesion.Token);
+                var result = ServerHelper.ValidarToken(Sesion.Token);
                 Sesion.TokenVerificado = true;
                 // Muestro el Snackbar
                 switch (result.CodigoTokenValid)
@@ -200,9 +200,9 @@ namespace AtaxiaVision.Desktop.Pantallas
                     case ServerHelper.TOKEN_VALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
                         Sesion.TokenValido = true;
-                        IdLabel.Dispatcher.Invoke(labelIdDelegate, result.patient.IdPatient);
-                        NombreLabel.Dispatcher.Invoke(labelNombreDelegate, result.patient.Name);
-                        EdadLabel.Dispatcher.Invoke(labelEdadDelegate, result.patient.Age);
+                        IdLabel.Dispatcher.Invoke(labelIdDelegate, result.Patient.PacienteId);
+                        NombreLabel.Dispatcher.Invoke(labelNombreDelegate, result.Patient.Nombre);
+                        EdadLabel.Dispatcher.Invoke(labelEdadDelegate, result.Patient.Edad);
                         PacienteCard.Dispatcher.Invoke(pacienteCardDelegate, Visibility.Visible);
                         break;
                     default:

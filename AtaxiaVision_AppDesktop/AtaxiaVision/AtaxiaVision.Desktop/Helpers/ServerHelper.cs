@@ -17,6 +17,7 @@ namespace AtaxiaVision.Helpers
         private const string URL = "http://api.ataxiavision.com/";
         private const string API_SESSION = "session/";
         private const string API_TOKEN = "token/";
+        private const string API_EJERCICIOS = "exercise/";
         private const string METHOD_POST = "POST";
         private const string METHOD_GET = "GET";
         public const int TOKEN_SINCONEXION = -1;
@@ -63,12 +64,10 @@ namespace AtaxiaVision.Helpers
             return ejercicios;
         }
 
-        private static RespuestaServer EnviarGet(string api, string data)
+        private static dynamic EnviarGet(string api, string data)
         {
-            RespuestaServer result = new RespuestaServer();
             try
             {
-                
                 var request = (HttpWebRequest)WebRequest.Create(URL + api + data);
                 var content = string.Empty;
                 using (var response = (HttpWebResponse)request.GetResponse())
@@ -83,32 +82,17 @@ namespace AtaxiaVision.Helpers
                 }
                 var rta = JsonConvert.DeserializeObject<dynamic>(content);
                 string status_code = rta.head.status_code;
-                result.RespuestaCode = Convert.ToInt32(status_code);
-                if (result.RespuestaCode == SERVER_OK)
-                {
-                    string isValid = rta.data.isValid;
-                    result.PropiedadIsValid = Convert.ToBoolean(isValid);
-                    if (result.PropiedadIsValid)
-                    {
-                        result.patient = new Patient();
-                        result.patient.Age = Convert.ToInt32(rta.data.patient.age);
-                        //result.patient.BeginDate = Convert.ToDateTime();
-                        result.patient.IdPatient = Convert.ToInt32(rta.data.patient.idPatient);
-                        result.patient.Name = rta.data.patient.name;
-                    }
-                }
+                if (Convert.ToInt32(status_code) == SERVER_OK)
+                    return rta.data;
             }
             catch (Exception)
             {
-                result.RespuestaCode = SERVER_ERROR;
             }
-
-            return result;
+            return SERVER_ERROR;
         }
 
-        private static RespuestaServer EnviarPost(string api, string data)
+        private static dynamic EnviarPost(string api, string data)
         {
-            RespuestaServer result = new RespuestaServer();
             try
             {
 
@@ -127,32 +111,34 @@ namespace AtaxiaVision.Helpers
                 {
                     var rtaSr = streamReader.ReadToEnd();
                     var rta = JsonConvert.DeserializeObject<dynamic>(rtaSr);
-                    string status_code = rta.head.status;
-                    result.RespuestaCode = Convert.ToInt32(status_code);
+                    string status_code = rta.head.status_code;
+                    if (Convert.ToInt32(status_code) == SERVER_OK)
+                        return rta.data;
                 }
             }
             catch (Exception)
             {
-                result.RespuestaCode = SERVER_ERROR;
             }
-            return result;
+            return SERVER_ERROR;
         }
 
-        private static RespuestaServer Enviar(string api, string method, string data)
+        private static dynamic Enviar(string api, string method, string data)
         {
-            RespuestaServer resultado = new RespuestaServer();
             switch (method)
             {
                 case METHOD_GET:
-                    resultado = EnviarGet(api, data);
-                    break;
+                    return EnviarGet(api, data);
                 case METHOD_POST:
-                    resultado = EnviarPost(api, data);
-                    break;
+                    return EnviarPost(api, data);
                 default:
                     break;
             }
-            return resultado;
+            return null;
+        }
+
+        private static bool RequestNoValida(dynamic result)
+        {
+            return result.GetType().Name == "Int32" && result == SERVER_ERROR;
         }
         #endregion
         
@@ -167,29 +153,31 @@ namespace AtaxiaVision.Helpers
         {
             if (!ExisteArchivoDatosOffile())
                 return ARCHIVOOFFLINE_NOEXISTE;
-            var data = LeerArchivoDatosOffile();
-            var Envio = Enviar(API_SESSION,METHOD_POST,data);
-            if (Envio.RespuestaCode == SERVER_OK)
-            {
-                EliminarArchivoDatosOffile();
-                return ARCHIVOOFFLINE_SINCRONIZADO;
-            }
 
-            return ARCHIVOOFFLINE_NOSINCRONIZADO;
+            var data = LeerArchivoDatosOffile();
+            var result = Enviar(API_SESSION,METHOD_POST,data);
+
+            if (RequestNoValida(result))
+                return ARCHIVOOFFLINE_NOSINCRONIZADO;
+
+            EliminarArchivoDatosOffile();
+            return ARCHIVOOFFLINE_SINCRONIZADO;
         }
 
-        public static RespuestaServer ValidarToken(string token)
+        public static RespuestaToken ValidarToken(string token)
         {
-            var resultGet = Enviar(API_TOKEN,METHOD_GET, token);
-            resultGet.CodigoTokenValid = TOKEN_SINCONEXION;
-            if (resultGet.RespuestaCode == SERVER_OK)
+            var respuestaToken = new RespuestaToken();
+            var result = Enviar(API_TOKEN,METHOD_GET, token);
+            if (RequestNoValida(result))
+                return respuestaToken;
+            if (Convert.ToBoolean(result.isValid))
             {
-                if (resultGet.PropiedadIsValid)
-                    resultGet.CodigoTokenValid = TOKEN_VALIDO;
-                else
-                    resultGet.CodigoTokenValid = TOKEN_INVALIDO;
+                respuestaToken.Patient = new Patient(result.patient);
+                respuestaToken.CodigoTokenValid = TOKEN_VALIDO;
             }
-            return resultGet;
+            else
+                respuestaToken.CodigoTokenValid = TOKEN_INVALIDO;
+            return respuestaToken;
         }
 
         public static int EnviarEjercicio(RepeticionViewModel ejercicio)
@@ -201,13 +189,21 @@ namespace AtaxiaVision.Helpers
                 ejercicio
             };
             var datos = JsonConvert.SerializeObject(ejercicios);
-            var resultPost = Enviar(API_SESSION, METHOD_POST, datos);
-            if (resultPost.RespuestaCode == SERVER_ERROR)
+            var result = Enviar(API_SESSION, METHOD_POST, datos);
+            if (RequestNoValida(result))
             {
                 AgregarEjercicioDatosOffile(ejercicio);
                 return SERVER_ERROR;
             }
             return SERVER_OK;
+        }
+
+        public static List<EjercicioViewModel> ObtenerEjercicios()
+        {
+            List<EjercicioViewModel> result = new List<EjercicioViewModel>();
+            var resultGet = Enviar(API_EJERCICIOS, METHOD_GET, null);
+
+            return result;
         }
 
         #region Test

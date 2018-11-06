@@ -152,7 +152,7 @@
     <Compile Include="Models\Distancia.cs" />
     <Compile Include="Models\RepeticionViewModel.cs" />
     <Compile Include="Models\Puntos.cs" />
-    <Compile Include="Models\RespuestaServer.cs" />
+    <Compile Include="Models\RespuestasServer.cs" />
     <Compile Include="Models\SesionViewModel.cs" />
     <Compile Include="Models\TensionServos.cs" />
     <Compile Include="Pantallas\Confirmacion.xaml.cs">
