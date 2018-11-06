@@ -59,13 +59,13 @@
             Name="EjerciciosDatGrid"
             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
             materialDesign:DataGridAssist.ColumnHeaderPadding="8" 
-            Margin="-6,200,32,50"
+            Margin="10,190,10,58"
             IsReadOnly="True" 
             AutoGenerateColumns="False"
             ItemsSource="{Binding TestCollection}"
             FontSize="20" 
             HorizontalAlignment="Center" 
-            Width="990">
+            Width="996">
             <DataGrid.Columns>
                 <DataGridTextColumn Width="300" Header="Nombre" Binding="{Binding Nombre}" FontWeight="Bold"></DataGridTextColumn>
                 <DataGridTextColumn Width="50"  Header="Nivel" Binding="{Binding Dificultad}" FontSize="15"></DataGridTextColumn>

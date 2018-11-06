@@ -257,7 +257,8 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void NuevoEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            NuevoEjercicio win = new NuevoEjercicio();
+            //NuevoEjercicio win = new NuevoEjercicio();
+            ListaEjercicios win = new ListaEjercicios();
             win.Show();
             Close();
         }

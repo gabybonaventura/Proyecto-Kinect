@@ -31,7 +31,7 @@
                     Padding="0" Click="NuevoEjercicioBtn_Click" 
                     >
                     <materialDesign:PackIcon 
-                            Kind="Add"
+                            Kind="ViewList"
                             Width="55"
                             Height="45" 
                             Padding="0"/>
