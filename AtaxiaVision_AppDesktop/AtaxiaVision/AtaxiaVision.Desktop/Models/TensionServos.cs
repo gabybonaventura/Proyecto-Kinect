@@ -45,10 +45,8 @@ namespace AtaxiaVision.Models
             CodoIzquierdaDerecha = TryConvert(r1);
             HombroArribaAbajo = TryConvert(r2);
             HombroAdelanteAtras = TryConvert(r3);
-
         }
-
-       
+        
         private int TryConvert(string number)
         {
             int n = 0;
@@ -63,6 +61,15 @@ namespace AtaxiaVision.Models
                 n = 0;
             }
             return n;
+        }
+
+        public override string ToString()
+        {
+            return "*"
+               + CodoArribaAbajo.ToString("D3")
+               + CodoIzquierdaDerecha.ToString("D3")
+               + HombroArribaAbajo.ToString("D3")
+               + HombroAdelanteAtras.ToString("D3");
         }
     }
 }

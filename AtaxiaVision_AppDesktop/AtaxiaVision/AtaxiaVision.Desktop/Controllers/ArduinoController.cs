@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AtaxiaVision.Controllers
 {
-    class ArduinoController
+    public class ArduinoController
     {
         private SerialPort _serialPort;
         int _intentos;

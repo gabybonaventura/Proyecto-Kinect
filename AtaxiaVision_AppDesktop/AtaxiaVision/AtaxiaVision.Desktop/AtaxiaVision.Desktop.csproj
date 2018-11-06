@@ -130,6 +130,8 @@
     <Compile Include="Controllers\ArduinoController.cs" />
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Helpers\ArduinoHelper.cs" />
+    <Compile Include="Models\AngulosServos.cs" />
+    <Compile Include="Models\EjercicioViewModel.cs" />
     <Compile Include="Models\Patient.cs" />
     <Compile Include="Pantallas\NuevoEjercicio.xaml.cs">
       <DependentUpon>NuevoEjercicio.xaml</DependentUpon>
