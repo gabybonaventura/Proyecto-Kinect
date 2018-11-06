@@ -63,7 +63,7 @@ namespace AtaxiaVision.Desktop.Pantallas
         {
             //PruebaAngulos p = new PruebaAngulos();
             InitializeComponent();
-            ServerHelper.TestInicializarArchivo();
+            //ServerHelper.TestInicializarArchivo();
             SincronizarDatos();
             // Test de grabacion json
             //ServerHelper.TestLeerArchivo();
