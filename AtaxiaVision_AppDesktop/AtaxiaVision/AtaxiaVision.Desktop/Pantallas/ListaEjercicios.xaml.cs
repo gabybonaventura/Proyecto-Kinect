@@ -67,5 +67,10 @@ namespace AtaxiaVision.Pantallas
                 CerrarBtn_Click(sender, e);
             }
         }
+
+        private void EliminarBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

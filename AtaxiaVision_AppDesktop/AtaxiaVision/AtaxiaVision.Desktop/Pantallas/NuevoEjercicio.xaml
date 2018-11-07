@@ -43,7 +43,7 @@
                         TextAlignment="Center" 
                         FontSize="40" 
                         Margin="55,0,0,0">
-                        Nuevo ejercicio
+                        Ejercicio
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
@@ -306,6 +306,7 @@
             Width="640" 
             Height="80" 
             FontSize="30" 
+            IsEnabled="False"
             Click="GuardarEjercicioBtn_Click"/>
 
         <!-- Snackbar -->

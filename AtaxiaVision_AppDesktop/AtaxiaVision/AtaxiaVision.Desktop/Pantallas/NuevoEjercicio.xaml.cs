@@ -224,6 +224,48 @@ namespace AtaxiaVision.Pantallas
             #endregion
         }
 
+        private void HabilitarBotonGuardar()
+        {
+            if (!String.IsNullOrEmpty(Ejercicio.Exercise.EstadoFinal) &&
+                !String.IsNullOrEmpty(Ejercicio.Exercise.EstadoInicial))
+                GuardarEjercicioBtn.IsEnabled = true;
+        }
+
+        private bool ValidarEjercicio()
+        {
+            if (String.IsNullOrEmpty(Ejercicio.Exercise.Nombre))
+            {
+                EstadoSnackBar("Ingresé un Nombre para el ejercicio.");
+                return false;
+            }
+            if (Ejercicio.Exercise.Dificultad == 0)
+            {
+                EstadoSnackBar("Ingresé una Dificultad para el ejercicio.");
+                return false;
+            }
+            if (String.IsNullOrEmpty(Ejercicio.Exercise.Descripcion))
+            {
+                EstadoSnackBar("Ingresé una Descripción para el ejercicio.");
+                return false;
+            }
+            if (String.IsNullOrEmpty(Ejercicio.Exercise.EstadoInicial))
+            {
+                EstadoSnackBar("Ingresé un Estado Inicial para el ejercicio.");
+                return false;
+            }
+            if (String.IsNullOrEmpty(Ejercicio.Exercise.EstadoFinal))
+            {
+                EstadoSnackBar("Ingresé un Estado Final para el ejercicio.");
+                return false;
+            }
+            if(Ejercicio.Exercise.EstadoInicial == Ejercicio.Exercise.EstadoFinal)
+            {
+                EstadoSnackBar("Estado inicial es el mismo que el Estado final.");
+                return false;
+            }
+            return true;
+        }
+
         #region Botones Angulos default
         private void AnguloHombroArribaAbajoDefaultBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -295,12 +337,14 @@ namespace AtaxiaVision.Pantallas
         {
             Ejercicio.Exercise.EstadoInicial = Angulos.ToString();
             VerEstadoInicialBtn.IsEnabled = true;
+            HabilitarBotonGuardar();
         }
 
         private void GuardarEstadoFinalBtn_Click(object sender, RoutedEventArgs e)
         {
             Ejercicio.Exercise.EstadoFinal = Angulos.ToString();
             VerEstadoFinalBtn.IsEnabled = true;
+            HabilitarBotonGuardar();
         }
 
         private void VerEstadoInicialBtn_Click(object sender, RoutedEventArgs e)
@@ -318,12 +362,14 @@ namespace AtaxiaVision.Pantallas
 
         private void GuardarEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
-            // FALTAN VALIDAR TODOS LOS DATOS.
             Ejercicio.Exercise.Nombre = NombreEjercicioTextBox.Text;
             Ejercicio.Exercise.Descripcion = DescripcionEjercicioTextBox.Text;
             Ejercicio.Exercise.Dificultad = DificultadRatingBar.Value;
-            ServerHelper.EnviarEjercicio(Ejercicio);
-            CerrarBtn_Click(sender, e);
+            if (ValidarEjercicio())
+            {
+                ServerHelper.EnviarEjercicio(Ejercicio);
+                CerrarBtn_Click(sender, e);
+            }
         }
     }
 }
