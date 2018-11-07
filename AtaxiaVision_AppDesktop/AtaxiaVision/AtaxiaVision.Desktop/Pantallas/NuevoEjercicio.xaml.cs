@@ -29,7 +29,7 @@ namespace AtaxiaVision.Pantallas
         public ArduinoController Arduino { get; set; }
         public AngulosServos Angulos { get; set; }
         public AngulosServos AngulosDefault { get; set; }
-        public EjercicioViewModel Ejercicio { get; set; }
+        public ExerciseID Ejercicio { get; set; }
         public List<int> AngulosDisponibles {
             get
             {
@@ -137,22 +137,15 @@ namespace AtaxiaVision.Pantallas
             AnguloCodoArribaAbajoComboBox.ItemsSource = AngulosDisponibles;
             AnguloCodoDerechaIzquierdaComboBox.ItemsSource = AngulosDisponibles;
         }
-        public void SetEjercicio(EjercicioViewModel ejercicio)
+        public void SetEjercicio(ExerciseID ejercicio)
         {
             if(ejercicio != null)
             {
-                Ejercicio = new EjercicioViewModel
-                {
-                    Nombre = ejercicio.Nombre,
-                    Descripcion = ejercicio.Descripcion,
-                    Dificultad = ejercicio.Dificultad,
-                    EstadoFinal = ejercicio.EstadoFinal,
-                    EstadoInicial = ejercicio.EstadoInicial
-                };
+                Ejercicio = ejercicio;
             }
             else
             {
-                Ejercicio = new EjercicioViewModel();
+                Ejercicio = new ExerciseID();
             }
         }
         private void InicializarArduino()
@@ -161,10 +154,10 @@ namespace AtaxiaVision.Pantallas
             try
             {
                 Arduino = new ArduinoController();
-                if(String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+                if(String.IsNullOrEmpty(Ejercicio.Exercise.EstadoInicial))
                     Angulos = new AngulosServos(AngulosDefault.ToString());
                 else
-                    Angulos = new AngulosServos(Ejercicio.EstadoInicial);
+                    Angulos = new AngulosServos(Ejercicio.Exercise.EstadoInicial);
                 Arduino.Inicializar(Angulos.ToString());
             }
             catch (Exception)
@@ -174,12 +167,12 @@ namespace AtaxiaVision.Pantallas
         }
         public void LlenarCampos()
         {
-            NombreEjercicioTextBox.Text = Ejercicio.Nombre;
-            DescripcionEjercicioTextBox.Text = Ejercicio.Descripcion;
-            DificultadRatingBar.Value = Ejercicio.Dificultad;
-            if (String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+            NombreEjercicioTextBox.Text = Ejercicio.Exercise.Nombre;
+            DescripcionEjercicioTextBox.Text = Ejercicio.Exercise.Descripcion;
+            DificultadRatingBar.Value = Ejercicio.Exercise.Dificultad;
+            if (String.IsNullOrEmpty(Ejercicio.Exercise.EstadoInicial))
                 VerEstadoInicialBtn.IsEnabled = false;
-            if (String.IsNullOrEmpty(Ejercicio.EstadoFinal))
+            if (String.IsNullOrEmpty(Ejercicio.Exercise.EstadoFinal))
                 VerEstadoFinalBtn.IsEnabled = false;
         }
         public void SetAngulos()
@@ -191,7 +184,7 @@ namespace AtaxiaVision.Pantallas
             Arduino.EnviarAngulosFromAngulosServos(Angulos);
         }
 
-        public NuevoEjercicio(EjercicioViewModel ejercicio = null)
+        public NuevoEjercicio(ExerciseID ejercicio = null)
         {
             InitializeComponent();      // Inicializar componentes
             AsignarListasAngulos();     // Asigna los 180 grados de las listas
@@ -203,8 +196,8 @@ namespace AtaxiaVision.Pantallas
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
         {
-            Inicio inicio = new Inicio();
-            inicio.Show();
+            var win = new ListaEjercicios();
+            win.Show();
             Close();
         }
 
@@ -300,27 +293,37 @@ namespace AtaxiaVision.Pantallas
 
         private void GuardarEstadoInicialBtn_Click(object sender, RoutedEventArgs e)
         {
-            Ejercicio.EstadoInicial = Angulos.ToString();
+            Ejercicio.Exercise.EstadoInicial = Angulos.ToString();
             VerEstadoInicialBtn.IsEnabled = true;
         }
 
         private void GuardarEstadoFinalBtn_Click(object sender, RoutedEventArgs e)
         {
-            Ejercicio.EstadoFinal = Angulos.ToString();
+            Ejercicio.Exercise.EstadoFinal = Angulos.ToString();
             VerEstadoFinalBtn.IsEnabled = true;
         }
 
         private void VerEstadoInicialBtn_Click(object sender, RoutedEventArgs e)
         {
-            Angulos = new AngulosServos(Ejercicio.EstadoInicial);
+            Angulos = new AngulosServos(Ejercicio.Exercise.EstadoInicial);
             SetAngulos();
         }
 
         private void VerEstadoFinalBtn_Click(object sender, RoutedEventArgs e)
         {
-            Angulos = new AngulosServos(Ejercicio.EstadoFinal);
+            Angulos = new AngulosServos(Ejercicio.Exercise.EstadoFinal);
             SetAngulos();
-        } 
+        }
         #endregion
+
+        private void GuardarEjercicioBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // FALTAN VALIDAR TODOS LOS DATOS.
+            Ejercicio.Exercise.Nombre = NombreEjercicioTextBox.Text;
+            Ejercicio.Exercise.Descripcion = DescripcionEjercicioTextBox.Text;
+            Ejercicio.Exercise.Dificultad = DificultadRatingBar.Value;
+            ServerHelper.EnviarEjercicio(Ejercicio);
+            CerrarBtn_Click(sender, e);
+        }
     }
 }

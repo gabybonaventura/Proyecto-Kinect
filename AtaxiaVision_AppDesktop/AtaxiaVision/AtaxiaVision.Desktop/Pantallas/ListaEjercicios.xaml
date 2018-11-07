@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized" >
+        WindowState="Maximized" KeyDown="Window_KeyDown" >
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
@@ -47,39 +47,51 @@
         </materialDesign:ColorZone>
         <!--Cuerpo-->
         <Button 
-            Name="GuardarEjercicioBtn"
+            Name="CrearEjercicioBtn"
             Content="Crear ejercicio" 
             HorizontalAlignment="Center" 
-            Margin="20,117,742,0" 
+            Margin="10,117,752,0" 
             VerticalAlignment="Top" 
             Width="254" 
             Height="70" 
-            FontSize="20" />
+            FontSize="20"
+            Click="CrearEjercicioBtn_Click"/>
         <DataGrid 
             Name="EjerciciosDatGrid"
             materialDesign:DataGridAssist.CellPadding="10"
             materialDesign:DataGridAssist.ColumnHeaderPadding="10" 
             Margin="10,190,10,58"
-            IsReadOnly="True" 
             AutoGenerateColumns="False"
+            IsReadOnly="True"
             FontSize="20" 
             HorizontalAlignment="Center" 
             Width="996">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="200" Header="Nombre" Binding="{Binding Nombre}" FontWeight="Bold">
+                <DataGridTextColumn Width="200" Header="Nombre" Binding="{Binding Exercise.Nombre}" FontWeight="Bold">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Width="100"  Header="Nivel" Binding="{Binding Dificultad}" FontSize="15"></DataGridTextColumn>
+                <DataGridTextColumn Width="100"  Header="Nivel" Binding="{Binding Exercise.Dificultad}" FontSize="15"></DataGridTextColumn>
                 <DataGridTemplateColumn Width="150" Header="Dificultad" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <materialDesign:RatingBar 
-                                Value="{Binding Dificultad}" 
+                                Value="{Binding Exercise.Dificultad}" 
                                 FontSize="20" 
                                 />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Width="450" FontSize="15" Header="Descripcion" Binding="{Binding Descripcion}"></DataGridTextColumn>
+                <DataGridTextColumn Width="450" FontSize="15" Header="Descripcion" Binding="{Binding Exercise.Descripcion}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTemplateColumn Width="90" Header="Editar">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -88,6 +100,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            
         </DataGrid>
         <!-- Snackbar -->
         <materialDesign:Snackbar

@@ -131,7 +131,6 @@
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Helpers\ArduinoHelper.cs" />
     <Compile Include="Models\AngulosServos.cs" />
-    <Compile Include="Models\EjercicioViewModel.cs" />
     <Compile Include="Pantallas\ListaEjercicios.xaml.cs">
       <DependentUpon>ListaEjercicios.xaml</DependentUpon>
     </Compile>

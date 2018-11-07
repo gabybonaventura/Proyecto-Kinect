@@ -20,11 +20,11 @@ namespace AtaxiaVision.Models
 
     public class RespuestaListaEjercicios
     {
-        public List<Exercise> Ejercicios { get; set; }
+        public List<ExerciseID> Ejercicios { get; set; }
 
         public RespuestaListaEjercicios()
         {
-            Ejercicios = new List<Exercise>();
+            Ejercicios = new List<ExerciseID>();
         }
     }
 
@@ -45,24 +45,62 @@ namespace AtaxiaVision.Models
         }
     }
 
-    public class Exercise
+    public class ExerciseID
     {
         public string ID { get; set; }
+        public Exercise Exercise { get; set; }
+
+        public ExerciseID()
+        {
+            Exercise = new Exercise();
+        }
+
+        public ExerciseID(string id, dynamic exercise)
+        {
+            ID = id;
+            Exercise = new Exercise(exercise);
+        }
+    }
+
+    public class Exercise
+    {
         public string Descripcion { get; set; }
         public int Dificultad { get; set; }
         public string EstadoFinal { get; set; }
         public string EstadoInicial { get; set; }
         public string Nombre { get; set; }
 
-        public Exercise(string id, dynamic exercise)
+        public Exercise() { }
+
+        public Exercise(dynamic exercise)
         {
-            ID = id;
             Descripcion = exercise.description;
             Dificultad = Convert.ToInt32(exercise.difficulty);
             EstadoFinal = exercise.endingState;
             EstadoInicial = exercise.initialState;
             Nombre = exercise.name;
         }
+
+        public ExerciseModelServer ConvertToModelServer()
+        {
+            return new ExerciseModelServer
+            {
+                description = Descripcion,
+                difficulty = Dificultad,
+                endingState = EstadoFinal,
+                initialState = EstadoInicial,
+                name = Nombre
+            };
+        }
+    }
+
+    public class ExerciseModelServer
+    {
+        public string description;
+        public int difficulty;
+        public string endingState;
+        public string initialState;
+        public string name;
     }
     #endregion
 

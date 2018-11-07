@@ -87,7 +87,7 @@
             Margin="10,196,10,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
-            FontSize="25"
+            FontSize="20"
             HorizontalAlignment="Center" 
             Width="996"/>
         <Button 
@@ -305,7 +305,8 @@
             VerticalAlignment="Top" 
             Width="640" 
             Height="80" 
-            FontSize="30" />
+            FontSize="30" 
+            Click="GuardarEjercicioBtn_Click"/>
 
         <!-- Snackbar -->
         <materialDesign:Snackbar

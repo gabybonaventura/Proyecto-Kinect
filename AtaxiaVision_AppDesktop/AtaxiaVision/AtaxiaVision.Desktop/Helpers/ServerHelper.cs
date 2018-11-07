@@ -20,6 +20,7 @@ namespace AtaxiaVision.Helpers
         private const string API_EJERCICIOS = "exercise/";
         private const string METHOD_POST = "POST";
         private const string METHOD_GET = "GET";
+        private const string METHOD_PUT = "PUT";
         public const int TOKEN_SINCONEXION = -1;
         public const int TOKEN_VALIDO = 1;
         public const int TOKEN_INVALIDO = 0;
@@ -95,9 +96,38 @@ namespace AtaxiaVision.Helpers
         {
             try
             {
-
                 var request = (HttpWebRequest)WebRequest.Create(URL + api);
                 request.Method = "POST";
+                request.ContentType = "application/json";
+                request.ContentLength = data.Length;
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(data);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                var httpResponse = (HttpWebResponse)request.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var rtaSr = streamReader.ReadToEnd();
+                    var rta = JsonConvert.DeserializeObject<dynamic>(rtaSr);
+                    string status_code = rta.head.status_code;
+                    if (Convert.ToInt32(status_code) == SERVER_OK)
+                        return rta.data;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return SERVER_ERROR;
+        }
+
+        private static dynamic EnviarPut(string api, string data)
+        {
+            try
+            {
+                var request = (HttpWebRequest)WebRequest.Create(URL + api);
+                request.Method = "PUT";
                 request.ContentType = "application/json";
                 request.ContentLength = data.Length;
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -130,6 +160,8 @@ namespace AtaxiaVision.Helpers
                     return EnviarGet(api, data);
                 case METHOD_POST:
                     return EnviarPost(api, data);
+                case METHOD_PUT:
+                    return EnviarPut(api, data);
                 default:
                     break;
             }
@@ -200,7 +232,6 @@ namespace AtaxiaVision.Helpers
 
         public static RespuestaListaEjercicios ObtenerEjercicios()
         {
-            var listaEjercicios = new List<EjercicioViewModel>();
             var ejerciciosServer = new RespuestaListaEjercicios();
             var resultGet = Enviar(API_EJERCICIOS, METHOD_GET, null);
             if (RequestNoValida(resultGet))
@@ -210,9 +241,30 @@ namespace AtaxiaVision.Helpers
             {
                 var id = item.Name;
                 var ex = item.First;
-                ejerciciosServer.Ejercicios.Add(new Exercise(id, ex.exercise));
+
+                ejerciciosServer.Ejercicios.Add(new ExerciseID(id, ex.exercise));
             }
             return ejerciciosServer;
+        }
+
+        public static int EnviarEjercicio(ExerciseID ejercicio)
+        {
+            var datos = JsonConvert.SerializeObject(ejercicio.Exercise.ConvertToModelServer());
+            // Si el ejercicio viene con un ID, es porque es un update, sino, es un new.
+            if(String.IsNullOrEmpty(ejercicio.ID))
+            {
+                var result = Enviar(API_EJERCICIOS, METHOD_POST, datos);
+                if (!RequestNoValida(result))
+                    return SERVER_OK;
+            }
+            else
+            {
+                // TODAVIA NO SE PEUDE ACTUALIZAR
+                var result = Enviar(API_EJERCICIOS, METHOD_PUT, datos);
+                if (!RequestNoValida(result))
+                    return SERVER_OK;
+            }
+            return SERVER_ERROR;
         }
 
         #region Test
