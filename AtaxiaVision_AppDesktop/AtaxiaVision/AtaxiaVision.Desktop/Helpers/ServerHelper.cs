@@ -244,6 +244,11 @@ namespace AtaxiaVision.Helpers
 
                 ejerciciosServer.Ejercicios.Add(new ExerciseID(id, ex.exercise));
             }
+            // Ordenamos la lista
+            ejerciciosServer.Ejercicios = ejerciciosServer
+                .Ejercicios
+                .OrderBy(x => x.Exercise.Dificultad)
+                .ToList();
             return ejerciciosServer;
         }
 
@@ -259,8 +264,7 @@ namespace AtaxiaVision.Helpers
             }
             else
             {
-                // TODAVIA NO SE PEUDE ACTUALIZAR
-                var result = Enviar(API_EJERCICIOS, METHOD_PUT, datos);
+                var result = Enviar(API_EJERCICIOS + ejercicio.ID, METHOD_PUT, datos);
                 if (!RequestNoValida(result))
                     return SERVER_OK;
             }
