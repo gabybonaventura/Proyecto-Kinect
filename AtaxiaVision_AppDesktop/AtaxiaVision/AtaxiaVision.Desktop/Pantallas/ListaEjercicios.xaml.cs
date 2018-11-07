@@ -71,8 +71,9 @@ namespace AtaxiaVision.Pantallas
         private void EliminarBtn_Click(object sender, RoutedEventArgs e)
         {
             var filaSeleccionada = ((FrameworkElement)sender).DataContext as ExerciseID;
-            ServerHelper.EliminarEjercicio(filaSeleccionada.ID);
-
+            var win = new EliminarEjercicio(filaSeleccionada);
+            win.Show();
+            Close();
         }
     }
 }

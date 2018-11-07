@@ -92,7 +92,7 @@
                     FontSize="25"
                     Foreground="#FFF"/>
                 <Label 
-                    x:Name="DesviosLabel"
+                    x:Name="DescripcionLabel"
                     Grid.ColumnSpan="2"
                     Grid.Row="4"
                     VerticalAlignment="Center"
@@ -112,6 +112,7 @@
             />
         <Button 
             x:Name="SiBtn" 
+            Click="SiBtn_Click"
             Content="_Sí" 
             HorizontalAlignment="Center" 
             Visibility="Visible"
@@ -124,6 +125,7 @@
             />
         <Button 
             x:Name="NoBtn" 
+            Click="NoBtn_Click"
             Content="_No" 
             Margin="528,200,188,0" 
             Visibility="Visible"

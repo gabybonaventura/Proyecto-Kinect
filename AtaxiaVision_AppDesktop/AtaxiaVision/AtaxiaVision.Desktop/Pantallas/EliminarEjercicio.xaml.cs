@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AtaxiaVision.Helpers;
+using AtaxiaVision.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,15 @@ namespace AtaxiaVision.Pantallas
     /// </summary>
     public partial class EliminarEjercicio : Window
     {
-        public EliminarEjercicio()
+        public ExerciseID Ejercicio { get; set; }
+
+        public EliminarEjercicio(ExerciseID exercise)
         {
             InitializeComponent();
+            Ejercicio = exercise;
+            NombreEjercicioLabel.Content += Ejercicio.Exercise.Nombre;
+            DficultadEjercicioLabel.Content += Ejercicio.Exercise.Dificultad + "";
+            DescripcionLabel.Content += Ejercicio.Exercise.Descripcion;
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -37,6 +45,21 @@ namespace AtaxiaVision.Pantallas
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void SiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ServerHelper.EliminarEjercicio(Ejercicio.ID);
+            var win = new ListaEjercicios();
+            win.Show();
+            Close();
+        }
+
+        private void NoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new ListaEjercicios();
+            win.Show();
+            Close();
         }
     }
 }
