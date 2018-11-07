@@ -21,6 +21,7 @@ namespace AtaxiaVision.Helpers
         private const string METHOD_POST = "POST";
         private const string METHOD_GET = "GET";
         private const string METHOD_PUT = "PUT";
+        private const string METHOD_DELETE = "DELETE";
         public const int TOKEN_SINCONEXION = -1;
         public const int TOKEN_VALIDO = 1;
         public const int TOKEN_INVALIDO = 0;
@@ -92,12 +93,12 @@ namespace AtaxiaVision.Helpers
             return SERVER_ERROR;
         }
 
-        private static dynamic EnviarPost(string api, string data)
+        private static dynamic EnviarPost(string api, string method, string data)
         {
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(URL + api);
-                request.Method = "POST";
+                request.Method = method;
                 request.ContentType = "application/json";
                 request.ContentLength = data.Length;
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -124,32 +125,12 @@ namespace AtaxiaVision.Helpers
 
         private static dynamic EnviarPut(string api, string data)
         {
-            try
-            {
-                var request = (HttpWebRequest)WebRequest.Create(URL + api);
-                request.Method = "PUT";
-                request.ContentType = "application/json";
-                request.ContentLength = data.Length;
-                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                {
-                    streamWriter.Write(data);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-                var httpResponse = (HttpWebResponse)request.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var rtaSr = streamReader.ReadToEnd();
-                    var rta = JsonConvert.DeserializeObject<dynamic>(rtaSr);
-                    string status_code = rta.head.status_code;
-                    if (Convert.ToInt32(status_code) == SERVER_OK)
-                        return rta.data;
-                }
-            }
-            catch (Exception)
-            {
-            }
-            return SERVER_ERROR;
+            return EnviarPost(api, METHOD_PUT, data);
+        }
+
+        private static dynamic EnviarDelete(string api, string data)
+        {
+            return EnviarPost(api, METHOD_DELETE, data);
         }
 
         private static dynamic Enviar(string api, string method, string data)
@@ -159,9 +140,11 @@ namespace AtaxiaVision.Helpers
                 case METHOD_GET:
                     return EnviarGet(api, data);
                 case METHOD_POST:
-                    return EnviarPost(api, data);
+                    return EnviarPost(api, METHOD_POST, data);
                 case METHOD_PUT:
                     return EnviarPut(api, data);
+                case METHOD_DELETE:
+                    return EnviarDelete(api, data);
                 default:
                     break;
             }
@@ -268,6 +251,14 @@ namespace AtaxiaVision.Helpers
                 if (!RequestNoValida(result))
                     return SERVER_OK;
             }
+            return SERVER_ERROR;
+        }
+
+        public static int EliminarEjercicio(string ID)
+        {
+            var result = Enviar(API_EJERCICIOS + ID, METHOD_DELETE, "");
+            if (!RequestNoValida(result))
+                return SERVER_OK;
             return SERVER_ERROR;
         }
 
