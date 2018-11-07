@@ -23,5 +23,20 @@ namespace AtaxiaVision.Pantallas
         {
             InitializeComponent();
         }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CerrarBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

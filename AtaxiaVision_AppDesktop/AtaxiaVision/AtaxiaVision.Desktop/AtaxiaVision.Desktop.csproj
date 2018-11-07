@@ -131,6 +131,9 @@
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Helpers\ArduinoHelper.cs" />
     <Compile Include="Models\AngulosServos.cs" />
+    <Compile Include="Pantallas\EliminarEjercicio.xaml.cs">
+      <DependentUpon>EliminarEjercicio.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pantallas\ListaEjercicios.xaml.cs">
       <DependentUpon>ListaEjercicios.xaml</DependentUpon>
     </Compile>
@@ -194,6 +197,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Pantallas\Confirmacion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pantallas\EliminarEjercicio.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
