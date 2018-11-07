@@ -180,7 +180,7 @@ namespace AtaxiaVision.Helpers
             return respuestaToken;
         }
 
-        public static int EnviarEjercicio(RepeticionViewModel ejercicio)
+        public static int EnviarRepeticion(RepeticionViewModel ejercicio)
         {
             // El metodo POST necesita una lista.
             ejercicio.Fecha = DateTime.Now;
@@ -198,12 +198,21 @@ namespace AtaxiaVision.Helpers
             return SERVER_OK;
         }
 
-        public static List<EjercicioViewModel> ObtenerEjercicios()
+        public static RespuestaListaEjercicios ObtenerEjercicios()
         {
-            List<EjercicioViewModel> result = new List<EjercicioViewModel>();
+            var listaEjercicios = new List<EjercicioViewModel>();
+            var ejerciciosServer = new RespuestaListaEjercicios();
             var resultGet = Enviar(API_EJERCICIOS, METHOD_GET, null);
-
-            return result;
+            if (RequestNoValida(resultGet))
+                return null;
+            var Lista = resultGet.exercisesList;
+            foreach (var item in Lista)
+            {
+                var id = item.Name;
+                var ex = item.First;
+                ejerciciosServer.Ejercicios.Add(new Exercise(id, ex.exercise));
+            }
+            return ejerciciosServer;
         }
 
         #region Test

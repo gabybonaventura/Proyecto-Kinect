@@ -118,7 +118,7 @@ namespace AtaxiaVision.Pantallas
                 //Tensiones = TensionHelper.TestListaTensionManual();
                 Ejercicio.Desvios = TensionHelper.CalcularDesvios(Tensiones);
                 DesviosLabel.Dispatcher.Invoke(desviosLabelDelegate, Ejercicio.Desvios + "");
-                var status = ServerHelper.EnviarEjercicio(Ejercicio);
+                var status = ServerHelper.EnviarRepeticion(Ejercicio);
                 if (status == ServerHelper.SERVER_ERROR)
                 {
                     Snackbar.Dispatcher.Invoke(snackBarDelegate, "No se pudo sincornizar los datos. Vamos a volver a intentar luego.");

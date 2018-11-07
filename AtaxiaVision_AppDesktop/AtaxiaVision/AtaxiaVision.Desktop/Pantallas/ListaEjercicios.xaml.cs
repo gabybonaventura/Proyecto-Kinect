@@ -1,4 +1,5 @@
-﻿using AtaxiaVision.Models;
+﻿using AtaxiaVision.Helpers;
+using AtaxiaVision.Models;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -52,12 +53,12 @@ namespace AtaxiaVision.Pantallas
                 };
             }
         }
-
+        
         public ListaEjercicios()
         {
             InitializeComponent();
-            EjerciciosDatGrid.ItemsSource = TestCollection;
-
+            ObtenerEjercicios();
+            
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
@@ -68,6 +69,14 @@ namespace AtaxiaVision.Pantallas
         private void EditarBtn_Click(object sender, RoutedEventArgs e)
         {
             var filaSeleccionada = ((FrameworkElement)sender).DataContext as EjercicioViewModel;
+        }
+
+        private void ObtenerEjercicios()
+        {
+            var ejercicios = ServerHelper.ObtenerEjercicios();
+            if (ejercicios != null)
+                EjerciciosDatGrid.ItemsSource = ejercicios.Ejercicios;
+
         }
     }
 }

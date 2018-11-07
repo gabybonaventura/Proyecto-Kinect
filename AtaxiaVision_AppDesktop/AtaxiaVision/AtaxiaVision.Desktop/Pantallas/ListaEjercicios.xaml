@@ -50,9 +50,9 @@
             Name="GuardarEjercicioBtn"
             Content="Crear ejercicio" 
             HorizontalAlignment="Center" 
-            Margin="20,117,646,0" 
+            Margin="20,117,742,0" 
             VerticalAlignment="Top" 
-            Width="350" 
+            Width="254" 
             Height="70" 
             FontSize="20" />
         <DataGrid 
@@ -66,17 +66,20 @@
             HorizontalAlignment="Center" 
             Width="996">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="300" Header="Nombre" Binding="{Binding Nombre}" FontWeight="Bold">
+                <DataGridTextColumn Width="200" Header="Nombre" Binding="{Binding Nombre}" FontWeight="Bold">
                 </DataGridTextColumn>
-                <DataGridTextColumn Width="50"  Header="Nivel" Binding="{Binding Dificultad}" FontSize="15"></DataGridTextColumn>
-                <DataGridTemplateColumn Width="150" Header="Dificultad">
+                <DataGridTextColumn Width="100"  Header="Nivel" Binding="{Binding Dificultad}" FontSize="15"></DataGridTextColumn>
+                <DataGridTemplateColumn Width="150" Header="Dificultad" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <materialDesign:RatingBar Value="{Binding Dificultad}" IsEnabled="True" FontSize="20" IsManipulationEnabled="False"/>
+                            <materialDesign:RatingBar 
+                                Value="{Binding Dificultad}" 
+                                FontSize="20" 
+                                />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Width="350" FontSize="15" Header="Descripcion" Binding="{Binding Descripcion}"></DataGridTextColumn>
+                <DataGridTextColumn Width="450" FontSize="15" Header="Descripcion" Binding="{Binding Descripcion}"></DataGridTextColumn>
                 <DataGridTemplateColumn Width="90" Header="Editar">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
