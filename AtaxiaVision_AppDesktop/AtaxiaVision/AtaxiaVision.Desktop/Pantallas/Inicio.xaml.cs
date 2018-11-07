@@ -200,9 +200,9 @@ namespace AtaxiaVision.Desktop.Pantallas
                     case ServerHelper.TOKEN_VALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
                         Sesion.TokenValido = true;
-                        IdLabel.Dispatcher.Invoke(labelIdDelegate, result.Patient.PacienteId);
-                        NombreLabel.Dispatcher.Invoke(labelNombreDelegate, result.Patient.Nombre);
-                        EdadLabel.Dispatcher.Invoke(labelEdadDelegate, result.Patient.Edad);
+                        IdLabel.Dispatcher.Invoke(labelIdDelegate, result.Paciente.PacienteId);
+                        NombreLabel.Dispatcher.Invoke(labelNombreDelegate, result.Paciente.Nombre);
+                        EdadLabel.Dispatcher.Invoke(labelEdadDelegate, result.Paciente.Edad);
                         PacienteCard.Dispatcher.Invoke(pacienteCardDelegate, Visibility.Visible);
                         break;
                     default:

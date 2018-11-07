@@ -172,7 +172,9 @@ namespace AtaxiaVision.Helpers
                 return respuestaToken;
             if (Convert.ToBoolean(result.isValid))
             {
-                respuestaToken.Patient = new Patient(result.patient);
+                respuestaToken.Paciente = new Patient(result.patient);
+                respuestaToken.Repeticiones = Convert.ToInt32(result.repetitions);
+                respuestaToken.Ejercicio = new Exercise(result.exercise);
                 respuestaToken.CodigoTokenValid = TOKEN_VALIDO;
             }
             else
