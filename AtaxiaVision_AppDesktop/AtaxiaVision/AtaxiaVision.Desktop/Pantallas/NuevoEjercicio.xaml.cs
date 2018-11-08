@@ -223,6 +223,7 @@ namespace AtaxiaVision.Pantallas
         {
             var win = new ListaEjercicios();
             win.Show();
+            Arduino.CerrarPuerto();
             Close();
         }
 

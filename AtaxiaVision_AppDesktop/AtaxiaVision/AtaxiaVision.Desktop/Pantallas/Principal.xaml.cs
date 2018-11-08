@@ -26,7 +26,6 @@
     {
         #region Properties
 
-
         private const float RenderWidth = 640.0f;
 
         private const float RenderHeight = 480.0f;

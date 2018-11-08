@@ -16,7 +16,9 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized">
+        WindowState="Maximized"
+        Loaded="Window_Loaded"
+        KeyDown="Window_KeyDown">
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
@@ -26,9 +28,10 @@
                     DockPanel.Dock="Right"
                     Width="55"
                     Height="45" 
-                    Padding="0" >
+                    Padding="0"
+                    Click="CerrarBtn_Click">
                     <materialDesign:PackIcon 
-                            Kind="ExitToApp"
+                            Kind="ExitRun"
                             Width="55"
                             Height="45" 
                             Padding="0"/>
@@ -40,13 +43,193 @@
                         TextAlignment="Center" 
                         FontSize="40" 
                         Margin="55,0,0,0">
-                        Sesion Brazo
+                        Ejercicio de rehabilitación
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
-        
+        <Button 
+            x:Name="IniciarButton" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Height="90" 
+            Width="335" 
+            IsEnabled="True" 
+            Content="_Iniciar rehabilitación" 
+            FontSize="30"
+            Margin="10,144,671,0"
+            Click="IniciarButton_Click"/>
+        <Button 
+            x:Name="RepeticionButton" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Height="90" 
+            Width="335" 
+            IsEnabled="False" 
+            Visibility="Hidden"
+            Content="Repeticion" 
+            FontSize="30"
+            Margin="10,130,671,0"
+            Click="RepeticionButton_Click"/>
+        <Label 
+            Content="Repeticiones" 
+            FontSize="25"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="10,238,842,0" 
+            Width="164" FontWeight="Bold" 
+            />
+        <Label Name="RepeticionesLabel"
+            Content="1/5" 
+            FontSize="25"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="188,238,671,0" 
+            Width="157" 
+            />
+        <ComboBox 
+            Name="ModoRepeticionComboBox"
+            materialDesign:HintAssist.Hint="Repetición"
+            Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+            materialDesign:HintAssist.FloatingOffset="1,-40"
+            materialDesign:HintAssist.FloatingScale=".9" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="10,324,849,0"
+            FontSize="25" 
+            Width="157" 
+            Padding="0"
+            Height="46">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <ComboBox 
+            Name="DelayComboBox"
+            materialDesign:HintAssist.Hint="Delay (seg)"
+            Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+            materialDesign:HintAssist.FloatingOffset="1,-40"
+            materialDesign:HintAssist.FloatingScale=".9" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="188,326,671,0"
+            FontSize="25" 
+            Width="157" 
+            Padding="0"
+            Height="44">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <Image 
+            x:Name="Image" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="364,144,12,0" 
+            Width="640" 
+            Height="480" 
+            Source="/AtaxiaVision;component/Imagenes/KinectAV.png"/>
+        <!-- Labels informativos -->
+        <Label 
+            Content="Consumos" 
+            FontSize="25"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="10,408,671,0" 
+            Width="335" 
+            FontWeight="Bold" 
+            />
+        <Label 
+            Content="H. Arriba Abajo" 
+            FontSize="20"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="10,448,823,0" 
+            Width="183" 
+            />
+        <Label Name="ConsumoHombroArribaAbajoLabel"
+            Content="200 mA"
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="10,482,842,0" 
+            Width="164" Foreground="#DD000000" 
+            />
+        <Label 
+            Content="H. Adelante Atrás" 
+            FontSize="20"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="10,534,842,0" 
+            Width="164" 
+            />
+        <Label Name="ConsumoHombroAdelanteAtrasLabel"
+            Content="200 mA" 
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="10,572,842,0" 
+            Width="164" RenderTransformOrigin="0.555,0.12" 
+            />
+        <Label 
+            Content="C. Arriba Abajo" 
+            FontSize="20"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="188,448,671,0" 
+            Width="157" 
+            />
+        <Label Name="ConsumoCodoArribaAbajoLabel"
+            Content="200 mA" 
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="188,482,671,0" 
+            Width="157" 
+            />
+        <Label 
+            Content="C. Derecha Izq" 
+            FontSize="20"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="188,534,671,0" 
+            Width="157" 
+            />
+        <Label Name="ConsumoCodoDerechaIzquierdaLabel"
+            Content="200 mA" 
+            FontSize="30"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="188,572,671,0" 
+            Width="157" 
+            />
+        <materialDesign:Card
+            x:Name="PacienteCard"
+            Background="#FFF44336"
+            Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" 
+            Margin="10,652,12,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Height="64" Width="994">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label 
+                    x:Name="EstadoLabel"
+                    Content="Una vez seteados los parámetros, preciona Iniciar rehabilitación."
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Margin="10"
+                    FontSize="25" 
+                    Foreground="#FFF"/>
+            </Grid>
+        </materialDesign:Card>
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="Snackbar"

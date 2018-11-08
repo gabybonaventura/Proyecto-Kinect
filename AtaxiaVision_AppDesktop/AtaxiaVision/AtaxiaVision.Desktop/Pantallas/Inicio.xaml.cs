@@ -32,6 +32,8 @@ namespace AtaxiaVision.Desktop.Pantallas
         public SesionViewModel Sesion { get; set; }
         public RepeticionViewModel Ejercicio { get; set; }
         public bool FlagFocusSesionTextBox { get; set; }
+        public bool EjercicioPersonalizado { get; set; }
+        public RespuestaToken RespuestaToken { get; set; }
 
         // Delegates (son como punteros de C, sirven para que entre 
         // hilos asincronicos puedan acceder a los componentes de la vista)
@@ -151,8 +153,16 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void IniRehabBtn_Click(object sender, RoutedEventArgs e)
         {
-            Principal win = new Principal(Sesion, Ejercicio);
-            win.Show();
+            if (EjercicioPersonalizado)
+            {
+                var ej = new SesionSoloBrazo(RespuestaToken);
+                ej.Show();
+            }
+            else
+            {
+                Principal win = new Principal(Sesion, Ejercicio);
+                win.Show();
+            }
             Close();
         }
 
@@ -184,8 +194,11 @@ namespace AtaxiaVision.Desktop.Pantallas
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 // Thread.Sleep(5000); // Es solo para ver como queda la animacion este sleep.
                 // Valido el token DNI + Sesion
-                var result = ServerHelper.ValidarToken(Sesion.Token);
+                RespuestaToken = ServerHelper.ValidarToken(Sesion.Token);
+                var result = RespuestaToken;
                 Sesion.TokenVerificado = true;
+                if (result.Ejercicio.Nombre != "Reach")
+                    EjercicioPersonalizado = true;
                 // Muestro el Snackbar
                 switch (result.CodigoTokenValid)
                 {

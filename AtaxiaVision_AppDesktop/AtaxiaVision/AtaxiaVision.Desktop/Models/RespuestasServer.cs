@@ -18,6 +18,8 @@ namespace AtaxiaVision.Models
         public RespuestaToken()
         {
             CodigoTokenValid = ServerHelper.TOKEN_SINCONEXION;
+            Paciente = new Patient();
+            Ejercicio = new Exercise();
         }
     }
    
@@ -48,6 +50,8 @@ namespace AtaxiaVision.Models
         public string FechaInicio { get; set; }
         public int PacienteId { get; set; }
         public string Nombre { get; set; }
+
+        public Patient() { }
 
         public Patient(dynamic patient)
         {  
