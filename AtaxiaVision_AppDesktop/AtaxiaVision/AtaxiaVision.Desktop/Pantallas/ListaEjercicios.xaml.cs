@@ -4,6 +4,7 @@ using AtaxiaVision.Models;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,38 @@ namespace AtaxiaVision.Pantallas
     /// </summary>
     public partial class ListaEjercicios : Window
     {
+        public delegate void ProgressBarDelegate(Visibility visibility);
+        public ProgressBarDelegate progressBarDelegate;
+        public delegate void EjerciciosDatGridDelegate(List<Exercise> exercises);
+        public EjerciciosDatGridDelegate ejerciciosDatGridDelegate;
+
+        private BackgroundWorker ejerciciosBG = new BackgroundWorker();
+
+
+        private void EstadoProgressBar(Visibility visibility)
+        {
+            ProgressBar.Visibility = visibility;
+        }
+
+        private void LlenarTabla(List<Exercise> exercises)
+        {
+            EjerciciosDatGrid.ItemsSource = exercises;
+        }
+
+        public void EjercicioTabla()
+        {
+            ejerciciosBG.DoWork += (s, e) =>
+            {
+                ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
+                var ejercicios = ServerHelper.ObtenerEjercicios();
+                EjerciciosDatGrid.Dispatcher.Invoke(ejerciciosDatGridDelegate, ejercicios.Ejercicios);
+                ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
+            };
+        }
+
         public ListaEjercicios()
         {
             InitializeComponent();
-            ObtenerEjercicios();
-            
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
@@ -43,14 +71,6 @@ namespace AtaxiaVision.Pantallas
             var win = new NuevoEjercicio(filaSeleccionada);
             win.Show();
             Close();
-        }
-
-        private void ObtenerEjercicios()
-        {
-            var ejercicios = ServerHelper.ObtenerEjercicios();
-            if (ejercicios != null)
-                EjerciciosDatGrid.ItemsSource = ejercicios.Ejercicios;
-
         }
 
         private void CrearEjercicioBtn_Click(object sender, RoutedEventArgs e)
@@ -74,6 +94,15 @@ namespace AtaxiaVision.Pantallas
             var win = new EliminarEjercicio(filaSeleccionada);
             win.Show();
             Close();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            EjercicioTabla();
+            progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
+            ejerciciosDatGridDelegate = new EjerciciosDatGridDelegate(LlenarTabla);
+            if (!ejerciciosBG.IsBusy)
+                ejerciciosBG.RunWorkerAsync();
         }
     }
 }

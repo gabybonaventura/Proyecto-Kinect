@@ -16,7 +16,9 @@
         FontFamily="{DynamicResource MaterialDesignFont}" 
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
-        WindowState="Maximized" KeyDown="Window_KeyDown" >
+        WindowState="Maximized" 
+        KeyDown="Window_KeyDown" 
+        Loaded="Window_Loaded">
     <Grid>
         <!--Encabezado-->
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
@@ -115,6 +117,16 @@
             </DataGrid.Columns>
             
         </DataGrid>
+        <ProgressBar
+            Style="{StaticResource MaterialDesignCircularProgressBar}"
+            IsIndeterminate="True" 
+            Visibility="Hidden"
+            Name="ProgressBar" 
+            Height="80" 
+            Margin="468,360,468,0" 
+            Width="80" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"/>
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="Snackbar"

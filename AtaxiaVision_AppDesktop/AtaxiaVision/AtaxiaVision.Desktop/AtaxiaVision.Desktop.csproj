@@ -141,6 +141,9 @@
     <Compile Include="Pantallas\NuevoEjercicio.xaml.cs">
       <DependentUpon>NuevoEjercicio.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pantallas\SesionSoloBrazo.xaml.cs">
+      <DependentUpon>SesionSoloBrazo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Testing\PruebaAngulos.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +221,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pantallas\Principal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pantallas\SesionSoloBrazo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
