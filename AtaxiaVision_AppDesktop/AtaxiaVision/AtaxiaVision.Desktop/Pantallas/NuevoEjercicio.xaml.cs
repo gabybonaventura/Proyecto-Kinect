@@ -26,6 +26,8 @@ namespace AtaxiaVision.Pantallas
     /// </summary>
     public partial class NuevoEjercicio : Window
     {
+
+
         public ArduinoController Arduino { get; set; }
         public AngulosServos Angulos { get; set; }
         public AngulosServos AngulosDefault { get; set; }
@@ -214,12 +216,7 @@ namespace AtaxiaVision.Pantallas
         public NuevoEjercicio(Exercise ejercicio = null)
         {
             InitializeComponent();      // Inicializar componentes
-            AsignarListasAngulos();     // Asigna los 180 grados de las listas
-            SetEjercicio(ejercicio);    // Setea el EjercicioViewModel
-            InicializarArduino();       // Envia los datos iniciales al exoesqueleto
-            LlenarCampos();             // Llena campos en base al EjercicioViewModel
-            SetAngulos();               // Setea los grados a la vista y al exoesqueleto
-            LlenarDesplegable();        // Llena el desplegable dependiendo si es un nuevo ejercicio
+            Ejercicio = ejercicio;
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
@@ -239,8 +236,6 @@ namespace AtaxiaVision.Pantallas
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            NombreEjercicioTextBox.Focus();
-
             #region Delegates
             snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             consumoHombroArribaAbajoDelegate = new ConsumoHombroArribaAbajoDelegate(SetConsumoHombroArribaAbajo);
@@ -250,6 +245,14 @@ namespace AtaxiaVision.Pantallas
             TensionesServosBG();
             ArduinoActivoBG();
             #endregion
+
+            AsignarListasAngulos();     // Asigna los 180 grados de las listas
+            SetEjercicio(Ejercicio);    // Setea el EjercicioViewModel
+            InicializarArduino();       // Envia los datos iniciales al exoesqueleto
+            LlenarCampos();             // Llena campos en base al EjercicioViewModel
+            SetAngulos();               // Setea los grados a la vista y al exoesqueleto
+            LlenarDesplegable();        // Llena el desplegable dependiendo si es un nuevo ejercicio
+            NombreEjercicioTextBox.Focus();
         }
 
         private void HabilitarBotonGuardar()
