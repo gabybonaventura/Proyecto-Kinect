@@ -62,13 +62,13 @@
             Click="IniciarButton_Click"/>
         <Button 
             x:Name="RepeticionButton" 
+            Content="Repetición" 
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Height="90" 
             Width="335" 
             IsEnabled="False" 
             Visibility="Hidden"
-            Content="Repeticion" 
             FontSize="30"
             Margin="10,130,671,0"
             Click="RepeticionButton_Click"/>
@@ -222,7 +222,7 @@
                 </Grid.RowDefinitions>
                 <Label 
                     x:Name="EstadoLabel"
-                    Content="Una vez seteados los parámetros, preciona Iniciar rehabilitación."
+                    Content="Una vez seteados los parámetros, presiona Iniciar rehabilitación."
                     Grid.Row="0"
                     VerticalAlignment="Center"
                     Margin="10"
