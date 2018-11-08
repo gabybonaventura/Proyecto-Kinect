@@ -24,11 +24,11 @@
         <materialDesign:ColorZone Background="#FFF44336" Padding="32">
             <DockPanel>
                 <Button 
-                    Name="NuevoEjercicioBtn" 
+                    Name="ListarEjercicioBtn" 
                     DockPanel.Dock="Left"
                     Width="55"
                     Height="45" 
-                    Padding="0" Click="NuevoEjercicioBtn_Click" 
+                    Padding="0" Click="ListarEjercicioBtn_Click" 
                     >
                     <materialDesign:PackIcon 
                             Kind="ViewList"

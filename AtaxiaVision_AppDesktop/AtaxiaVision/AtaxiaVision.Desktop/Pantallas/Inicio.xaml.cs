@@ -251,11 +251,11 @@ namespace AtaxiaVision.Desktop.Pantallas
             }
             if (e.Key == Key.Add)
             {
-                NuevoEjercicioBtn_Click(sender, e);
+                ListarEjercicioBtn_Click(sender, e);
             }
         }
 
-        private void NuevoEjercicioBtn_Click(object sender, RoutedEventArgs e)
+        private void ListarEjercicioBtn_Click(object sender, RoutedEventArgs e)
         {
             //NuevoEjercicio win = new NuevoEjercicio();
             ListaEjercicios win = new ListaEjercicios();

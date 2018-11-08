@@ -1,4 +1,5 @@
 ﻿using AtaxiaVision.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,41 +20,84 @@ namespace AtaxiaVision.Models
             CodigoTokenValid = ServerHelper.TOKEN_SINCONEXION;
         }
     }
+   
+    public class RespuestaListaEjercicios
+    {
+        public List<Exercise> Ejercicios { get; set; }
 
+        public RespuestaListaEjercicios()
+        {
+            Ejercicios = new List<Exercise>();
+        }
+    }
 
-    #region Modelos base
+    public class RespuestaListaPacientes
+    {
+        public List<Patient> Pacientes { get; set; }
+
+        public RespuestaListaPacientes()
+        {
+            Pacientes = new List<Patient>();
+        }
+    }
+
+    #region Modelos Server
     public class Patient
     {
         public int Edad { get; set; }
-        public DateTime FechaInicio { get; set; }
+        public string FechaInicio { get; set; }
         public int PacienteId { get; set; }
         public string Nombre { get; set; }
 
         public Patient(dynamic patient)
-        {
+        {  
             Edad = Convert.ToInt32(patient.age);
-            FechaInicio = DateTime.Now;
+            FechaInicio = patient.beginDate;
             PacienteId = Convert.ToInt32(patient.idPatient);
             Nombre = patient.name;
         }
     }
-
     public class Exercise
     {
+        public string ID { get; set; }
         public string Descripcion { get; set; }
         public int Dificultad { get; set; }
         public string EstadoInicial { get; set; }
         public string EstadoFinal { get; set; }
         public string Nombre { get; set; }
 
-        public Exercise(dynamic exercise)
+        public Exercise() { }
+        public Exercise(string id, dynamic exercise)
         {
+            ID = id;
             Descripcion = exercise.description;
             Dificultad = Convert.ToInt32(exercise.difficulty);
             EstadoInicial = exercise.initialState;
             EstadoFinal = exercise.endingState;
             Nombre = exercise.name;
         }
+
+        public ExerciseModelServer ConvertToModelServer()
+        {
+            return new ExerciseModelServer
+            {
+                description = Descripcion,
+                difficulty = Dificultad,
+                endingState = EstadoFinal,
+                initialState = EstadoInicial,
+                name = Nombre
+            };
+        }
+    }
+    public class ExerciseModelServer
+    {
+        public string description;
+        public int difficulty;
+        public string endingState;
+        public string initialState;
+        public string name;
     }
     #endregion
+    
+  
 }

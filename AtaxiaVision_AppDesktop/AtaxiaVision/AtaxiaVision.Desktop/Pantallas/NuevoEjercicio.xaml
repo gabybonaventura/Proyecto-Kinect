@@ -43,7 +43,7 @@
                         TextAlignment="Center" 
                         FontSize="40" 
                         Margin="55,0,0,0">
-                        Nuevo ejercicio
+                        Ejercicio
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
@@ -56,13 +56,30 @@
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="10,117,137,0" 
+            Margin="10,117,364,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             HorizontalAlignment="Center" 
             FontSize="30" 
             FontWeight="Bold" 
-            Width="869"/>
+            Width="642"/>
+        <ComboBox 
+            Name="AnguloHombroArribaAbajoComboBox"
+            materialDesign:HintAssist.Hint="Hombro Arriba abajo"
+            materialDesign:HintAssist.FloatingOffset="1,-30"
+            materialDesign:HintAssist.FloatingScale=".9" 
+            Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="188,400,528,0"
+            FontSize="25" 
+            Width="300" SelectionChanged="AnguloHombroArribaAbajoComboBox_SelectionChanged">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
         <Label 
             Content="Dificultad" 
             Margin="884,117,10,0"
@@ -87,7 +104,7 @@
             Margin="10,196,10,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
-            FontSize="25"
+            FontSize="20"
             HorizontalAlignment="Center" 
             Width="996"/>
         <Button 
@@ -103,7 +120,7 @@
             Name="VerEstadoInicialBtn"
             Content="Ir Estado Inicial" 
             HorizontalAlignment="Center"
- 
+            IsEnabled="False"
             Margin="258,300,528,0" 
             VerticalAlignment="Top" 
             Width="230" 
@@ -117,6 +134,7 @@
             Content="Ir Estado Final" 
             HorizontalAlignment="Center" 
             Margin="528,300,258,0" 
+            IsEnabled="False"
             VerticalAlignment="Top" 
             Width="230" 
             Height="75" 
@@ -134,16 +152,17 @@
             Height="75" 
             FontSize="20" Click="GuardarEstadoFinalBtn_Click" />
         <ComboBox 
-            Name="AnguloHombroArribaAbajoComboBox"
-            materialDesign:HintAssist.Hint="Hombro Arriba abajo"
+            Name="DestinoComboBox"
+            materialDesign:HintAssist.Hint="Destino"
             materialDesign:HintAssist.FloatingOffset="1,-30"
             materialDesign:HintAssist.FloatingScale=".9" 
             Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,400,528,0"
+            Margin="657,137,137,0"
             FontSize="25" 
-            Width="300" SelectionChanged="AnguloHombroArribaAbajoComboBox_SelectionChanged">
+            Width="222" 
+            SelectionChanged="DestinoComboBox_SelectionChanged">
             <ComboBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />
@@ -305,7 +324,9 @@
             VerticalAlignment="Top" 
             Width="640" 
             Height="80" 
-            FontSize="30" />
+            FontSize="30" 
+            IsEnabled="False"
+            Click="GuardarEjercicioBtn_Click"/>
 
         <!-- Snackbar -->
         <materialDesign:Snackbar

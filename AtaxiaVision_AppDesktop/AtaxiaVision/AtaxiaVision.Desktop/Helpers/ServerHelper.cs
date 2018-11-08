@@ -18,8 +18,11 @@ namespace AtaxiaVision.Helpers
         private const string API_SESSION = "session/";
         private const string API_TOKEN = "token/";
         private const string API_EJERCICIOS = "exercise/";
+        private const string API_PACIENTES = "patient/";
         private const string METHOD_POST = "POST";
         private const string METHOD_GET = "GET";
+        private const string METHOD_PUT = "PUT";
+        private const string METHOD_DELETE = "DELETE";
         public const int TOKEN_SINCONEXION = -1;
         public const int TOKEN_VALIDO = 1;
         public const int TOKEN_INVALIDO = 0;
@@ -91,13 +94,12 @@ namespace AtaxiaVision.Helpers
             return SERVER_ERROR;
         }
 
-        private static dynamic EnviarPost(string api, string data)
+        private static dynamic EnviarPost(string api, string method, string data)
         {
             try
             {
-
                 var request = (HttpWebRequest)WebRequest.Create(URL + api);
-                request.Method = "POST";
+                request.Method = method;
                 request.ContentType = "application/json";
                 request.ContentLength = data.Length;
                 using (var streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -122,6 +124,16 @@ namespace AtaxiaVision.Helpers
             return SERVER_ERROR;
         }
 
+        private static dynamic EnviarPut(string api, string data)
+        {
+            return EnviarPost(api, METHOD_PUT, data);
+        }
+
+        private static dynamic EnviarDelete(string api, string data)
+        {
+            return EnviarPost(api, METHOD_DELETE, data);
+        }
+
         private static dynamic Enviar(string api, string method, string data)
         {
             switch (method)
@@ -129,7 +141,11 @@ namespace AtaxiaVision.Helpers
                 case METHOD_GET:
                     return EnviarGet(api, data);
                 case METHOD_POST:
-                    return EnviarPost(api, data);
+                    return EnviarPost(api, METHOD_POST, data);
+                case METHOD_PUT:
+                    return EnviarPut(api, data);
+                case METHOD_DELETE:
+                    return EnviarDelete(api, data);
                 default:
                     break;
             }
@@ -174,7 +190,7 @@ namespace AtaxiaVision.Helpers
             {
                 respuestaToken.Paciente = new Patient(result.patient);
                 respuestaToken.Repeticiones = Convert.ToInt32(result.repetitions);
-                respuestaToken.Ejercicio = new Exercise(result.exercise);
+                respuestaToken.Ejercicio = new Exercise(null,result.exercise);
                 respuestaToken.CodigoTokenValid = TOKEN_VALIDO;
             }
             else
@@ -182,7 +198,7 @@ namespace AtaxiaVision.Helpers
             return respuestaToken;
         }
 
-        public static int EnviarEjercicio(RepeticionViewModel ejercicio)
+        public static int EnviarRepeticion(RepeticionViewModel ejercicio)
         {
             // El metodo POST necesita una lista.
             ejercicio.Fecha = DateTime.Now;
@@ -200,11 +216,72 @@ namespace AtaxiaVision.Helpers
             return SERVER_OK;
         }
 
-        public static List<EjercicioViewModel> ObtenerEjercicios()
+        public static RespuestaListaEjercicios ObtenerEjercicios()
         {
-            List<EjercicioViewModel> result = new List<EjercicioViewModel>();
+            var ejerciciosServer = new RespuestaListaEjercicios();
             var resultGet = Enviar(API_EJERCICIOS, METHOD_GET, null);
+            if (RequestNoValida(resultGet))
+                return null;
+            var Lista = resultGet.exercisesList;
+            foreach (var item in Lista)
+            {
+                var id = item.Name;
+                var ex = item.First;
 
+                ejerciciosServer.Ejercicios.Add(new Exercise(id, ex.exercise));
+            }
+            // Ordenamos la lista
+            ejerciciosServer.Ejercicios = ejerciciosServer
+                .Ejercicios
+                .OrderBy(x => x.Dificultad)
+                .ToList();
+            return ejerciciosServer;
+        }
+
+        public static int EnviarEjercicio(Exercise ejercicio)
+        {
+            var datos = JsonConvert.SerializeObject(ejercicio.ConvertToModelServer());
+            // Si el ejercicio viene con un ID, es porque es un update, sino, es un new.
+            if(String.IsNullOrEmpty(ejercicio.ID))
+            {
+                var result = Enviar(API_EJERCICIOS, METHOD_POST, datos);
+                if (!RequestNoValida(result))
+                    return SERVER_OK;
+            }
+            else
+            {
+                var result = Enviar(API_EJERCICIOS + ejercicio.ID, METHOD_PUT, datos);
+                if (!RequestNoValida(result))
+                    return SERVER_OK;
+            }
+            return SERVER_ERROR;
+        }
+
+        public static int EliminarEjercicio(string ID)
+        {
+            var result = Enviar(API_EJERCICIOS + ID, METHOD_DELETE, "");
+            if (!RequestNoValida(result))
+                return SERVER_OK;
+            return SERVER_ERROR;
+        }
+
+        public static RespuestaListaPacientes ObtenerPacientes()
+        {
+            var result = new RespuestaListaPacientes();
+            var resultGet = Enviar(API_PACIENTES, METHOD_GET, null);
+            if (RequestNoValida(resultGet))
+                return null;
+            var Lista = resultGet.patientsList;
+            foreach (var item in Lista)
+            {
+                var fila = item.First;
+                result.Pacientes.Add(new Patient(fila));
+            }
+            // Ordenamos la lista
+            result.Pacientes = result
+                .Pacientes
+                .OrderBy(x => x.Nombre)
+                .ToList();
             return result;
         }
 

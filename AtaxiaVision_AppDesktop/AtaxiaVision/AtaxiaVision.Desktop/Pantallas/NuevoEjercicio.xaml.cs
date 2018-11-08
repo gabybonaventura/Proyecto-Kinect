@@ -29,13 +29,15 @@ namespace AtaxiaVision.Pantallas
         public ArduinoController Arduino { get; set; }
         public AngulosServos Angulos { get; set; }
         public AngulosServos AngulosDefault { get; set; }
-        public EjercicioViewModel Ejercicio { get; set; }
+        public Exercise Ejercicio { get; set; }
         public List<int> AngulosDisponibles {
             get
             {
                 return new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180 };
             }
         }
+        public List<string> Destino { get; set; }
+        public RespuestaListaPacientes Pacientes { get; set; }
         
         #region Delegates
         public delegate void SnackBarDelegate(string msg);
@@ -137,22 +139,15 @@ namespace AtaxiaVision.Pantallas
             AnguloCodoArribaAbajoComboBox.ItemsSource = AngulosDisponibles;
             AnguloCodoDerechaIzquierdaComboBox.ItemsSource = AngulosDisponibles;
         }
-        public void SetEjercicio(EjercicioViewModel ejercicio)
+        public void SetEjercicio(Exercise ejercicio)
         {
             if(ejercicio != null)
             {
-                Ejercicio = new EjercicioViewModel
-                {
-                    Nombre = ejercicio.Nombre,
-                    Descripcion = ejercicio.Descripcion,
-                    Dificultad = ejercicio.Dificultad,
-                    EstadoFinal = ejercicio.EstadoFinal,
-                    EstadoInicial = ejercicio.EstadoInicial
-                };
+                Ejercicio = ejercicio;
             }
             else
             {
-                Ejercicio = new EjercicioViewModel();
+                Ejercicio = new Exercise();
             }
         }
         private void InicializarArduino()
@@ -177,10 +172,21 @@ namespace AtaxiaVision.Pantallas
             NombreEjercicioTextBox.Text = Ejercicio.Nombre;
             DescripcionEjercicioTextBox.Text = Ejercicio.Descripcion;
             DificultadRatingBar.Value = Ejercicio.Dificultad;
-            if (String.IsNullOrEmpty(Ejercicio.EstadoInicial))
-                VerEstadoInicialBtn.IsEnabled = false;
-            if (String.IsNullOrEmpty(Ejercicio.EstadoFinal))
-                VerEstadoFinalBtn.IsEnabled = false;
+            if(!String.IsNullOrEmpty(Ejercicio.EstadoInicial) 
+                && !String.IsNullOrEmpty(Ejercicio.EstadoFinal))
+            {
+                GuardarEjercicioBtn.IsEnabled = true;
+                VerEstadoInicialBtn.IsEnabled = true;
+                VerEstadoFinalBtn.IsEnabled = true;
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+                    VerEstadoInicialBtn.IsEnabled = true;
+                if (!String.IsNullOrEmpty(Ejercicio.EstadoFinal))
+                    VerEstadoFinalBtn.IsEnabled = true;
+            }
+
         }
         public void SetAngulos()
         {
@@ -191,7 +197,21 @@ namespace AtaxiaVision.Pantallas
             Arduino.EnviarAngulosFromAngulosServos(Angulos);
         }
 
-        public NuevoEjercicio(EjercicioViewModel ejercicio = null)
+        public void LlenarDesplegable()
+        {
+            Destino = new List<string>() { "Genérico" };
+            // Si es un ejercicio editado, listo personas
+            if (!String.IsNullOrEmpty(Ejercicio.ID))
+            {
+                Pacientes = ServerHelper.ObtenerPacientes();
+                Destino.AddRange(Pacientes.Pacientes.Select(x => x.Nombre));
+            }
+            DestinoComboBox.ItemsSource = Destino;
+            // Siempre selecciono el "Generico"
+            DestinoComboBox.SelectedItem = DestinoComboBox.Items[0];
+        }
+
+        public NuevoEjercicio(Exercise ejercicio = null)
         {
             InitializeComponent();      // Inicializar componentes
             AsignarListasAngulos();     // Asigna los 180 grados de las listas
@@ -199,12 +219,13 @@ namespace AtaxiaVision.Pantallas
             InicializarArduino();       // Envia los datos iniciales al exoesqueleto
             LlenarCampos();             // Llena campos en base al EjercicioViewModel
             SetAngulos();               // Setea los grados a la vista y al exoesqueleto
+            LlenarDesplegable();        // Llena el desplegable dependiendo si es un nuevo ejercicio
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
         {
-            Inicio inicio = new Inicio();
-            inicio.Show();
+            var win = new ListaEjercicios();
+            win.Show();
             Close();
         }
 
@@ -229,6 +250,48 @@ namespace AtaxiaVision.Pantallas
             TensionesServosBG();
             ArduinoActivoBG();
             #endregion
+        }
+
+        private void HabilitarBotonGuardar()
+        {
+            if (!String.IsNullOrEmpty(Ejercicio.EstadoFinal) &&
+                !String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+                GuardarEjercicioBtn.IsEnabled = true;
+        }
+
+        private bool ValidarEjercicio()
+        {
+            if (String.IsNullOrEmpty(Ejercicio.Nombre))
+            {
+                EstadoSnackBar("Ingresé un Nombre para el ejercicio.");
+                return false;
+            }
+            if (Ejercicio.Dificultad == 0)
+            {
+                EstadoSnackBar("Ingresé una Dificultad para el ejercicio.");
+                return false;
+            }
+            if (String.IsNullOrEmpty(Ejercicio.Descripcion))
+            {
+                EstadoSnackBar("Ingresé una Descripción para el ejercicio.");
+                return false;
+            }
+            if (String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+            {
+                EstadoSnackBar("Ingresé un Estado Inicial para el ejercicio.");
+                return false;
+            }
+            if (String.IsNullOrEmpty(Ejercicio.EstadoFinal))
+            {
+                EstadoSnackBar("Ingresé un Estado Final para el ejercicio.");
+                return false;
+            }
+            if(Ejercicio.EstadoInicial == Ejercicio.EstadoFinal)
+            {
+                EstadoSnackBar("Estado inicial es el mismo que el Estado final.");
+                return false;
+            }
+            return true;
         }
 
         #region Botones Angulos default
@@ -302,12 +365,14 @@ namespace AtaxiaVision.Pantallas
         {
             Ejercicio.EstadoInicial = Angulos.ToString();
             VerEstadoInicialBtn.IsEnabled = true;
+            HabilitarBotonGuardar();
         }
 
         private void GuardarEstadoFinalBtn_Click(object sender, RoutedEventArgs e)
         {
             Ejercicio.EstadoFinal = Angulos.ToString();
             VerEstadoFinalBtn.IsEnabled = true;
+            HabilitarBotonGuardar();
         }
 
         private void VerEstadoInicialBtn_Click(object sender, RoutedEventArgs e)
@@ -320,7 +385,24 @@ namespace AtaxiaVision.Pantallas
         {
             Angulos = new AngulosServos(Ejercicio.EstadoFinal);
             SetAngulos();
-        } 
+        }
         #endregion
+
+        private void GuardarEjercicioBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Ejercicio.Nombre = NombreEjercicioTextBox.Text;
+            Ejercicio.Descripcion = DescripcionEjercicioTextBox.Text;
+            Ejercicio.Dificultad = DificultadRatingBar.Value;
+            if (ValidarEjercicio())
+            {
+                ServerHelper.EnviarEjercicio(Ejercicio);
+                CerrarBtn_Click(sender, e);
+            }
+        }
+
+        private void DestinoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
