@@ -233,6 +233,56 @@
                     Foreground="#FFF"/>
             </Grid>
         </materialDesign:Card>
+        <materialDesign:Card
+            x:Name="SinConexionCard"
+            Background="#FFF44336"
+            Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+            Width="640" 
+            Margin="188,205,188,0"
+            Height="300"
+            Visibility="Hidden">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="150" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="30"
+                    Name="TokenInvalidoTextBlock"
+                    Visibility="Hidden"
+                    FontSize="35"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Top" 
+                    TextAlignment="Center" 
+                    TextWrapping="Wrap">
+                    No pudimos encontrar un token válido.
+                </TextBlock>
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="30"
+                    Name="SinConexiónTextBlock"
+                    FontSize="35"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Top" 
+                    TextAlignment="Center" 
+                    Visibility="Hidden"
+                    TextWrapping="Wrap">
+                    No hay conexión a internet para validar el token.
+                </TextBlock>
+                <TextBlock
+                    Grid.Row="1"
+                    Margin="30"
+                    Name="SoloEjercicioReachTextBlock"
+                    FontSize="35"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Top"
+                    TextAlignment="Center" 
+                    TextWrapping="Wrap">
+                    Por este motivo, sólo vas a poder acceder al ejercicio de Reach.
+                </TextBlock>
+            </Grid>
+        </materialDesign:Card>
         <materialDesign:RatingBar
             x:Name="DificultadRatingBar"
             VerticalAlignment="Top" 

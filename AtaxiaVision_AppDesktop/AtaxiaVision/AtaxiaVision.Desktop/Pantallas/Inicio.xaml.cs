@@ -88,6 +88,15 @@ namespace AtaxiaVision.Desktop.Pantallas
         public delegate void AtrasBtnDelegate(Visibility visibility);
         public AtrasBtnDelegate atrasBtnDelegate;
 
+        public delegate void SinConexionCardDelegate(Visibility visibility);
+        public SinConexionCardDelegate sinConexionCardDelegate;
+
+        public delegate void SinConexionTextBlockDelegate(Visibility visibility);
+        public SinConexionTextBlockDelegate sinConexionTextBlockDelegate;
+
+        public delegate void TokenInvalidoTextBlockDelegate(Visibility visibility);
+        public TokenInvalidoTextBlockDelegate tokenInvalidoTextBlockDelegate;
+
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
         
@@ -120,6 +129,10 @@ namespace AtaxiaVision.Desktop.Pantallas
             ratingBarDelegate = new RatingBarDelegate(EstadoRatingBar);
             estadoGeneralDelegate = new EstadoGeneralDelegate(EstadoGeneral);
             atrasBtnDelegate = new AtrasBtnDelegate(EstadoAtrasBtn);
+            sinConexionCardDelegate = new SinConexionCardDelegate(EstadoSinConexionCard);
+            sinConexionTextBlockDelegate = new SinConexionTextBlockDelegate(EstadoSinConexiónTextBlock);
+            tokenInvalidoTextBlockDelegate = new TokenInvalidoTextBlockDelegate(EstadoTokenInvalidoTextBlock);
+
 
             Sesion = new SesionViewModel();
             Ejercicio = new RepeticionViewModel();
@@ -161,6 +174,21 @@ namespace AtaxiaVision.Desktop.Pantallas
             PacienteCard.Visibility = visibility;
         }
 
+        private void EstadoSinConexionCard(Visibility visibility)
+        {
+            SinConexionCard.Visibility = visibility;
+        }
+
+        public void EstadoTokenInvalidoTextBlock(Visibility visibility)
+        {
+            TokenInvalidoTextBlock.Visibility = visibility;
+        }
+
+        public void EstadoSinConexiónTextBlock(Visibility visibility)
+        {
+            SinConexiónTextBlock.Visibility = visibility;
+        }
+
         private void EstadoAtrasBtn(Visibility visibility)
         {
             AtrasBtn.Visibility = visibility;
@@ -180,27 +208,27 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void EstadoIconoToken(Visibility visibility)
         {
-            IconoValidarToken.Visibility = Visibility;
+            IconoValidarToken.Visibility = visibility;
         }
 
         private void EstadoDNIPaciente(Visibility visibility)
         {
-            DNITextBox.Visibility = Visibility;
+            DNITextBox.Visibility = visibility;
         }
 
         private void EstadoSesionId(Visibility visibility)
         {
-            SesionTextBox.Visibility = Visibility;
+            SesionTextBox.Visibility = visibility;
         }
 
         private void EstadoValidarTokenBtn(Visibility visibility)
         {
-            ValidarTokenBtn.Visibility = Visibility;
+            ValidarTokenBtn.Visibility = visibility;
         }
 
         private void EstadoRatingBar(Visibility visibility)
         {
-            DificultadRatingBar.Visibility = Visibility;
+            DificultadRatingBar.Visibility = visibility;
         }
 
         private void EstadoIniciarRehabilitacion(bool state)
@@ -269,8 +297,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             Sesion.Token = DNITextBox.Text + "_" + SesionTextBox.Text;
             Ejercicio.Token = Sesion.Token;
             Ejercicio.Ejercicio = 1;
-            
-            
+
             if (!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
         }
@@ -298,10 +325,16 @@ namespace AtaxiaVision.Desktop.Pantallas
                     case ServerHelper.TOKEN_SINCONEXION:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para validar el token.");
                         EstadoVentanaLabel.Dispatcher.Invoke(estadoGeneralDelegate, "Sin conexión");
+                        DificultadRatingBar.Dispatcher.Invoke(ratingBarDelegate, Visibility.Hidden);
+                        SinConexiónTextBlock.Dispatcher.Invoke(sinConexionTextBlockDelegate, Visibility.Visible);
+                        SinConexionCard.Dispatcher.Invoke(sinConexionCardDelegate, Visibility.Visible);
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_INVALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token inválido. Vas a poder utilizar la Aplicación sin problemas.");
+                        DificultadRatingBar.Dispatcher.Invoke(ratingBarDelegate, Visibility.Hidden);
+                        TokenInvalidoTextBlock.Dispatcher.Invoke(tokenInvalidoTextBlockDelegate, Visibility.Visible);
+                        SinConexionCard.Dispatcher.Invoke(sinConexionCardDelegate, Visibility.Visible);
                         EstadoVentanaLabel.Dispatcher.Invoke(estadoGeneralDelegate, "Token rechazado");
                         Sesion.TokenValido = false;
                         break;
@@ -312,6 +345,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                         IdLabel.Dispatcher.Invoke(labelIdDelegate, result.Paciente.PacienteId);
                         NombreLabel.Dispatcher.Invoke(labelNombreDelegate, result.Paciente.Nombre);
                         PacienteCard.Dispatcher.Invoke(pacienteCardDelegate, Visibility.Visible);
+                        SinConexionCard.Dispatcher.Invoke(sinConexionCardDelegate, Visibility.Hidden);
                         NombreEjercicioLabel.Dispatcher.Invoke(nombreEjercicioDelegate, result.Ejercicio.Nombre);
                         DificultadRatingBar.Dispatcher.Invoke(dificultadEjercicioDelegate, result.Ejercicio.Dificultad);
                         DificultadRatingBar.Dispatcher.Invoke(ratingBarDelegate, Visibility.Visible);
@@ -384,6 +418,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             EstadoPacienteCard(Visibility.Hidden);
             IniRehabBtn.Visibility = Visibility.Hidden;
             AtrasBtn.Visibility = Visibility.Hidden;
+            SinConexionCard.Visibility = Visibility.Hidden;
             EstadoGeneral("Ingrese los datos de la sesión");
             DNITextBox.Focus();
         }
