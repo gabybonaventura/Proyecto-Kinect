@@ -317,8 +317,6 @@ namespace AtaxiaVision.Desktop.Pantallas
                 RespuestaToken = ServerHelper.ValidarToken(Sesion.Token);
                 var result = RespuestaToken;
                 Sesion.TokenVerificado = true;
-                if (result.Ejercicio.Nombre != "Reach")
-                    EjercicioPersonalizado = true;
                 // Muestro el Snackbar
                 switch (result.CodigoTokenValid)
                 {
@@ -339,6 +337,8 @@ namespace AtaxiaVision.Desktop.Pantallas
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_VALIDO:
+                        if (result.Ejercicio.Nombre != "Reach")
+                            EjercicioPersonalizado = true;
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
                         EstadoVentanaLabel.Dispatcher.Invoke(estadoGeneralDelegate, "Token válido");
                         Sesion.TokenValido = true;
