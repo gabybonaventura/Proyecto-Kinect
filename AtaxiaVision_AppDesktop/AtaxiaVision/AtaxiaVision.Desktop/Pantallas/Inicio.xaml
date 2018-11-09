@@ -17,7 +17,8 @@
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
         WindowState="Maximized" 
-        Loaded="Window_Loaded" KeyDown="Window_KeyDown"
+        Loaded="Window_Loaded" 
+        KeyDown="Window_KeyDown"
         >
     <Grid>
         <!--Encabezado-->
@@ -62,22 +63,50 @@
             </DockPanel>
         </materialDesign:ColorZone>
         <!--Cuerpo-->
+        <Button 
+            Name="AtrasBtn" 
+            Width="55"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Height="45" 
+            Padding="0" 
+            Margin="188,134,773,0"
+            Visibility="Hidden"
+            Click="AtrasBtn_Click">
+            <materialDesign:PackIcon 
+                Kind="ArrowLeftBold"
+                Width="56"
+                Height="45" 
+                Padding="0"/>
+        </Button>
         <ProgressBar
             Style="{StaticResource MaterialDesignCircularProgressBar}"
             IsIndeterminate="True" 
             Visibility="Hidden"
             Name="ProgressBar" 
             Height="80" 
-            Margin="468,360,468,0" 
+            Margin="468,500,468,0" 
             Width="80" 
             VerticalAlignment="Top"
             HorizontalAlignment="Center"/>
+        <TextBlock 
+            Name="EstadoVentanaLabel"
+            FontSize="35"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Margin="279,134,265,0" 
+            Width="472" 
+            Height="71" 
+            TextAlignment="Center">
+            Ingrese los datos de la sesión
+        </TextBlock>
         <materialDesign:PackIcon 
+            Name="IconoValidarToken"
             Kind="AccountKey" 
             VerticalAlignment="Top" 
             HorizontalAlignment="Center" 
             Height="74" 
-            Margin="188,156,742,0" 
+            Margin="188,235,742,0" 
             Width="86"/>
         <TextBox 
             x:Name="DNITextBox" 
@@ -86,7 +115,7 @@
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="274,156,542,0" 
+            Margin="279,235,364,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             FontSize="30" 
@@ -94,7 +123,7 @@
             MaxLength="8"
             FontWeight="Bold" 
             HorizontalAlignment="Center" 
-            Width="200" 
+            Width="373" 
             KeyUp="DNITextBox_KeyUp" 
             KeyDown="DNITextBox_KeyDown" 
             />
@@ -105,7 +134,7 @@
             materialDesign:HintAssist.FloatingOffset="1,-30"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Height="74" 
-            Margin="479,156,415,0" 
+            Margin="657,235,188,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             FontSize="30" 
@@ -113,24 +142,25 @@
             MaxLines="1"
             MaxLength="4"
             HorizontalAlignment="Center" 
-            Width="122" KeyDown="SesionTextBox_KeyDown" />
+            Width="171" KeyDown="SesionTextBox_KeyDown" />
         <Button 
             Name="ValidarTokenBtn"
             Content="Validar token" 
             HorizontalAlignment="Center" 
-            Margin="606,156,188,0" 
+            Margin="188,335,188,0" 
             VerticalAlignment="Top" 
-            Width="222" 
-            Height="74" 
+            Width="640" 
+            Height="126" 
             FontSize="30" 
+            
             Click="ValidarTokenBtn_Click"/>
         <materialDesign:Card
             x:Name="PacienteCard"
             Background="#FFF44336"
             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
             Width="640" 
-            Margin="188,261,188,0"
-            Height="235"
+            Margin="188,205,188,0"
+            Height="334"
             Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
@@ -147,54 +177,81 @@
                 <TextBlock
                     Grid.Row="0"
                     Grid.ColumnSpan="2"
-                    Margin="16 20 16 20"
-                    FontSize="40"
+                    Margin="16 10 16 10"
+                    FontSize="35"
                     Style="{StaticResource MaterialDesignHeadlineTextBlock}" 
-                    TextAlignment="Center"><Run Text="Datos"/><Run Text=" del paciente"/></TextBlock>
-                <Separator
-                    Grid.Row="1"
-                    Grid.ColumnSpan="2"
-                    Style="{StaticResource MaterialDesignLightSeparator}" />
+                    TextAlignment="Center">
+                    Datos del paciente
+                </TextBlock>
                 <Label 
                     x:Name="NombreLabel"
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Content="Nombre: "
                     Margin="16 10 16 10"
                     FontSize="25" 
                     Foreground="#FFF"/>
                 <Label 
                     x:Name="IdLabel"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="16 10 16 10"
+                    Content="DNI: "
+                    FontSize="25"
+                    Foreground="#FFF"/>
+                <TextBlock
                     Grid.Row="2"
-                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
                     Margin="16 10 16 10"
-                    Content="Id: "
+                    FontSize="35"
+                    Style="{StaticResource MaterialDesignHeadlineTextBlock}" 
+                    TextAlignment="Center">
+                    Datos del ejercicio
+                </TextBlock>
+                <Label 
+                    x:Name="NombreEjercicioLabel"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Content="Nombre: "
                     FontSize="25"
+                    Margin="16 10 16 10"
                     Foreground="#FFF"/>
                 <Label 
-                    x:Name="EdadLabel"
-                    Grid.Row="3"
-                    Content="Edad: "
-                    Margin="16 10 16 10"
+                    x:Name="DificultadEjercicioLabel"
+                    Grid.Row="4"
+                    Content="Dificultad: "
                     FontSize="25"
+                    Margin="16,10,160,10"
                     Foreground="#FFF"/>
                 <Label 
-                    x:Name="FechaInicioLabel"
-                    Grid.Row="3"
-                    Grid.Column="2"
-                    Content=""
+                    x:Name="RepeticionesEjercicioLabel"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Content="Repeticiones: "
                     FontSize="25"
-                    Margin="16 10 16 10"
+                    Margin="16,10"
                     Foreground="#FFF"/>
             </Grid>
         </materialDesign:Card>
+        <materialDesign:RatingBar
+            x:Name="DificultadRatingBar"
+            VerticalAlignment="Top" 
+            HorizontalAlignment="Center" 
+            Value="4" 
+            Height="29"
+            Visibility="Hidden"
+            Width="122" 
+            Margin="350,466,570,0" 
+            Foreground="White" />
         <Button 
             x:Name="IniRehabBtn" 
             Content="_Iniciar sesión" 
-            IsEnabled="False" 
+            Visibility="Hidden"
             Margin="188,553,188,0" 
             Height="150" 
             FontSize="40" 
             HorizontalAlignment="Center" 
+            IsEnabled="False"
             Width="640" 
             VerticalAlignment="Top" 
             Click="IniRehabBtn_Click"

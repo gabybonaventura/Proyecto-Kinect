@@ -58,6 +58,36 @@ namespace AtaxiaVision.Desktop.Pantallas
         public delegate void LabelIdDelegate(int id);
         public LabelIdDelegate labelIdDelegate;
 
+        public delegate void NombreEjercicioDelegate(string nombre);
+        public NombreEjercicioDelegate nombreEjercicioDelegate;
+
+        public delegate void DificultadEjercicioDelegate(int n);
+        public DificultadEjercicioDelegate dificultadEjercicioDelegate;
+
+        public delegate void RepeticionesEjercicioDelegate(int n);
+        public RepeticionesEjercicioDelegate repeticionesEjercicioDelegate;
+
+        public delegate void IconoTokenDelegate(Visibility visibility);
+        public IconoTokenDelegate iconoTokenDelegate;
+
+        public delegate void DNIPacienteDelegate(Visibility visibility);
+        public DNIPacienteDelegate dNIPacienteDelegate;
+
+        public delegate void SesionPacienteDelegate(Visibility visibility);
+        public SesionPacienteDelegate sesionPacienteDelegate;
+
+        public delegate void ValidarTokenButtonDelegate(Visibility visibility);
+        public ValidarTokenButtonDelegate tokenButtonDelegate;
+
+        public delegate void RatingBarDelegate(Visibility visibility);
+        public RatingBarDelegate ratingBarDelegate;
+
+        public delegate void EstadoGeneralDelegate(string msj);
+        public EstadoGeneralDelegate estadoGeneralDelegate;
+
+        public delegate void AtrasBtnDelegate(Visibility visibility);
+        public AtrasBtnDelegate atrasBtnDelegate;
+
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
         
@@ -77,34 +107,63 @@ namespace AtaxiaVision.Desktop.Pantallas
             snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             iniRehabBtnDelegate = new IniRehabBtnDelegate(EstadoIniciarRehabilitacion);
-            labelEdadDelegate = new LabelEdadDelegate(Edad);
-            labelNombreDelegate = new LabelNombreDelegate(Nombre);
-            labelIdDelegate = new LabelIdDelegate(Id);
+            labelNombreDelegate = new LabelNombreDelegate(LlenarNombrePaciente);
+            labelIdDelegate = new LabelIdDelegate(LlenarId);
             pacienteCardDelegate = new PacienteCardDelegate(EstadoPacienteCard);
+            nombreEjercicioDelegate = new NombreEjercicioDelegate(LlenarNombreEjercicio);
+            dificultadEjercicioDelegate = new DificultadEjercicioDelegate(LlenarDificultadEjercicio);
+            repeticionesEjercicioDelegate = new RepeticionesEjercicioDelegate(LlenarRepeticiones);
+            iconoTokenDelegate = new IconoTokenDelegate(EstadoIconoToken);
+            dNIPacienteDelegate = new DNIPacienteDelegate(EstadoDNIPaciente);
+            sesionPacienteDelegate = new SesionPacienteDelegate(EstadoSesionId);
+            tokenButtonDelegate = new ValidarTokenButtonDelegate(EstadoValidarTokenBtn);
+            ratingBarDelegate = new RatingBarDelegate(EstadoRatingBar);
+            estadoGeneralDelegate = new EstadoGeneralDelegate(EstadoGeneral);
+            atrasBtnDelegate = new AtrasBtnDelegate(EstadoAtrasBtn);
 
             Sesion = new SesionViewModel();
             Ejercicio = new RepeticionViewModel();
             DNITextBox.Focus();
         }
 
-        private void Id(int id)
+        private void EstadoGeneral(string msj)
         {
-            IdLabel.Content += id.ToString();
+            EstadoVentanaLabel.Text = msj;
         }
 
-        private void Nombre(string nombre)
+        private void LlenarId(int id)
         {
-            NombreLabel.Content += nombre;
+            IdLabel.Content = "DNI: " + id.ToString();
         }
 
-        private void Edad(int edad)
+        private void LlenarNombrePaciente(string nombre)
         {
-            EdadLabel.Content += edad.ToString();
+            NombreLabel.Content = "Nombre: " + nombre;
         }
 
+        private void LlenarNombreEjercicio(string nombre)
+        {
+            NombreEjercicioLabel.Content = "Nombre: " + nombre;
+        }
+
+        private void LlenarDificultadEjercicio(int n)
+        {
+            DificultadRatingBar.Value = n;
+        }
+
+        private void LlenarRepeticiones(int n)
+        {
+            RepeticionesEjercicioLabel.Content = "Repeticiones: " + n;
+        }
+        
         private void EstadoPacienteCard(Visibility visibility)
         {
             PacienteCard.Visibility = visibility;
+        }
+
+        private void EstadoAtrasBtn(Visibility visibility)
+        {
+            AtrasBtn.Visibility = visibility;
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -119,10 +178,39 @@ namespace AtaxiaVision.Desktop.Pantallas
             ProgressBar.Visibility = visibility;
         }
 
+        private void EstadoIconoToken(Visibility visibility)
+        {
+            IconoValidarToken.Visibility = Visibility;
+        }
+
+        private void EstadoDNIPaciente(Visibility visibility)
+        {
+            DNITextBox.Visibility = Visibility;
+        }
+
+        private void EstadoSesionId(Visibility visibility)
+        {
+            SesionTextBox.Visibility = Visibility;
+        }
+
+        private void EstadoValidarTokenBtn(Visibility visibility)
+        {
+            ValidarTokenBtn.Visibility = Visibility;
+        }
+
+        private void EstadoRatingBar(Visibility visibility)
+        {
+            DificultadRatingBar.Visibility = Visibility;
+        }
+
         private void EstadoIniciarRehabilitacion(bool state)
         {
-            IniRehabBtn.IsEnabled = state;
-            IniRehabBtn.Focus();
+            if (state)
+            {
+                IniRehabBtn.Visibility = Visibility.Visible;
+                IniRehabBtn.IsEnabled = state;
+                IniRehabBtn.Focus();
+            }
         }
 
         private void SincronizarDatos()
@@ -181,7 +269,9 @@ namespace AtaxiaVision.Desktop.Pantallas
             Sesion.Token = DNITextBox.Text + "_" + SesionTextBox.Text;
             Ejercicio.Token = Sesion.Token;
             Ejercicio.Ejercicio = 1;
-            if(!backgroundWorker.IsBusy)
+            
+            
+            if (!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
         }
 
@@ -190,8 +280,11 @@ namespace AtaxiaVision.Desktop.Pantallas
         {
             backgroundWorker.DoWork += (s, e) =>
             {
-                // Muestro la barra de cargando
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
+                //IconoValidarToken.Dispatcher.Invoke(iconoTokenDelegate,Visibility.Hidden);
+                //DNITextBox.Dispatcher.Invoke(dNIPacienteDelegate,Visibility.Hidden);
+                //SesionTextBox.Dispatcher.Invoke(sesionPacienteDelegate,Visibility.Hidden);
+                //ValidarTokenBtn.Dispatcher.Invoke(tokenButtonDelegate,Visibility.Hidden);
                 // Thread.Sleep(5000); // Es solo para ver como queda la animacion este sleep.
                 // Valido el token DNI + Sesion
                 RespuestaToken = ServerHelper.ValidarToken(Sesion.Token);
@@ -204,24 +297,31 @@ namespace AtaxiaVision.Desktop.Pantallas
                 {
                     case ServerHelper.TOKEN_SINCONEXION:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para validar el token.");
+                        EstadoVentanaLabel.Dispatcher.Invoke(estadoGeneralDelegate, "Sin conexión");
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_INVALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token inválido. Vas a poder utilizar la Aplicación sin problemas.");
+                        EstadoVentanaLabel.Dispatcher.Invoke(estadoGeneralDelegate, "Token rechazado");
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_VALIDO:
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token Válido.");
+                        EstadoVentanaLabel.Dispatcher.Invoke(estadoGeneralDelegate, "Token válido");
                         Sesion.TokenValido = true;
                         IdLabel.Dispatcher.Invoke(labelIdDelegate, result.Paciente.PacienteId);
                         NombreLabel.Dispatcher.Invoke(labelNombreDelegate, result.Paciente.Nombre);
-                        EdadLabel.Dispatcher.Invoke(labelEdadDelegate, result.Paciente.Edad);
                         PacienteCard.Dispatcher.Invoke(pacienteCardDelegate, Visibility.Visible);
+                        NombreEjercicioLabel.Dispatcher.Invoke(nombreEjercicioDelegate, result.Ejercicio.Nombre);
+                        DificultadRatingBar.Dispatcher.Invoke(dificultadEjercicioDelegate, result.Ejercicio.Dificultad);
+                        DificultadRatingBar.Dispatcher.Invoke(ratingBarDelegate, Visibility.Visible);
+                        RepeticionesEjercicioLabel.Dispatcher.Invoke(repeticionesEjercicioDelegate, result.Repeticiones);
                         break;
                     default:
                         break;
                 }                
                 IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
+                AtrasBtn.Dispatcher.Invoke(atrasBtnDelegate, Visibility.Visible);
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
             };
         }
@@ -256,7 +356,10 @@ namespace AtaxiaVision.Desktop.Pantallas
         {
             if (e.Key == Key.Escape)
             {
-                Close();
+                if (AtrasBtn.Visibility == Visibility.Hidden)
+                    Close();
+                else
+                    AtrasBtn_Click(sender, e);
             }   
             if(e.Key == Key.I)
             {
@@ -274,6 +377,15 @@ namespace AtaxiaVision.Desktop.Pantallas
             ListaEjercicios win = new ListaEjercicios();
             win.Show();
             Close();
+        }
+
+        private void AtrasBtn_Click(object sender, RoutedEventArgs e)
+        {
+            EstadoPacienteCard(Visibility.Hidden);
+            IniRehabBtn.Visibility = Visibility.Hidden;
+            AtrasBtn.Visibility = Visibility.Hidden;
+            EstadoGeneral("Ingrese los datos de la sesión");
+            DNITextBox.Focus();
         }
     }
 }
