@@ -72,6 +72,17 @@
             FontSize="30"
             Margin="10,144,671,0"
             Click="RepeticionButton_Click"/>
+        <Button 
+            x:Name="ReportesButton" 
+            Content="Reportes" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Height="90" 
+            Width="335" 
+            Visibility="Hidden"
+            FontSize="30"
+            Margin="10,144,671,0"
+            Click="IrAConfirmacion_Click"/>
         <Label 
             Content="Repeticiones" 
             FontSize="25"
@@ -90,7 +101,7 @@
             />
         <ComboBox 
             Name="ModoRepeticionComboBox"
-            materialDesign:HintAssist.Hint="Repetición"
+            materialDesign:HintAssist.Hint="Modo"
             Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
             materialDesign:HintAssist.FloatingOffset="1,-40"
             materialDesign:HintAssist.FloatingScale=".9" 

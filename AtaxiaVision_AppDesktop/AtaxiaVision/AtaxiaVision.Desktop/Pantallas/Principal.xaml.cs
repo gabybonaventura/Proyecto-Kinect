@@ -90,6 +90,7 @@
 
         private RepeticionViewModel Ejercicio { get; set; }
         private SesionViewModel Sesion { get; set; }
+        public RespuestaToken RespuestaToken { get; set; }
 
         #endregion Properties
 
@@ -179,13 +180,14 @@
         }
         #endregion
 
-        public Principal(SesionViewModel sesionVM, RepeticionViewModel ejercicioVM)
+        public Principal(RespuestaToken token,SesionViewModel sesionVM, RepeticionViewModel ejercicioVM)
         {
             InitializeComponent();
             flagSkeleton = false;
             flagObjeto = false;
             datosDistancia = null;
             colorImagenDistancia = null;
+            RespuestaToken = token;
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
             angulos = new Angulos();
@@ -448,8 +450,7 @@
             string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
             videoController.GuardarVideo(framesBmp, nombreArchivo);
             arduinoController.CerrarPuerto();
-            //Confirmacion win = new Confirmacion(flagTokenValidado, desvios, resultado, valorToken, nro_ejercicio);
-            Confirmacion win = new Confirmacion(Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
+            Confirmacion win = new Confirmacion(RespuestaToken, Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
             Console.WriteLine("cierra por acá");
             win.Show();
 

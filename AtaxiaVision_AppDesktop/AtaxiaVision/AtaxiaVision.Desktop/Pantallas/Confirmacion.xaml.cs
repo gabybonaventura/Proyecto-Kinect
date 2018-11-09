@@ -40,6 +40,7 @@ namespace AtaxiaVision.Pantallas
         public RepeticionViewModel Ejercicio { get; set; }
         public SesionViewModel Sesion { get; set; }
         public List<TensionServos> Tensiones { get; set; }
+        public RespuestaToken RespuestaToken { get; set; }
         public string Pregunta { get; set; }
         
         public delegate void SnackBarDelegate(string msg);
@@ -67,13 +68,13 @@ namespace AtaxiaVision.Pantallas
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
 
-        public Confirmacion(SesionViewModel sesionVM, RepeticionViewModel ejercicioVM, List<TensionServos> tensiones, string nombreArchivo)
+        public Confirmacion(RespuestaToken token,SesionViewModel sesionVM, RepeticionViewModel ejercicioVM, List<TensionServos> tensiones, string nombreArchivo)
         {
             InitializeComponent();
             this.nombreArchivo = nombreArchivo;
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
-            Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second) - Ejercicio.Duracion;
+            RespuestaToken = token;
             DuracionLabel.Content = "Duracion: " + Ejercicio.Duracion;
             Tensiones = tensiones;
             ContentTokenLabel(Ejercicio.Token);
@@ -209,7 +210,7 @@ namespace AtaxiaVision.Pantallas
         private void SiBtn_Click(object sender, RoutedEventArgs e)
         {
             Ejercicio.Ejercicio++;
-            Principal win = new Principal(Sesion, Ejercicio);
+            Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
             win.Show();
             Close();
         }

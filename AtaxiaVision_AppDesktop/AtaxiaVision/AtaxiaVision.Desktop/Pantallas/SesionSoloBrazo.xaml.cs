@@ -43,6 +43,8 @@ namespace AtaxiaVision.Pantallas
         public bool RepeticionAutomatica { get; set; }
         public int DelaySeg { get; set; }
         public int Repeticiones { get; set; }
+        private RepeticionViewModel Ejercicio { get; set; }
+        private SesionViewModel Sesion { get; set; }
         ArduinoController arduinoController = new ArduinoController();
 
         public delegate void EstadoLabelDelegate(string nombre);
@@ -66,6 +68,8 @@ namespace AtaxiaVision.Pantallas
         public ConsumoCodoArribaAbajo consumoCodoArribaAbajoDelegate;
         public delegate void ConsumoCodoDerechaIzquierda(int consumo);
         public ConsumoCodoDerechaIzquierda consumoCodoDerechaIzquierdaDelegate;
+        public delegate void ReportesButtonDelegate(Visibility visibility);
+        public ReportesButtonDelegate reportesButtonDelegate;
 
         private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
         private BackgroundWorker ArduinoActivoBackgroundWorker = new BackgroundWorker();
@@ -146,15 +150,22 @@ namespace AtaxiaVision.Pantallas
             if (!bg.IsBusy)
                 bg.RunWorkerAsync();
         }
+
+        private void VisibilidadReportesButton(Visibility visibility)
+        {
+            ReportesButton.Visibility = visibility;
+            if(visibility == Visibility.Visible)
+                ReportesButton.Focus();
+        }
         #endregion
 
-        public SesionSoloBrazo(RespuestaToken token = null)
+        public SesionSoloBrazo(RespuestaToken token, SesionViewModel sesionVM, RepeticionViewModel ejercicioVM)
         {
             InitializeComponent();
-            if (token == null)
-                Token = new RespuestaToken();
-            else
-                Token = token;
+            Sesion = sesionVM;
+            Ejercicio = ejercicioVM;
+            Ejercicio.Duracion = new TimeSpan(0, 0, 0);
+            Token = token;
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
@@ -180,6 +191,8 @@ namespace AtaxiaVision.Pantallas
         private void EstadoRepetecionesButton(bool isEnable)
         {
             RepeticionButton.IsEnabled = isEnable;
+            if (isEnable)
+                RepeticionButton.Focus();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -192,6 +205,7 @@ namespace AtaxiaVision.Pantallas
             consumoHombroAdelanteAtrasDelegate = new ConsumoHombroAdelanteAtras(SetConsumoHombroAdelanteAtras);
             consumoCodoArribaAbajoDelegate = new ConsumoCodoArribaAbajo(SetConsumoCodoArribaAbajo);
             consumoCodoDerechaIzquierdaDelegate = new ConsumoCodoDerechaIzquierda(SetConsumoCodoDerechaIzquierda);
+            reportesButtonDelegate = new ReportesButtonDelegate(VisibilidadReportesButton);
             TensionesServosBG();
             ArduinoActivoBG();
             EjecutarEjercicioManualBG();   // Preparo ejercicio manual
@@ -199,6 +213,7 @@ namespace AtaxiaVision.Pantallas
             LlenarComboBoxs();          // Lleno los combo boxs
             MostrarRepeticiones(0);      // Lleno el campo de repeticiones
             arduinoController.Inicializar(ArduinoController.BRAZO_GB);
+            IniciarButton.Focus();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -267,17 +282,10 @@ namespace AtaxiaVision.Pantallas
             {
                 for (int i = 0; i < Token.Repeticiones; i++)
                 {
-                    RepeticionesLabel.Dispatcher.Invoke(repetecionesLabelDelegate, (i + 1));
-                    EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Inicio repetición: " + (i + 1));
-                    Thread.Sleep(2 * 1000);
-                    arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoInicial));
-                    EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Inicial [" + Token.Ejercicio.EstadoInicial + "]");
-                    Thread.Sleep(DelaySeg * 1000);
-                    EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Final [" + Token.Ejercicio.EstadoFinal + "]");
-                    arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoFinal));
-                    Thread.Sleep(DelaySeg * 1000);
+                    EjecutarRepeticion(i + 1);
                 }
                 EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Fin de repeticiones.");
+                ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
             };
 
             if (!ejercicioAutomaticoBG.IsBusy)
@@ -286,6 +294,7 @@ namespace AtaxiaVision.Pantallas
 
         private void EjecutarEjercicioManual()
         {
+
             if (!ejercicioManualBG.IsBusy)
                 ejercicioManualBG.RunWorkerAsync();
         }
@@ -295,22 +304,48 @@ namespace AtaxiaVision.Pantallas
             ejercicioManualBG.DoWork += (s, e) =>
             {
                 RepeticionButton.Dispatcher.Invoke(repeticionButtonDelegate, false);
-                RepeticionesLabel.Dispatcher.Invoke(repetecionesLabelDelegate, (Repeticiones + 1));
-                EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Inicio repetición: " + (Repeticiones + 1));
-                Thread.Sleep(2 * 1000);
-                arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoInicial));
-                EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Inicial [" + Token.Ejercicio.EstadoInicial + "]");
-                Thread.Sleep(DelaySeg * 1000);
-                EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Final [" + Token.Ejercicio.EstadoFinal + "]");
-                arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoFinal));
-                Thread.Sleep(DelaySeg * 1000);
+                EjecutarRepeticion(Repeticiones + 1);
                 Repeticiones++;
                 EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Fin Repetición");
                 if (Repeticiones < Token.Repeticiones)
                     RepeticionButton.Dispatcher.Invoke(repeticionButtonDelegate, true);
                 else
+                {
                     RepeticionButton.Dispatcher.Invoke(repeticionButtonDelegate, false);
+                    ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
+                }
             };
+        }
+
+        private void EjecutarRepeticion(int i)
+        {
+            TimeSpan inicio = new TimeSpan(DateTime.Now.Hour,DateTime.Now.Minute,DateTime.Now.Second);
+            RepeticionesLabel.Dispatcher.Invoke(repetecionesLabelDelegate, (i));
+            EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Inicio repetición: " + (i));
+            Thread.Sleep(2 * 1000);
+            arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoInicial));
+            EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Inicial [" + Token.Ejercicio.EstadoInicial + "]");
+            Thread.Sleep(DelaySeg * 1000);
+            EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Final [" + Token.Ejercicio.EstadoFinal + "]");
+            arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoFinal));
+            Thread.Sleep(DelaySeg * 1000);
+            TimeSpan fin = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            TimeSpan duracion = fin - inicio;
+            Ejercicio.Duracion += duracion;
+        }
+
+        private void IrAConfirmacion()
+        {
+            Ejercicio.FinalizoConExito = true;
+            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+            Confirmacion win = new Confirmacion(Token, Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
+            win.Show();
+            Close();
+        }
+
+        private void IrAConfirmacion_Click(object sender, RoutedEventArgs e)
+        {
+            IrAConfirmacion();
         }
     }
 }

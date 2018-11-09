@@ -271,12 +271,12 @@ namespace AtaxiaVision.Desktop.Pantallas
         {
             if (EjercicioPersonalizado)
             {
-                var ej = new SesionSoloBrazo(RespuestaToken);
+                var ej = new SesionSoloBrazo(RespuestaToken, Sesion, Ejercicio);
                 ej.Show();
             }
             else
             {
-                Principal win = new Principal(Sesion, Ejercicio);
+                Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
                 win.Show();
             }
             Close();
