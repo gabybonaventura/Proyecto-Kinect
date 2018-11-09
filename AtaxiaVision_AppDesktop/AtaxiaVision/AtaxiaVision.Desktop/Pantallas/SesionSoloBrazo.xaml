@@ -70,7 +70,7 @@
             IsEnabled="False" 
             Visibility="Hidden"
             FontSize="30"
-            Margin="10,130,671,0"
+            Margin="10,144,671,0"
             Click="RepeticionButton_Click"/>
         <Label 
             Content="Repeticiones" 

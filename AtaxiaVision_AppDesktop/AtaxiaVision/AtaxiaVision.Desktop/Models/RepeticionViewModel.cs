@@ -14,5 +14,6 @@ namespace AtaxiaVision.Models
         public int Desvios { get; set; }
         public DateTime Fecha { get; set; }
         public TimeSpan Duracion { get; set; }
+        public string Comentario { get; set; }
     }
 }

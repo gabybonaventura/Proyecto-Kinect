@@ -153,6 +153,7 @@
             </Grid>
         </materialDesign:Card>
         <TextBox
+            Name="ComentarioRepeticionTextBox"
             Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
             Margin="10,446,10,0"
             VerticalAlignment="Top"
