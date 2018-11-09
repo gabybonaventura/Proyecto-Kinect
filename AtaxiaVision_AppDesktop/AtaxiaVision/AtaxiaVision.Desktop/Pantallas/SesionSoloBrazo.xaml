@@ -107,7 +107,7 @@
             materialDesign:HintAssist.FloatingScale=".9" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="10,324,849,0"
+            Margin="10,317,849,0"
             FontSize="25" 
             Width="157" 
             Padding="0"
@@ -126,7 +126,7 @@
             materialDesign:HintAssist.FloatingScale=".9" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,326,671,0"
+            Margin="188,319,671,0"
             FontSize="25" 
             Width="157" 
             Padding="0"
@@ -151,7 +151,7 @@
             FontSize="25"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="10,408,671,0" 
+            Margin="10,417,671,0" 
             Width="335" 
             FontWeight="Bold" 
             />
@@ -160,7 +160,7 @@
             FontSize="20"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="10,448,823,0" 
+            Margin="10,462,823,0" 
             Width="183" 
             />
         <Label Name="ConsumoHombroArribaAbajoLabel"
@@ -168,7 +168,7 @@
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="10,482,842,0" 
+            Margin="10,496,842,0" 
             Width="164" Foreground="#DD000000" 
             />
         <Label 
@@ -176,7 +176,7 @@
             FontSize="20"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="10,534,842,0" 
+            Margin="10,547,842,0" 
             Width="164" 
             />
         <Label Name="ConsumoHombroAdelanteAtrasLabel"
@@ -184,7 +184,7 @@
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="10,572,842,0" 
+            Margin="10,581,842,0" 
             Width="164" RenderTransformOrigin="0.555,0.12" 
             />
         <Label 
@@ -192,7 +192,7 @@
             FontSize="20"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,448,671,0" 
+            Margin="188,462,671,0" 
             Width="157" 
             />
         <Label Name="ConsumoCodoArribaAbajoLabel"
@@ -200,7 +200,7 @@
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,482,671,0" 
+            Margin="188,496,671,0" 
             Width="157" 
             />
         <Label 
@@ -208,7 +208,7 @@
             FontSize="20"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,534,671,0" 
+            Margin="188,547,671,0" 
             Width="157" 
             />
         <Label Name="ConsumoCodoDerechaIzquierdaLabel"
@@ -216,7 +216,7 @@
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="188,572,671,0" 
+            Margin="188,581,671,0" 
             Width="157" 
             />
         <materialDesign:Card
