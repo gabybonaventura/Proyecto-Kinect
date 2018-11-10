@@ -66,7 +66,6 @@ namespace AtaxiaVision.Pantallas
         public DesviosLabelDelegate desviosLabelDelegate;
         public delegate void FechaLabelDelegate(DateTime date);
         public FechaLabelDelegate fechaLabelDelegate;
-        public string nombreArchivo;
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
 
@@ -81,8 +80,7 @@ namespace AtaxiaVision.Pantallas
         {
             InitializeComponent();
             this._videoController = videoController;
-
-            this.nombreArchivo = nombreArchivo;
+            
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
             RespuestaToken = token;
@@ -90,18 +88,15 @@ namespace AtaxiaVision.Pantallas
             Tensiones = tensiones;
             ContentTokenLabel(Ejercicio.Token);
             ContentEjercicioLabel(Ejercicio.Ejercicio + "");
-
-            videocapture = new VideoCapture($"C://Users//Public/Videos//{nombreArchivo}.avi");
+            
             TotalFrames = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount));
             FrameInicioBoomerang = TotalFrames - 51;
             FrameFinBoomerang = TotalFrames - 1;
-            //FPS = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
             int Duracion = (int)(new TimeSpan(_videoController.FinGrabacion - _videoController.InicioGrabacion)).TotalSeconds;
             Duracion = Duracion == 0 ? 1 : Duracion;
             FPS = _videoController.framesBmp.Count / Duracion;
             CurrentFrame = new Mat();
             CurrentFrameNo = 0;
-            //PlayVideo();
             PlayVideoBitMap();
         }
 
@@ -285,62 +280,7 @@ namespace AtaxiaVision.Pantallas
                 throw;
             }
         }
-
-        private async void PlayVideo()
-        {
-            if (videocapture == null)
-            {
-                return;
-            }
-            try
-            {               
-                CurrentFrameNo = TotalFrames - 51;
-                while (CurrentFrameNo < TotalFrames)
-                {
-                    videocapture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames, CurrentFrameNo);
-                    videocapture.Read(CurrentFrame);
-                    
-                    //Tener cuidado con este puntero porque sobre carga la memoria
-                    IntPtr handle = CurrentFrame.Bitmap.GetHbitmap();
-
-                    try
-                    {
-
-                        ImageSource imageSource = Imaging
-                            .CreateBitmapSourceFromHBitmap(handle,
-                            IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-
-                        this.Image.Source = imageSource;
-                        if (CurrentFrameNo == FrameInicioBoomerang)
-                            Adelante = true;
-                        if (CurrentFrameNo == FrameFinBoomerang)
-                            Adelante = false;
-
-                        if (Adelante)
-                            CurrentFrameNo += 5;
-                        else
-                            CurrentFrameNo -= 5;
-
-                        await Task.Delay(1000 / FPS);
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                    finally
-                    {
-                        //Tengo que marcar el objeto como borrado, para que el garbage collector lo borre
-                        //Sino colapsa la memoria
-                        DeleteObject(handle);
-                    }                    
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
+        
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape || e.Key == Key.C || e.Key == Key.Enter)
