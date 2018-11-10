@@ -201,11 +201,11 @@ namespace AtaxiaVision.Helpers
         public static int EnviarRepeticion(RepeticionViewModel ejercicio)
         {
             // El metodo POST necesita una lista.
+            List<RepeticionViewModel> ejercicios = new List<RepeticionViewModel>();
+            if (ExisteArchivoDatosOffile())
+                 ejercicios = DeserializarArchivoOffline();
             ejercicio.Fecha = DateTime.Now;
-            List<RepeticionViewModel> ejercicios = new List<RepeticionViewModel>
-            {
-                ejercicio
-            };
+            ejercicios.Add(ejercicio);
             var datos = JsonConvert.SerializeObject(ejercicios);
             var result = Enviar(API_SESSION, METHOD_POST, datos);
             if (RequestNoValida(result))
