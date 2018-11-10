@@ -69,6 +69,7 @@ namespace AtaxiaVision.Pantallas
         public string nombreArchivo;
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
+        private bool _reproducirBoomerang = true;
 
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
@@ -224,8 +225,16 @@ namespace AtaxiaVision.Pantallas
         private void SiBtn_Click(object sender, RoutedEventArgs e)
         {
             Ejercicio.Ejercicio++;
-            Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
-            win.Show();
+            if(RespuestaToken.Ejercicio.Nombre == "Reach")
+            {
+                Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
+                win.Show();
+            }
+            else
+            {
+                SesionSoloBrazo win = new SesionSoloBrazo(RespuestaToken, Sesion, Ejercicio);
+                win.Show();
+            }
             Close();
         }
         private async void PlayVideoBitMap()
@@ -244,7 +253,7 @@ namespace AtaxiaVision.Pantallas
 
             try
             {
-                while (true)
+                while (_reproducirBoomerang)
                 {
                     Bitmap bmpFrameActual = _videoController.framesBmp[CurrentFrameNo];
 
@@ -373,6 +382,12 @@ namespace AtaxiaVision.Pantallas
             GuardarVideoButton.IsEnabled = false;
 
             Process.Start($"C:\\Users\\Public\\Videos\\{nombreArchivo}.avi");
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            _reproducirBoomerang = false;
+            _videoController.framesBmp = null;
         }
     }
 }
