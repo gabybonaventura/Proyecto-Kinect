@@ -197,6 +197,7 @@
             IsActive="False"/>
         <Button x:Name="GuardarVideoButton" 
                 Content="Guardar video" 
+                IsEnabled="True"
                 HorizontalAlignment="Center" 
                 Margin="689,462,0,0" 
                 VerticalAlignment="Top" 

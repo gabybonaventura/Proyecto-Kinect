@@ -60,7 +60,7 @@ namespace AtaxiaVision.Controllers
                 using (var vFWriter = new VideoFileWriter())
                 {
                     // create new video file
-                    vFWriter.Open($"C://Users//Public/Videos//{nombreArchivo}.avi", width, height, framRate, VideoCodec.Raw);
+                    vFWriter.Open($"C://Users//Public/Videos//{nombreArchivo}.avi", width, height, framRate, VideoCodec.Default);
 
 
                     //loop throught all images in the collection

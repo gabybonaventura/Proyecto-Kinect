@@ -22,6 +22,7 @@ using System.Threading;
 using System.Windows.Interop;
 using AtaxiaVision.Controllers;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace AtaxiaVision.Pantallas
 {
@@ -96,7 +97,7 @@ namespace AtaxiaVision.Pantallas
             FrameFinBoomerang = TotalFrames - 1;
             //FPS = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
             int Duracion = (int)(new TimeSpan(_videoController.FinGrabacion - _videoController.InicioGrabacion)).TotalSeconds;
-
+            Duracion = Duracion == 0 ? 1 : Duracion;
             FPS = _videoController.framesBmp.Count / Duracion;
             CurrentFrame = new Mat();
             CurrentFrameNo = 0;
@@ -369,8 +370,9 @@ namespace AtaxiaVision.Pantallas
 
             _videoController.GuardarVideo(nombreArchivo);
 
+            GuardarVideoButton.IsEnabled = false;
 
-            PlayVideoBitMap();
+            Process.Start($"C:\\Users\\Public\\Videos\\{nombreArchivo}.avi");
         }
     }
 }
