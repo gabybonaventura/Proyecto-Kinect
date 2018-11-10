@@ -251,6 +251,12 @@ namespace AtaxiaVision.Pantallas
                     this.sensor = null;
                 }
             }
+            if (null == this.sensor)
+            {
+                Image.Source = new BitmapImage(
+                    new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
+                EstadoSnackBar("Kinect no lista.");
+            }
 
             estadoLabelDelegate = new EstadoLabelDelegate(EstadoCard);
             repetecionesLabelDelegate = new RepetecionesLabelDelegate(MostrarRepeticiones);
