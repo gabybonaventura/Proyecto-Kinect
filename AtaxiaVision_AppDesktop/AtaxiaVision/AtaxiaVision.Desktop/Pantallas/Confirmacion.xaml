@@ -167,7 +167,7 @@
             FontSize="25"/>
         <Button 
             x:Name="SiBtn" 
-            Content="_Sí" 
+            Content="Sí" 
             HorizontalAlignment="Center" 
             Visibility="Visible"
             Margin="188,675,528,0" 
@@ -180,7 +180,7 @@
             />
         <Button 
             x:Name="NoBtn" 
-            Content="_No" 
+            Content="No" 
             Margin="528,675,188,0" 
             Click="NoBtn_Click" 
             Visibility="Visible"

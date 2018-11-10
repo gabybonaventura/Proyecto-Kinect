@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AtaxiaVision.Helpers
 {
-    public class ServerHelper
+    public static class ServerHelper
     {
         private const string ARCHIVO_OFFILE = @"C:\Users\Public\Documents\AV_ArchivoDatosOffline.txt";
         private const string URL = "http://api.ataxiavision.com/";

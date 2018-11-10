@@ -98,6 +98,7 @@ namespace AtaxiaVision.Pantallas
             CurrentFrame = new Mat();
             CurrentFrameNo = 0;
             PlayVideoBitMap();
+            ComentarioRepeticionTextBox.Focus();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -213,6 +214,7 @@ namespace AtaxiaVision.Pantallas
         {
             Inicio inicio = new Inicio();
             inicio.Show();
+            EnviarComentario();
             Close();
         }
 
@@ -223,6 +225,7 @@ namespace AtaxiaVision.Pantallas
             win.Show();
             Close();
         }
+
         private async void PlayVideoBitMap()
         {
             if (videocapture == null)
@@ -283,10 +286,9 @@ namespace AtaxiaVision.Pantallas
         
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape || e.Key == Key.C || e.Key == Key.Enter)
+            if (e.Key == Key.Escape)
             {
-                //NoBtn_Click(sender,e);
-                Close();
+                NoBtn_Click(sender,e);
             }
             //if (e.Key == Key.N)
             //{
@@ -313,6 +315,14 @@ namespace AtaxiaVision.Pantallas
             GuardarVideoButton.IsEnabled = false;
 
             Process.Start($"C:\\Users\\Public\\Videos\\{nombreArchivo}.avi");
+        }
+
+        private void EnviarComentario()
+        {
+            if (String.IsNullOrEmpty(ComentarioRepeticionTextBox.Text))
+            {
+
+            }
         }
     }
 }
