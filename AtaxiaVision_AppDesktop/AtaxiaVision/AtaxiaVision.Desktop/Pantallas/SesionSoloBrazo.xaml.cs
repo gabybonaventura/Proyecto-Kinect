@@ -94,6 +94,7 @@ namespace AtaxiaVision.Pantallas
 
         private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
         private BackgroundWorker ArduinoActivoBackgroundWorker = new BackgroundWorker();
+        private bool _grabando = false;
         #endregion
 
         #region Metodos Delegates
@@ -193,6 +194,7 @@ namespace AtaxiaVision.Pantallas
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
         {
+            Cerrar();
             var win = new Inicio();
             win.Show();
             Close();
@@ -273,6 +275,7 @@ namespace AtaxiaVision.Pantallas
         {
             if (e.Key == Key.Escape)
             {
+                Cerrar();
                 var win = new Inicio();
                 win.Show();
                 Close();
@@ -305,6 +308,7 @@ namespace AtaxiaVision.Pantallas
 
         private void IniciarButton_Click(object sender, RoutedEventArgs e)
         {
+            _grabando = true;
             EsRepeticionAutomatica();
             GuardarDelay();
             DehabilitarComponentes();
@@ -389,9 +393,10 @@ namespace AtaxiaVision.Pantallas
 
         private void IrAConfirmacion()
         {
+            Cerrar();
+
             Ejercicio.FinalizoConExito = true;
-            //string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
-            videoController.FinGrabacion = DateTime.Now.Ticks;
+            
             Confirmacion win = new Confirmacion(Token, Sesion, Ejercicio, arduinoController.Tensiones, videoController);
             win.Show();
             Close();
@@ -413,10 +418,12 @@ namespace AtaxiaVision.Pantallas
 
                     System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
 
+                    if(_grabando)
+                    {
+                        videoController.InicioGrabacion = DateTime.Now.Ticks;
 
-                    videoController.InicioGrabacion = DateTime.Now.Ticks;
-
-                    videoController.framesBmp.Add(bmp);
+                        videoController.framesBmp.Add(bmp);
+                    }
                     // Write the pixel data into our bitmap
                     this.colorBitmap.WritePixels(
                         new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
@@ -431,6 +438,17 @@ namespace AtaxiaVision.Pantallas
 
                     this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
                 }
+            }
+        }
+
+        private void Cerrar()
+        {
+            videoController.FinGrabacion = DateTime.Now.Ticks;
+            arduinoController.CerrarPuerto();
+            if (null != this.sensor)
+            {
+                this.sensor.Stop();
+                this.sensor.Dispose();
             }
         }
         

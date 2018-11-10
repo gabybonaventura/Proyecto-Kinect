@@ -445,7 +445,7 @@
                 this.sensor.Stop();
                 this.sensor.Dispose();
             }
-            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+            //string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
             //videoController.GuardarVideo(nombreArchivo);
             videoController.FinGrabacion = DateTime.Now.Ticks;
             arduinoController.CerrarPuerto();

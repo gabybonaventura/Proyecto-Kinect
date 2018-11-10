@@ -48,12 +48,13 @@ namespace AtaxiaVision.Controllers
             {
                 int width = 640;
                 int height = 480;
-                FinGrabacion = DateTime.Now.Ticks;
+                //FinGrabacion = DateTime.Now.Ticks;
 
                 int Duracion = (int)(new TimeSpan(FinGrabacion - InicioGrabacion)).TotalSeconds;
 
 
                 int framRate = this.framesBmp.Count / Duracion;
+                Console.WriteLine($"Frames por segundo {framRate}");
 
                 // create instance of video writer
                 using (var vFWriter = new VideoFileWriter())
@@ -73,7 +74,7 @@ namespace AtaxiaVision.Controllers
                     }
                     vFWriter.Close();
                 }
-                this.framesBmp = new List<Bitmap>();
+                //this.framesBmp = new List<Bitmap>();
             }
         }
     }

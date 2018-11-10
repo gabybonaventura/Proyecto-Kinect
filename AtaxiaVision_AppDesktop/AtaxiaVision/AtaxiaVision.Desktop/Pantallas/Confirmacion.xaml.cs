@@ -275,11 +275,10 @@ namespace AtaxiaVision.Pantallas
                         //Tengo que marcar el objeto como borrado, para que el garbage collector lo borre
                         //Sino colapsa la memoria
                         DeleteObject(handle);
-                        //bmpFrameActual.Dispose();
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
                 throw;
@@ -361,6 +360,17 @@ namespace AtaxiaVision.Pantallas
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void GuardarVideoClick(object sender, RoutedEventArgs e)
+        {
+
+            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+
+            _videoController.GuardarVideo(nombreArchivo);
+
+
+            PlayVideoBitMap();
         }
     }
 }
