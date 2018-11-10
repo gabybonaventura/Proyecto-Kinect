@@ -223,6 +223,7 @@ namespace AtaxiaVision.Pantallas
             Ejercicio.Ejercicio++;
             Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
             win.Show();
+            EnviarComentario();
             Close();
         }
 
@@ -321,7 +322,12 @@ namespace AtaxiaVision.Pantallas
         {
             if (String.IsNullOrEmpty(ComentarioRepeticionTextBox.Text))
             {
-
+                ServerHelper.EnviarComentarioPaciente(
+                    RespuestaToken.Paciente.PacienteId,
+                    new Comments
+                    {
+                        comment = ComentarioRepeticionTextBox.Text
+                    });
             }
         }
     }

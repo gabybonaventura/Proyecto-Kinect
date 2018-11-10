@@ -286,6 +286,18 @@ namespace AtaxiaVision.Helpers
             return result;
         }
 
+        public static int EnviarComentarioPaciente(int id, Comments comentario)
+        {
+            // El metodo POST necesita una lista.
+            var datos = JsonConvert.SerializeObject(comentario);
+            var result = Enviar(API_PACIENTES + id + "/comment" , METHOD_POST, datos);
+            if (RequestNoValida(result))
+            {
+                return SERVER_ERROR;
+            }
+            return SERVER_OK;
+        }
+
         #region Test
         // Test para probar como guardar el archivo
         public static void TestInicializarArchivo()

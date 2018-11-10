@@ -101,6 +101,11 @@ namespace AtaxiaVision.Models
         public string initialState;
         public string name;
     }
+
+    public class Comments
+    {
+        public string comment;
+    }
     #endregion
     
   
