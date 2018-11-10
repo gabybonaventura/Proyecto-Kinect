@@ -67,6 +67,7 @@ namespace AtaxiaVision.Pantallas
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
         private bool _reproducirBoomerang = true;
+        private BackgroundWorker _guardarVideoBackgroundWorker = new BackgroundWorker();
 
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
@@ -98,6 +99,7 @@ namespace AtaxiaVision.Pantallas
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             TareasBackGruondWorker();
+            _guardarVideoBackgroundWorker.DoWork += GuardarVideoAsync;
             snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             siBtnDelegate = new SiBtnDelegate(EstadoSi);
@@ -109,6 +111,26 @@ namespace AtaxiaVision.Pantallas
             fechaLabelDelegate = new FechaLabelDelegate(FechaDesviosLabel);
             if (!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
+
+        }
+
+        private void GuardarVideoAsync(object sender, DoWorkEventArgs e)
+        {
+            SiBtn.Dispatcher.Invoke(siBtnDelegate, false);
+            NoBtn.Dispatcher.Invoke(noBtnDelegate, false);
+
+            ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
+
+            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+
+            _videoController.GuardarVideo(nombreArchivo);
+
+            Process.Start($"C:\\Users\\Public\\Videos\\{nombreArchivo}.avi");
+
+            ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
+
+            SiBtn.Dispatcher.Invoke(siBtnDelegate, true);
+            NoBtn.Dispatcher.Invoke(noBtnDelegate, true);
 
         }
 
@@ -304,14 +326,8 @@ namespace AtaxiaVision.Pantallas
 
         private void GuardarVideoClick(object sender, RoutedEventArgs e)
         {
-
-            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
-
-            _videoController.GuardarVideo(nombreArchivo);
-
             GuardarVideoButton.IsEnabled = false;
-
-            Process.Start($"C:\\Users\\Public\\Videos\\{nombreArchivo}.avi");
+            _guardarVideoBackgroundWorker.RunWorkerAsync();
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
