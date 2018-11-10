@@ -48,8 +48,8 @@
             Content="Aguarde un momento" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
-            Margin="0,120,0,0" 
-            FontSize="40"
+            Margin="0,115,0,0" 
+            FontSize="30"
             />
         <Label 
             x:Name="PreguntaLabel"
@@ -63,7 +63,7 @@
             x:Name="Image" 
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Margin="672,178,10,0" 
+            Margin="673,162,10.6,0" 
             Width="334" 
             Height="250" 
             Source="/AtaxiaVision;component/Imagenes/KinectAV.png"/>
@@ -84,8 +84,8 @@
             Background="#FFF44336"
             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
             Width="640" 
-            Margin="10,178,366,0"
-            Height="298"
+            Margin="11,162,366.6,0"
+            Height="316"
             Visibility="Visible">
             <Grid>
                 <Grid.RowDefinitions>
@@ -155,10 +155,10 @@
         <TextBox
             Name="ComentarioRepeticionTextBox"
             Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-            Margin="10,500,10,0"
+            Margin="12,500,9.6,0"
             VerticalAlignment="Top"
             HorizontalAlignment="Center"
-            Height="124"
+            Height="114"
             AcceptsReturn="True"
             TextWrapping="Wrap"
             VerticalScrollBarVisibility="Auto"
@@ -199,10 +199,10 @@
                 Content="Guardar video" 
                 IsEnabled="True"
                 HorizontalAlignment="Center" 
-                Margin="672,425,10,0" 
+                Margin="674,425,9.6,0" 
                 VerticalAlignment="Top" 
                 FontSize="25" 
-                Width="334" Height="51" 
+                Width="334" Height="53" 
                 RenderTransformOrigin="0.511,0.804" Click="GuardarVideoClick"/>
     </Grid>
 </Window>
