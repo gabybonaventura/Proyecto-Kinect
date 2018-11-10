@@ -449,6 +449,7 @@
             //videoController.GuardarVideo(nombreArchivo);
             videoController.FinGrabacion = DateTime.Now.Ticks;
             arduinoController.CerrarPuerto();
+            Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second) - Ejercicio.Duracion;
             Confirmacion win = new Confirmacion(RespuestaToken, Sesion, Ejercicio, arduinoController.Tensiones, videoController);
             Console.WriteLine("cierra por acá");
             win.Show();
