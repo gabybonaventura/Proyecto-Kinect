@@ -33,12 +33,10 @@ namespace AtaxiaVision.Pantallas
     {
         private VideoController _videoController;
 
-        VideoCapture videocapture;
         int TotalFrames;
         int FrameInicioBoomerang;
         int FrameFinBoomerang;
         int CurrentFrameNo;
-        Mat CurrentFrame;
         int FPS;
         bool Adelante = true;
 
@@ -90,13 +88,9 @@ namespace AtaxiaVision.Pantallas
             ContentTokenLabel(Ejercicio.Token);
             ContentEjercicioLabel(Ejercicio.Ejercicio + "");
             
-            TotalFrames = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount));
-            FrameInicioBoomerang = TotalFrames - 51;
-            FrameFinBoomerang = TotalFrames - 1;
             int Duracion = (int)(new TimeSpan(_videoController.FinGrabacion - _videoController.InicioGrabacion)).TotalSeconds;
             Duracion = Duracion == 0 ? 1 : Duracion;
             FPS = _videoController.framesBmp.Count / Duracion;
-            CurrentFrame = new Mat();
             CurrentFrameNo = 0;
             PlayVideoBitMap();
         }
@@ -234,10 +228,6 @@ namespace AtaxiaVision.Pantallas
         }
         private async void PlayVideoBitMap()
         {
-            if (videocapture == null)
-            {
-                return;
-            }
             FrameFinBoomerang = _videoController.framesBmp.Count - 1;
             FrameInicioBoomerang = FrameFinBoomerang - 50;
             while (FrameInicioBoomerang < 0)
