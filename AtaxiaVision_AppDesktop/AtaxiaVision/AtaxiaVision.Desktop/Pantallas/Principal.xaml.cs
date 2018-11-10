@@ -110,7 +110,6 @@
         private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
 
         VideoController videoController;
-        List<System.Drawing.Bitmap> framesBmp;
 
         #region Metodos Delegates
         private void SetConsumoHombroArribaAbajo(int consumo)
@@ -195,7 +194,6 @@
             Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             arduinoController = new ArduinoController();
             videoController = new VideoController();
-            framesBmp = new List<System.Drawing.Bitmap>();
         }
 
         private void EstadoSnackBar(string mensaje)
@@ -309,7 +307,7 @@
 
                     videoController.InicioGrabacion = DateTime.Now.Ticks;
 
-                    framesBmp.Add(bmp);
+                    videoController.framesBmp.Add(bmp);
 
                     Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
 
@@ -448,13 +446,12 @@
                 this.sensor.Dispose();
             }
             string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
-            videoController.GuardarVideo(framesBmp, nombreArchivo);
+            //videoController.GuardarVideo(nombreArchivo);
+            videoController.FinGrabacion = DateTime.Now.Ticks;
             arduinoController.CerrarPuerto();
-            Confirmacion win = new Confirmacion(RespuestaToken, Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
+            Confirmacion win = new Confirmacion(RespuestaToken, Sesion, Ejercicio, arduinoController.Tensiones, videoController);
             Console.WriteLine("cierra por acá");
             win.Show();
-
-            framesBmp = new List<System.Drawing.Bitmap>();
 
             this.Close();
         }

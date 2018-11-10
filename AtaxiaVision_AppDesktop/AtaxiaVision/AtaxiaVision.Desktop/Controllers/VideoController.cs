@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace AtaxiaVision.Controllers
 {
-    class VideoController
+    public class VideoController
     {
         private long _inicioGrabacion;
+        public List<System.Drawing.Bitmap> framesBmp { get; set; }
 
         public long InicioGrabacion
         {
@@ -26,6 +27,7 @@ namespace AtaxiaVision.Controllers
         public VideoController()
         {
             _inicioGrabacion = 0;
+            framesBmp = new List<System.Drawing.Bitmap>();
         }
         public Bitmap ReduceBitmap(Bitmap original, int reducedWidth, int reducedHeight)
         {
@@ -40,9 +42,9 @@ namespace AtaxiaVision.Controllers
             return reduced;
         }
 
-        public void GuardarVideo(List<Bitmap> frames, string nombreArchivo)
+        public void GuardarVideo(string nombreArchivo)
         {
-            if(frames.Count != 0)
+            if(framesBmp.Count != 0)
             {
                 int width = 640;
                 int height = 480;
@@ -51,7 +53,7 @@ namespace AtaxiaVision.Controllers
                 int Duracion = (int)(new TimeSpan(FinGrabacion - InicioGrabacion)).TotalSeconds;
 
 
-                int framRate = frames.Count / Duracion;
+                int framRate = this.framesBmp.Count / Duracion;
 
                 // create instance of video writer
                 using (var vFWriter = new VideoFileWriter())
@@ -61,16 +63,17 @@ namespace AtaxiaVision.Controllers
 
 
                     //loop throught all images in the collection
-                    foreach (var frameBmp in frames)
+                    foreach (var frame in framesBmp)
                     {
                         //what's the current image data?
 
-                        var bmpReduced = ReduceBitmap(frameBmp, width, height);
+                        var bmpReduced = ReduceBitmap(frame, width, height);
 
                         vFWriter.WriteVideoFrame(bmpReduced);
                     }
                     vFWriter.Close();
                 }
+                this.framesBmp = new List<Bitmap>();
             }
         }
     }

@@ -20,6 +20,8 @@ using System.Windows.Shapes;
 using Emgu.CV;
 using System.Threading;
 using System.Windows.Interop;
+using AtaxiaVision.Controllers;
+using System.Drawing;
 
 namespace AtaxiaVision.Pantallas
 {
@@ -28,6 +30,8 @@ namespace AtaxiaVision.Pantallas
     /// </summary>
     public partial class Confirmacion : Window
     {
+        private VideoController _videoController;
+
         VideoCapture videocapture;
         int TotalFrames;
         int FrameInicioBoomerang;
@@ -68,9 +72,15 @@ namespace AtaxiaVision.Pantallas
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
 
-        public Confirmacion(RespuestaToken token,SesionViewModel sesionVM, RepeticionViewModel ejercicioVM, List<TensionServos> tensiones, string nombreArchivo)
+        public Confirmacion(RespuestaToken token,
+            SesionViewModel sesionVM, 
+            RepeticionViewModel ejercicioVM, 
+            List<TensionServos> tensiones, 
+            VideoController videoController)
         {
             InitializeComponent();
+            this._videoController = videoController;
+
             this.nombreArchivo = nombreArchivo;
             Sesion = sesionVM;
             Ejercicio = ejercicioVM;
@@ -84,11 +94,14 @@ namespace AtaxiaVision.Pantallas
             TotalFrames = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount));
             FrameInicioBoomerang = TotalFrames - 51;
             FrameFinBoomerang = TotalFrames - 1;
-            FPS = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
+            //FPS = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
+            int Duracion = (int)(new TimeSpan(_videoController.FinGrabacion - _videoController.InicioGrabacion)).TotalSeconds;
+
+            FPS = _videoController.framesBmp.Count / Duracion;
             CurrentFrame = new Mat();
             CurrentFrameNo = 0;
-            PlayVideo();
-
+            //PlayVideo();
+            PlayVideoBitMap();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -213,6 +226,64 @@ namespace AtaxiaVision.Pantallas
             Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
             win.Show();
             Close();
+        }
+        private async void PlayVideoBitMap()
+        {
+            if (videocapture == null)
+            {
+                return;
+            }
+            FrameFinBoomerang = _videoController.framesBmp.Count - 1;
+            FrameInicioBoomerang = FrameFinBoomerang - 50;
+            while (FrameInicioBoomerang < 0)
+                FrameInicioBoomerang += 5;
+            if (FrameInicioBoomerang >= FrameFinBoomerang)
+                return;
+            CurrentFrameNo = FrameInicioBoomerang;
+
+            try
+            {
+                while (true)
+                {
+                    Bitmap bmpFrameActual = _videoController.framesBmp[CurrentFrameNo];
+
+                    IntPtr handle = bmpFrameActual.GetHbitmap();
+                    try
+                    {
+                        ImageSource imageSource = Imaging
+                                    .CreateBitmapSourceFromHBitmap(handle,
+                                    IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        this.Image.Source = imageSource;
+                        if (CurrentFrameNo == FrameInicioBoomerang)
+                            Adelante = true;
+                        if (CurrentFrameNo == FrameFinBoomerang)
+                            Adelante = false;
+
+                        if (Adelante)
+                            CurrentFrameNo += 5;
+                        else
+                            CurrentFrameNo -= 5;
+                        await Task.Delay(1000 / FPS);
+                    }
+                    catch (Exception e)
+                    {
+
+                        throw;
+                    }
+                    finally
+                    {
+                        //Tengo que marcar el objeto como borrado, para que el garbage collector lo borre
+                        //Sino colapsa la memoria
+                        DeleteObject(handle);
+                        //bmpFrameActual.Dispose();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private async void PlayVideo()

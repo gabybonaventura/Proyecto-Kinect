@@ -3,9 +3,11 @@ using AtaxiaVision.Desktop.Pantallas;
 using AtaxiaVision.Helpers;
 using AtaxiaVision.Models;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Kinect;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -26,6 +28,24 @@ namespace AtaxiaVision.Pantallas
     /// </summary>
     public partial class SesionSoloBrazo : Window
     {
+        #region Properties
+        private const float RenderWidth = 640.0f;
+
+        private const float RenderHeight = 480.0f;
+
+        private KinectSensor sensor;
+
+        private DrawingGroup drawingGroup;
+
+        private DrawingImage imageSource;
+
+        private WriteableBitmap colorBitmap;
+
+        private byte[] colorPixels;
+
+        VideoController videoController;
+
+
         public List<int> Delays
         {
             get
@@ -56,6 +76,7 @@ namespace AtaxiaVision.Pantallas
 
         private BackgroundWorker ejercicioAutomaticoBG = new BackgroundWorker();
         private BackgroundWorker ejercicioManualBG = new BackgroundWorker();
+        #endregion Properties
 
         #region Delegates
         public delegate void SnackBarDelegate(string msg);
@@ -166,6 +187,8 @@ namespace AtaxiaVision.Pantallas
             Ejercicio = ejercicioVM;
             Ejercicio.Duracion = new TimeSpan(0, 0, 0);
             Token = token;
+            videoController = new VideoController();
+
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
@@ -197,6 +220,36 @@ namespace AtaxiaVision.Pantallas
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            this.drawingGroup = new DrawingGroup();
+            this.imageSource = new DrawingImage(this.drawingGroup);
+            Image.Source = this.imageSource;
+
+            foreach (var potentialSensor in KinectSensor.KinectSensors)
+            {
+                if (potentialSensor.Status == KinectStatus.Connected)
+                {
+                    this.sensor = potentialSensor;
+                    break;
+                }
+            }
+
+            if (null != this.sensor)
+            {
+                this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+                this.colorPixels = new byte[this.sensor.ColorStream.FramePixelDataLength];
+                this.colorBitmap = new WriteableBitmap(this.sensor.ColorStream.FrameWidth, this.sensor.ColorStream.FrameHeight, 96.0, 96.0, PixelFormats.Bgr32, null);
+
+                sensor.ColorFrameReady += Sensor_ColorFrameReady;
+                try
+                {
+                    this.sensor.Start();
+                }
+                catch (IOException)
+                {
+                    this.sensor = null;
+                }
+            }
+
             estadoLabelDelegate = new EstadoLabelDelegate(EstadoCard);
             repetecionesLabelDelegate = new RepetecionesLabelDelegate(MostrarRepeticiones);
             repeticionButtonDelegate = new RepeticionButtonDelegate(EstadoRepetecionesButton);
@@ -337,8 +390,9 @@ namespace AtaxiaVision.Pantallas
         private void IrAConfirmacion()
         {
             Ejercicio.FinalizoConExito = true;
-            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
-            Confirmacion win = new Confirmacion(Token, Sesion, Ejercicio, arduinoController.Tensiones, nombreArchivo);
+            //string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+            videoController.FinGrabacion = DateTime.Now.Ticks;
+            Confirmacion win = new Confirmacion(Token, Sesion, Ejercicio, arduinoController.Tensiones, videoController);
             win.Show();
             Close();
         }
@@ -347,5 +401,38 @@ namespace AtaxiaVision.Pantallas
         {
             IrAConfirmacion();
         }
+        private void Sensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            {
+
+                if (colorFrame != null)
+                {
+
+                    colorFrame.CopyPixelDataTo(this.colorPixels);
+
+                    System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
+
+
+                    videoController.InicioGrabacion = DateTime.Now.Ticks;
+
+                    videoController.framesBmp.Add(bmp);
+                    // Write the pixel data into our bitmap
+                    this.colorBitmap.WritePixels(
+                        new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight),
+                        this.colorPixels,
+                        this.colorBitmap.PixelWidth * sizeof(int),
+                        0);
+                }
+
+                using (DrawingContext dc = this.drawingGroup.Open())
+                {
+                    dc.DrawImage(this.colorBitmap, new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+
+                    this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+                }
+            }
+        }
+        
     }
 }
