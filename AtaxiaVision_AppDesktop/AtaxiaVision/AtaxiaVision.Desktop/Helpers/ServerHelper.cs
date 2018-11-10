@@ -233,6 +233,7 @@ namespace AtaxiaVision.Helpers
             // Ordenamos la lista
             ejerciciosServer.Ejercicios = ejerciciosServer
                 .Ejercicios
+                .Where(x => x.Nombre != "Reach")
                 .OrderBy(x => x.Dificultad)
                 .ToList();
             return ejerciciosServer;
