@@ -33,12 +33,10 @@ namespace AtaxiaVision.Pantallas
     {
         private VideoController _videoController;
 
-        VideoCapture videocapture;
         int TotalFrames;
         int FrameInicioBoomerang;
         int FrameFinBoomerang;
         int CurrentFrameNo;
-        Mat CurrentFrame;
         int FPS;
         bool Adelante = true;
 
@@ -68,6 +66,8 @@ namespace AtaxiaVision.Pantallas
         public FechaLabelDelegate fechaLabelDelegate;
         // Backgruond Worker
         private BackgroundWorker backgroundWorker = new BackgroundWorker();
+        private bool _reproducirBoomerang = true;
+        private BackgroundWorker _guardarVideoBackgroundWorker = new BackgroundWorker();
 
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
@@ -89,13 +89,9 @@ namespace AtaxiaVision.Pantallas
             ContentTokenLabel(Ejercicio.Token);
             ContentEjercicioLabel(Ejercicio.Ejercicio + "");
             
-            TotalFrames = Convert.ToInt32(videocapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount));
-            FrameInicioBoomerang = TotalFrames - 51;
-            FrameFinBoomerang = TotalFrames - 1;
             int Duracion = (int)(new TimeSpan(_videoController.FinGrabacion - _videoController.InicioGrabacion)).TotalSeconds;
             Duracion = Duracion == 0 ? 1 : Duracion;
             FPS = _videoController.framesBmp.Count / Duracion;
-            CurrentFrame = new Mat();
             CurrentFrameNo = 0;
             PlayVideoBitMap();
             ComentarioRepeticionTextBox.Focus();
@@ -104,6 +100,7 @@ namespace AtaxiaVision.Pantallas
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             TareasBackGruondWorker();
+            _guardarVideoBackgroundWorker.DoWork += GuardarVideoAsync;
             snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             siBtnDelegate = new SiBtnDelegate(EstadoSi);
@@ -115,6 +112,26 @@ namespace AtaxiaVision.Pantallas
             fechaLabelDelegate = new FechaLabelDelegate(FechaDesviosLabel);
             if (!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
+
+        }
+
+        private void GuardarVideoAsync(object sender, DoWorkEventArgs e)
+        {
+            SiBtn.Dispatcher.Invoke(siBtnDelegate, false);
+            NoBtn.Dispatcher.Invoke(noBtnDelegate, false);
+
+            ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
+
+            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
+
+            _videoController.GuardarVideo(nombreArchivo);
+
+            Process.Start($"C:\\Users\\Public\\Videos\\{nombreArchivo}.avi");
+
+            ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
+
+            SiBtn.Dispatcher.Invoke(siBtnDelegate, true);
+            NoBtn.Dispatcher.Invoke(noBtnDelegate, true);
 
         }
 
@@ -221,18 +238,22 @@ namespace AtaxiaVision.Pantallas
         private void SiBtn_Click(object sender, RoutedEventArgs e)
         {
             Ejercicio.Ejercicio++;
-            Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
-            win.Show();
+            if(RespuestaToken.Ejercicio.Nombre == "Reach")
+            {
+                Principal win = new Principal(RespuestaToken, Sesion, Ejercicio);
+                win.Show();
+            }
+            else
+            {
+                SesionSoloBrazo win = new SesionSoloBrazo(RespuestaToken, Sesion, Ejercicio);
+                win.Show();
+            }
             EnviarComentario();
             Close();
         }
 
         private async void PlayVideoBitMap()
         {
-            if (videocapture == null)
-            {
-                return;
-            }
             FrameFinBoomerang = _videoController.framesBmp.Count - 1;
             FrameInicioBoomerang = FrameFinBoomerang - 50;
             while (FrameInicioBoomerang < 0)
@@ -243,7 +264,7 @@ namespace AtaxiaVision.Pantallas
 
             try
             {
-                while (true)
+                while (_reproducirBoomerang)
                 {
                     Bitmap bmpFrameActual = _videoController.framesBmp[CurrentFrameNo];
 
@@ -308,14 +329,14 @@ namespace AtaxiaVision.Pantallas
 
         private void GuardarVideoClick(object sender, RoutedEventArgs e)
         {
-
-            string nombreArchivo = $"Paciente{Sesion.Token} {DateTime.Now.ToString("ddMMyyyy")}";
-
-            _videoController.GuardarVideo(nombreArchivo);
-
             GuardarVideoButton.IsEnabled = false;
+            _guardarVideoBackgroundWorker.RunWorkerAsync();
+        }
 
-            Process.Start($"C:\\Users\\Public\\Videos\\{nombreArchivo}.avi");
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            _reproducirBoomerang = false;
+            _videoController.framesBmp = null;
         }
 
         private void EnviarComentario()

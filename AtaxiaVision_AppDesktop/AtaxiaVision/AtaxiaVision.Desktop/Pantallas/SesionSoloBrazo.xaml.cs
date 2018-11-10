@@ -343,6 +343,8 @@ namespace AtaxiaVision.Pantallas
                 }
                 EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Fin de repeticiones.");
                 ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
+                videoController.FinGrabacion = DateTime.Now.Ticks;
+                _grabando = false;
             };
 
             if (!ejercicioAutomaticoBG.IsBusy)
@@ -370,6 +372,8 @@ namespace AtaxiaVision.Pantallas
                 {
                     RepeticionButton.Dispatcher.Invoke(repeticionButtonDelegate, false);
                     ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
+                    videoController.FinGrabacion = DateTime.Now.Ticks;
+                    _grabando = false;
                 }
             };
         }
@@ -443,7 +447,7 @@ namespace AtaxiaVision.Pantallas
 
         private void Cerrar()
         {
-            videoController.FinGrabacion = DateTime.Now.Ticks;
+            //videoController.FinGrabacion = DateTime.Now.Ticks;
             arduinoController.CerrarPuerto();
             if (null != this.sensor)
             {
