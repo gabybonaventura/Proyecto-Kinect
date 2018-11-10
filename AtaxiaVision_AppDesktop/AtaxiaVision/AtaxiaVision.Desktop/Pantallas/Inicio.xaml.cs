@@ -419,6 +419,7 @@ namespace AtaxiaVision.Desktop.Pantallas
             IniRehabBtn.Visibility = Visibility.Hidden;
             AtrasBtn.Visibility = Visibility.Hidden;
             SinConexionCard.Visibility = Visibility.Hidden;
+            EstadoRatingBar(Visibility.Hidden);
             EstadoGeneral("Ingrese los datos de la sesión");
             DNITextBox.Focus();
         }
