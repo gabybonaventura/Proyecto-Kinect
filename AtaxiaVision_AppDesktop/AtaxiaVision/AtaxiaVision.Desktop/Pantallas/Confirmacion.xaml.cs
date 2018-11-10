@@ -94,7 +94,6 @@ namespace AtaxiaVision.Pantallas
             FPS = _videoController.framesBmp.Count / Duracion;
             CurrentFrameNo = 0;
             PlayVideoBitMap();
-            ComentarioRepeticionTextBox.Focus();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -113,6 +112,7 @@ namespace AtaxiaVision.Pantallas
             if (!backgroundWorker.IsBusy)
                 backgroundWorker.RunWorkerAsync();
 
+            ComentarioRepeticionTextBox.Focus();
         }
 
         private void GuardarVideoAsync(object sender, DoWorkEventArgs e)
@@ -341,7 +341,7 @@ namespace AtaxiaVision.Pantallas
 
         private void EnviarComentario()
         {
-            if (String.IsNullOrEmpty(ComentarioRepeticionTextBox.Text))
+            if (!String.IsNullOrEmpty(ComentarioRepeticionTextBox.Text))
             {
                 ServerHelper.EnviarComentarioPaciente(
                     RespuestaToken.Paciente.PacienteId,
