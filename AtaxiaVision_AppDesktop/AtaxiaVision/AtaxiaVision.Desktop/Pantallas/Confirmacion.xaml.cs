@@ -33,7 +33,6 @@ namespace AtaxiaVision.Pantallas
     {
         private VideoController _videoController;
 
-        int TotalFrames;
         int FrameInicioBoomerang;
         int FrameFinBoomerang;
         int CurrentFrameNo;
@@ -93,12 +92,15 @@ namespace AtaxiaVision.Pantallas
             Duracion = Duracion == 0 ? 1 : Duracion;
             FPS = _videoController.framesBmp.Count / Duracion;
             CurrentFrameNo = 0;
-            PlayVideoBitMap();
+            if (_videoController != null && _videoController.framesBmp.Count > 0)
+                PlayVideoBitMap();
+            else
+                GuardarVideoButton.IsEnabled = false;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            TareasBackGruondWorker();
+            backgroundWorker.DoWork += TareasBackGruondWorker;
             _guardarVideoBackgroundWorker.DoWork += GuardarVideoAsync;
             snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
@@ -135,38 +137,35 @@ namespace AtaxiaVision.Pantallas
 
         }
 
-        private void TareasBackGruondWorker()
+        private void TareasBackGruondWorker(object sender, DoWorkEventArgs e)
         {
-            backgroundWorker.DoWork += (s, e) =>
-            {
                 // Muestro la barra de cargando
-                ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
+            ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 
-                //Tensiones = TensionHelper.TestListaTension(4000);
-                //Tensiones = TensionHelper.TestListaTensionManual();
-                Ejercicio.Desvios = TensionHelper.CalcularDesvios(Tensiones);
-                DesviosLabel.Dispatcher.Invoke(desviosLabelDelegate, Ejercicio.Desvios + "");
-                var status = ServerHelper.EnviarRepeticion(Ejercicio);
-                if (status == ServerHelper.SERVER_ERROR)
-                {
-                    Snackbar.Dispatcher.Invoke(snackBarDelegate, "No se pudo sincornizar los datos. Vamos a volver a intentar luego.");
-                }
-                if (Ejercicio.FinalizoConExito)
-                {
-                    ResultadoLabel.Dispatcher.Invoke(resultadoLabelDelegate, "¡Ejercicio finalizado con éxito!");
-                    PreguntaLabel.Dispatcher.Invoke(preguntaLabelDelegate, "¿Desea repetir el ejercicio?");
-                }
-                else
-                {
-                    ResultadoLabel.Dispatcher.Invoke(resultadoLabelDelegate, "Ejercicio no finalizado");
-                    PreguntaLabel.Dispatcher.Invoke(preguntaLabelDelegate, "¿Desea repetir el ejercicio?");
-                }
-                EjercicioCard.Dispatcher.Invoke(ejercicioCardDelegate, Visibility.Visible);
-                SiBtn.Dispatcher.Invoke(siBtnDelegate, true);
-                NoBtn.Dispatcher.Invoke(noBtnDelegate, true);
-                FechaLabel.Dispatcher.Invoke(fechaLabelDelegate, DateTime.Now);
-                ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
-            };
+            //Tensiones = TensionHelper.TestListaTension(4000);
+            //Tensiones = TensionHelper.TestListaTensionManual();
+            Ejercicio.Desvios = TensionHelper.CalcularDesvios(Tensiones);
+            DesviosLabel.Dispatcher.Invoke(desviosLabelDelegate, Ejercicio.Desvios + "");
+            var status = ServerHelper.EnviarRepeticion(Ejercicio);
+            if (status == ServerHelper.SERVER_ERROR)
+            {
+                Snackbar.Dispatcher.Invoke(snackBarDelegate, "No se pudo sincornizar los datos. Vamos a volver a intentar luego.");
+            }
+            if (Ejercicio.FinalizoConExito)
+            {
+                ResultadoLabel.Dispatcher.Invoke(resultadoLabelDelegate, "¡Ejercicio finalizado con éxito!");
+                PreguntaLabel.Dispatcher.Invoke(preguntaLabelDelegate, "¿Desea repetir el ejercicio?");
+            }
+            else
+            {
+                ResultadoLabel.Dispatcher.Invoke(resultadoLabelDelegate, "Ejercicio no finalizado");
+                PreguntaLabel.Dispatcher.Invoke(preguntaLabelDelegate, "¿Desea repetir el ejercicio?");
+            }
+            EjercicioCard.Dispatcher.Invoke(ejercicioCardDelegate, Visibility.Visible);
+            SiBtn.Dispatcher.Invoke(siBtnDelegate, true);
+            NoBtn.Dispatcher.Invoke(noBtnDelegate, true);
+            FechaLabel.Dispatcher.Invoke(fechaLabelDelegate, DateTime.Now);
+            ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);   
         }
 
         private void EstadoSnackBar(string mensaje)
