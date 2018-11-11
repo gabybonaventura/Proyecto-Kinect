@@ -188,11 +188,25 @@ namespace AtaxiaVision.Desktop.Pantallas
         public void EstadoTokenInvalidoTextBlock(Visibility visibility)
         {
             TokenInvalidoTextBlock.Visibility = visibility;
+            SegundoTokenInvalidoTextBlock.Visibility = visibility;
+            if(visibility == Visibility.Visible)
+            {
+                SinConexiónTextBlock.Visibility = Visibility.Hidden;
+                SegundoSinConexionTextBlock.Visibility = Visibility.Hidden;
+                IniRehabBtn.Visibility = Visibility.Hidden;
+            }
         }
 
         public void EstadoSinConexiónTextBlock(Visibility visibility)
         {
             SinConexiónTextBlock.Visibility = visibility;
+            SegundoSinConexionTextBlock.Visibility = visibility;
+            IniRehabBtn.Visibility = visibility;
+            if (visibility == Visibility.Visible)
+            {
+                TokenInvalidoTextBlock.Visibility = Visibility.Hidden; 
+                SegundoTokenInvalidoTextBlock.Visibility = Visibility.Hidden;
+            }
         }
 
         private void EstadoAtrasBtn(Visibility visibility)
@@ -335,7 +349,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_INVALIDO:
-                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token inválido. Vas a poder utilizar la Aplicación sin problemas.");
+                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Token inválido. Revisa los datos.");
                         DificultadRatingBar.Dispatcher.Invoke(ratingBarDelegate, Visibility.Hidden);
                         TokenInvalidoTextBlock.Dispatcher.Invoke(tokenInvalidoTextBlockDelegate, Visibility.Visible);
                         SinConexionCard.Dispatcher.Invoke(sinConexionCardDelegate, Visibility.Visible);
@@ -356,11 +370,11 @@ namespace AtaxiaVision.Desktop.Pantallas
                         DificultadRatingBar.Dispatcher.Invoke(dificultadEjercicioDelegate, result.Ejercicio.Dificultad);
                         DificultadRatingBar.Dispatcher.Invoke(ratingBarDelegate, Visibility.Visible);
                         RepeticionesEjercicioLabel.Dispatcher.Invoke(repeticionesEjercicioDelegate, result.Repeticiones);
+                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                         break;
                     default:
                         break;
                 }                
-                IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                 AtrasBtn.Dispatcher.Invoke(atrasBtnDelegate, Visibility.Visible);
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
             };
@@ -378,7 +392,7 @@ namespace AtaxiaVision.Desktop.Pantallas
         private void DNITextBox_KeyDown(object sender, KeyEventArgs e)
         {
             FlagFocusSesionTextBox = true;
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && AtrasBtn.Visibility == Visibility.Hidden)
             {
                 ValidarToken();
             }
@@ -386,7 +400,7 @@ namespace AtaxiaVision.Desktop.Pantallas
 
         private void SesionTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && AtrasBtn.Visibility == Visibility.Hidden)
             {
                 ValidarToken();
             }
