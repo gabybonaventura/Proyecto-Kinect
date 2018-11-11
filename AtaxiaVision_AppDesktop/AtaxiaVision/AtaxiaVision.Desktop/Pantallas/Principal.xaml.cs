@@ -106,47 +106,47 @@
         public ConsumoCodoArribaAbajo consumoCodoArribaAbajoDelegate;
         public delegate void ConsumoCodoDerechaIzquierda(int consumo);
         public ConsumoCodoDerechaIzquierda consumoCodoDerechaIzquierdaDelegate;
+        public delegate void ExistenciaKinectExoesqueletoDelegate();
+        public ExistenciaKinectExoesqueletoDelegate existenciaKinectExoesqueletoDelegate;
 
         //Para trabajar en background
         private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
+        private BackgroundWorker ExistenciaKinectExoesqueletoBackgroundWorker = new BackgroundWorker();
 
         VideoController videoController;
 
         #region Metodos Delegates
         private void SetConsumoHombroArribaAbajo(int consumo)
         {
-            ConsumoHombroArribaAbajoLabel.Foreground = CalcularColor(consumo);
-            ConsumoHombroArribaAbajoLabel.Content = consumo + " mA";
+            ConsumoHombroArribaAbajoLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
+            if (consumo > 0)
+                ConsumoHombroArribaAbajoLabel.Content = consumo + " mA";
+            else
+                ConsumoHombroArribaAbajoLabel.Content = "-";
         }
         private void SetConsumoHombroAdelanteAtras(int consumo)
         {
-            ConsumoHombroAdelanteAtrasLabel.Foreground = CalcularColor(consumo);
-            ConsumoHombroAdelanteAtrasLabel.Content = consumo + " mA";
+            ConsumoHombroAdelanteAtrasLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
+            if (consumo > 0)
+                ConsumoHombroAdelanteAtrasLabel.Content = consumo + " mA";
+            else
+                ConsumoHombroAdelanteAtrasLabel.Content = "-";
         }
         private void SetConsumoCodoArribaAbajo(int consumo)
         {
-            ConsumoCodoArribaAbajoLabel.Foreground = CalcularColor(consumo);
-            ConsumoCodoArribaAbajoLabel.Content = consumo + " mA";
+            ConsumoCodoArribaAbajoLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
+            if (consumo > 0)
+                ConsumoCodoArribaAbajoLabel.Content = consumo + " mA";
+            else
+                ConsumoCodoArribaAbajoLabel.Content = "-";
         }
         private void SetConsumoCodoDerechaIzquierda(int consumo)
         {
-            ConsumoCodoDerechaIzquierdaLabel.Foreground = CalcularColor(consumo);
-            ConsumoCodoDerechaIzquierdaLabel.Content = consumo + " mA";
-        }
-
-        private Brush CalcularColor(int c)
-        {
-            if (c < 100)
-                // Azul
-                return new SolidColorBrush(Color.FromRgb(29, 22, 182));
-            if (c < 200)
-                // Verde
-                return new SolidColorBrush(Color.FromRgb(22,182,51));
-            if (c < 500)
-                // Naranja
-                return new SolidColorBrush(Color.FromRgb(226, 107, 25));
-            // Rojo
-            return new SolidColorBrush(Color.FromRgb(255, 0, 0));
+            ConsumoCodoDerechaIzquierdaLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
+            if (consumo > 0)
+                ConsumoCodoDerechaIzquierdaLabel.Content = consumo + " mA";
+            else
+                ConsumoCodoDerechaIzquierdaLabel.Content = "-";
         }
         #endregion
 
@@ -156,11 +156,12 @@
             TensionesServosBackgroundWorker.DoWork += (s, e) =>
             {
                 while (true)
-                {   
-                    int consumoHombroArribaAbajo = 20;
-                    int consumoHombroAdelanteAtras = 100;
-                    int consumoCodoArribaAbajo = 205;
-                    int consumoCodoDerechaIzquierda = 550;
+                {
+                    Thread.Sleep(1000);
+                    int consumoHombroArribaAbajo = -1;
+                    int consumoHombroAdelanteAtras = -1;
+                    int consumoCodoArribaAbajo = -1;
+                    int consumoCodoDerechaIzquierda = -1;
                     if (arduinoController.UltimaTension != null)
                     {
                         consumoHombroArribaAbajo = arduinoController.UltimaTension.HombroArribaAbajo;
@@ -172,11 +173,43 @@
                     ConsumoHombroAdelanteAtrasLabel.Dispatcher.Invoke(consumoHombroAdelanteAtrasDelegate, consumoHombroAdelanteAtras);
                     ConsumoCodoArribaAbajoLabel.Dispatcher.Invoke(consumoCodoArribaAbajoDelegate, consumoCodoArribaAbajo);
                     ConsumoCodoDerechaIzquierdaLabel.Dispatcher.Invoke(consumoCodoDerechaIzquierdaDelegate, consumoCodoDerechaIzquierda);
-                    Thread.Sleep(1000);
                 }
             };
             if (!TensionesServosBackgroundWorker.IsBusy)
                 TensionesServosBackgroundWorker.RunWorkerAsync();
+        }
+
+        private void ReviarFaltaDeKinectOExoesqueletoBG(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                Thread.Sleep(1000);
+                ConsumoCodoDerechaIzquierdaLabel.Dispatcher.Invoke(existenciaKinectExoesqueletoDelegate);
+            }
+        }
+
+        private void ReviarFaltaDeKinectOExoesqueleto()
+        {
+            // No hay kinect
+            if (sensor == null)
+            {
+                Image.Source = new BitmapImage(
+                    new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
+                InformarFinDeEjercicio("Se perdió la conexión con la Kinect, Por favor finalizar el ejercicio.");
+            }
+            // No hay exoesqueleto
+            if (arduinoController == null || arduinoController.UltimaTension == null)
+            {
+                InformarFinDeEjercicio("Se perdió la conexión con el exoesqueleto, Por favor finalizar el ejercicio.");
+            }
+        }
+
+        private void InformarFinDeEjercicio(string msj)
+        {
+            IrAConfirmacion.Visibility = Visibility.Visible;
+            ConfirmacionButton.Visibility = Visibility.Hidden;
+            PacienteCard.Visibility = Visibility.Visible;
+            EstadoLabel.Content = msj;
         }
         #endregion
 
@@ -270,13 +303,13 @@
                     this.sensor.Dispose();
                 }
                 arduinoController.CerrarPuerto();
-                var win = new Inicio("Kinect desconectada, para el ejercicio de reach se requiere una. Conéctela e intente nuevamente");
+                var win = new Inicio("Kinect no detectada, para el ejercicio de reach se requiere una. Conéctela e intente nuevamente");
                 win.Show();
                 Close();
             }
             else
             {
-                if(!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
+                if (!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
                 {
                     if (null != this.sensor)
                     {
@@ -284,13 +317,17 @@
                         this.sensor.Dispose();
                     }
                     arduinoController.CerrarPuerto();
-                    var win = new Inicio("Arduino desconectada, conéctela e intente nuevamente");
+                    var win = new Inicio("Exoesqueleto no detectado. No se puede ejecutar el ejecicio sin el mismo.");
                     win.Show();
                     Close();
                 }
             }
 
             TensionesServosBG();
+            //ReviarFaltaDeKinectOExoesqueleto();
+            existenciaKinectExoesqueletoDelegate = new ExistenciaKinectExoesqueletoDelegate(ReviarFaltaDeKinectOExoesqueleto);
+            ExistenciaKinectExoesqueletoBackgroundWorker.DoWork += ReviarFaltaDeKinectOExoesqueletoBG;
+            ExistenciaKinectExoesqueletoBackgroundWorker.RunWorkerAsync();
         }
 
         private void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
@@ -462,7 +499,7 @@
             Cerrar();
         }
 
-        private void Cerrar()
+        private void Cerrar(string msj = null)
         {
             if (null != this.sensor)
             {
@@ -614,6 +651,11 @@
             {
                CalcularAngulosFinales(puntos);
             }
+        }
+
+        private void IrAConfirmacion_Click(object sender, RoutedEventArgs e)
+        {
+            Cerrar();
         }
     }
 }

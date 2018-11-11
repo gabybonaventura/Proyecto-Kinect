@@ -179,11 +179,14 @@ namespace AtaxiaVision.Pantallas
             var bg = ArduinoActivoBackgroundWorker;
             bg.DoWork += (s, e) =>
             {
-                Thread.Sleep(1000);
-                if (arduinoController == null || arduinoController.UltimaTension == null)
+                while (true)
                 {
-                    Snackbar.Dispatcher.Invoke(snackBarDelegate, "Exoesqueleto no detectado.");
-                    Snackbar.Dispatcher.Invoke(seCortoExoesqueletoDelegate, null);
+                    Thread.Sleep(1000);
+                    if (arduinoController == null || arduinoController.UltimaTension == null)
+                    {
+                        Snackbar.Dispatcher.Invoke(snackBarDelegate, "Exoesqueleto no detectado.");
+                        Snackbar.Dispatcher.Invoke(seCortoExoesqueletoDelegate, null);
+                    }
                 }
             };
             if (!bg.IsBusy)

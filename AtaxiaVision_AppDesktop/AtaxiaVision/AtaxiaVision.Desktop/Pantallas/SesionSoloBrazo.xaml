@@ -175,7 +175,7 @@
             Width="183" 
             />
         <Label Name="ConsumoHombroArribaAbajoLabel"
-            Content="200 mA"
+            Content="-"
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
@@ -191,7 +191,7 @@
             Width="164" 
             />
         <Label Name="ConsumoHombroAdelanteAtrasLabel"
-            Content="200 mA" 
+            Content="-" 
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
@@ -207,7 +207,7 @@
             Width="157" 
             />
         <Label Name="ConsumoCodoArribaAbajoLabel"
-            Content="200 mA" 
+            Content="-" 
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
@@ -223,7 +223,7 @@
             Width="157" 
             />
         <Label Name="ConsumoCodoDerechaIzquierdaLabel"
-            Content="200 mA" 
+            Content="-" 
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"

@@ -68,6 +68,18 @@
             FontSize="30"
             Margin="188,130,188,0"/>
         <Button 
+            x:Name="IrAConfirmacion" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Height="100" 
+            Width="640" 
+            IsEnabled="True"
+            Visibility="Hidden"
+            Click="IrAConfirmacion_Click" 
+            Content="Finalizar ejercicio" 
+            FontSize="30"
+            Margin="188,130,188,0"/>
+        <Button 
             x:Name="CalcularButton" 
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
@@ -96,7 +108,7 @@
             Width="183" 
             />
         <Label Name="ConsumoHombroArribaAbajoLabel"
-            Content="200 mA"
+            Content="-"
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
@@ -112,7 +124,7 @@
             Width="183" 
             />
         <Label Name="ConsumoHombroAdelanteAtrasLabel"
-            Content="200 mA" 
+            Content="-" 
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
@@ -128,7 +140,7 @@
             Width="183" 
             />
         <Label Name="ConsumoCodoArribaAbajoLabel"
-            Content="200 mA" 
+            Content="-" 
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
@@ -144,13 +156,36 @@
             Width="183" 
             />
         <Label Name="ConsumoCodoDerechaIzquierdaLabel"
-            Content="200 mA" 
+            Content="-" 
             FontSize="30"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"
             Margin="0,684,852,0" 
             Width="164" 
             />
+        <materialDesign:Card
+            x:Name="PacienteCard"
+            Background="#FFF44336"
+            Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" 
+            Margin="10,692,12,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Visibility="Hidden"
+            Height="64" Width="994">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label 
+                    x:Name="EstadoLabel"
+                    Content="-"
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Margin="10"
+                    FontSize="25" 
+                    Foreground="#FFF"/>
+            </Grid>
+        </materialDesign:Card>
         <!-- Snackbar -->
         <materialDesign:Snackbar
             x:Name="Snackbar"
