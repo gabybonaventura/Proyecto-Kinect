@@ -11,6 +11,9 @@ namespace AtaxiaVision.Helpers
     {
         public static Brush CalcularColor(int c)
         {
+            if (c < 0)
+                // Negro
+                return new SolidColorBrush(Color.FromRgb(0,0,0));
             if (c < 100)
                 // Azul
                 return new SolidColorBrush(Color.FromRgb(29, 22, 182));

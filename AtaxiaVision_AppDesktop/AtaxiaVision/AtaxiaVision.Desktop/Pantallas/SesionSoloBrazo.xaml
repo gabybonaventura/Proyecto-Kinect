@@ -83,6 +83,17 @@
             FontSize="30"
             Margin="10,144,671,0"
             Click="IrAConfirmacion_Click"/>
+        <Button 
+            x:Name="SinExoesqueletoButton" 
+            Content="Reportes" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Height="90" 
+            Width="335" 
+            Visibility="Hidden"
+            FontSize="30"
+            Margin="10,144,671,0"
+            Click="SinExoesqueletoButton_Click"/>
         <Label 
             Content="Repeticiones" 
             FontSize="25"

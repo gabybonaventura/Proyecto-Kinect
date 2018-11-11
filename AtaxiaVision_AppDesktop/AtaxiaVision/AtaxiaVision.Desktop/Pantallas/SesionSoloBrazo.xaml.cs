@@ -91,6 +91,8 @@ namespace AtaxiaVision.Pantallas
         public ConsumoCodoDerechaIzquierda consumoCodoDerechaIzquierdaDelegate;
         public delegate void ReportesButtonDelegate(Visibility visibility);
         public ReportesButtonDelegate reportesButtonDelegate;
+        public delegate void SeCortoExoesqueletoDelegate();
+        public SeCortoExoesqueletoDelegate seCortoExoesqueletoDelegate;
 
         private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
         private BackgroundWorker ArduinoActivoBackgroundWorker = new BackgroundWorker();
@@ -107,22 +109,34 @@ namespace AtaxiaVision.Pantallas
         private void SetConsumoHombroArribaAbajo(int consumo)
         {
             ConsumoHombroArribaAbajoLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
-            ConsumoHombroArribaAbajoLabel.Content = consumo + " mA";
+            if (consumo > 0)
+                ConsumoHombroArribaAbajoLabel.Content = consumo + " mA";
+            else
+                ConsumoHombroArribaAbajoLabel.Content = "-";
         }
         private void SetConsumoHombroAdelanteAtras(int consumo)
         {
             ConsumoHombroAdelanteAtrasLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
-            ConsumoHombroAdelanteAtrasLabel.Content = consumo + " mA";
+            if (consumo > 0)
+                ConsumoHombroAdelanteAtrasLabel.Content = consumo + " mA";
+            else
+                ConsumoHombroAdelanteAtrasLabel.Content = "-";
         }
         private void SetConsumoCodoArribaAbajo(int consumo)
         {
             ConsumoCodoArribaAbajoLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
-            ConsumoCodoArribaAbajoLabel.Content = consumo + " mA";
+            if (consumo > 0)
+                ConsumoCodoArribaAbajoLabel.Content = consumo + " mA";
+            else
+                ConsumoCodoArribaAbajoLabel.Content = "-";
         }
         private void SetConsumoCodoDerechaIzquierda(int consumo)
         {
             ConsumoCodoDerechaIzquierdaLabel.Foreground = ArduinoHelper.CalcularColor(consumo);
-            ConsumoCodoDerechaIzquierdaLabel.Content = consumo + " mA";
+            if (consumo > 0)
+                ConsumoCodoDerechaIzquierdaLabel.Content = consumo + " mA";
+            else
+                ConsumoCodoDerechaIzquierdaLabel.Content = "-";
         }
         private void MostrarConsumosDelegates()
         {
@@ -131,10 +145,10 @@ namespace AtaxiaVision.Pantallas
             {
                 tensiones = new TensionServos()
                 {
-                    CodoArribaAbajo = 20,
-                    CodoIzquierdaDerecha = 105,
-                    HombroAdelanteAtras = 215,
-                    HombroArribaAbajo = 545
+                    CodoArribaAbajo = -1,
+                    CodoIzquierdaDerecha = -1,
+                    HombroAdelanteAtras = -1,
+                    HombroArribaAbajo = -1
                 };
             }
             else
@@ -167,10 +181,22 @@ namespace AtaxiaVision.Pantallas
             {
                 Thread.Sleep(1000);
                 if (arduinoController == null || arduinoController.UltimaTension == null)
+                {
                     Snackbar.Dispatcher.Invoke(snackBarDelegate, "Exoesqueleto no detectado.");
+                    Snackbar.Dispatcher.Invoke(seCortoExoesqueletoDelegate, null);
+                }
             };
             if (!bg.IsBusy)
                 bg.RunWorkerAsync();
+        }
+
+        private void DehabilitarBotones()
+        {
+            DelayComboBox.IsEnabled = false;
+            ModoRepeticionComboBox.IsEnabled = false;
+            IniciarButton.Visibility = Visibility.Hidden;
+            SinExoesqueletoButton.Visibility = Visibility.Visible;
+            EstadoLabel.Content = "Se detecto la falta de exoesqueleto. Por favor finalizar el ejercicio.";
         }
 
         private void VisibilidadReportesButton(Visibility visibility)
@@ -190,15 +216,11 @@ namespace AtaxiaVision.Pantallas
             Token = token;
             arduinoController = new ArduinoController();
             videoController = new VideoController();
-
         }
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
         {
-            Cerrar();
-            var win = new Inicio();
-            win.Show();
-            Close();
+            IrAConfirmacion();
         }
 
         private void LlenarComboBoxs()
@@ -258,7 +280,7 @@ namespace AtaxiaVision.Pantallas
                     new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
                 EstadoSnackBar("Kinect no lista.");
             }
-
+            seCortoExoesqueletoDelegate = new SeCortoExoesqueletoDelegate(DehabilitarBotones);
             estadoLabelDelegate = new EstadoLabelDelegate(EstadoCard);
             repetecionesLabelDelegate = new RepetecionesLabelDelegate(MostrarRepeticiones);
             repeticionButtonDelegate = new RepeticionButtonDelegate(EstadoRepetecionesButton);
@@ -275,10 +297,11 @@ namespace AtaxiaVision.Pantallas
             LlenarComboBoxs();          // Lleno los combo boxs
             MostrarRepeticiones(0);      // Lleno el campo de repeticiones
             //Si no se logra iniciar el arduino se vuelve a inicio
-            if(!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
+            //arduinoController.Inicializar(ArduinoController.BRAZO_GB);
+            if (!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
             {
                 Cerrar();
-                var win = new Inicio("Arduino desconectada, conéctela e intente nuevamente");
+                var win = new Inicio("Exoesqueleto no detectado. No se puede ejecutar el ejecicio sin el mismo.");
                 win.Show();
                 Close();
             }
@@ -289,10 +312,7 @@ namespace AtaxiaVision.Pantallas
         {
             if (e.Key == Key.Escape)
             {
-                Cerrar();
-                var win = new Inicio();
-                win.Show();
-                Close();
+                IrAConfirmacion();
             }
         }
 
@@ -356,7 +376,8 @@ namespace AtaxiaVision.Pantallas
                     EjecutarRepeticion(i + 1);
                 }
                 EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Fin de repeticiones.");
-                ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
+                if (arduinoController != null && arduinoController.UltimaTension != null)
+                    ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
                 videoController.FinGrabacion = DateTime.Now.Ticks;
                 _grabando = false;
             };
@@ -367,7 +388,6 @@ namespace AtaxiaVision.Pantallas
 
         private void EjecutarEjercicioManual()
         {
-
             if (!ejercicioManualBG.IsBusy)
                 ejercicioManualBG.RunWorkerAsync();
         }
@@ -385,7 +405,8 @@ namespace AtaxiaVision.Pantallas
                 else
                 {
                     RepeticionButton.Dispatcher.Invoke(repeticionButtonDelegate, false);
-                    ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
+                    if (arduinoController != null && arduinoController.UltimaTension != null)
+                        ReportesButton.Dispatcher.Invoke(reportesButtonDelegate, Visibility.Visible);
                     videoController.FinGrabacion = DateTime.Now.Ticks;
                     _grabando = false;
                 }
@@ -394,26 +415,29 @@ namespace AtaxiaVision.Pantallas
 
         private void EjecutarRepeticion(int i)
         {
-            TimeSpan inicio = new TimeSpan(DateTime.Now.Hour,DateTime.Now.Minute,DateTime.Now.Second);
-            RepeticionesLabel.Dispatcher.Invoke(repetecionesLabelDelegate, (i));
-            EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Inicio repetición: " + (i));
-            Thread.Sleep(2 * 1000);
-            arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoInicial));
-            EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Inicial [" + Token.Ejercicio.EstadoInicial + "]");
-            Thread.Sleep(DelaySeg * 1000);
-            EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Final [" + Token.Ejercicio.EstadoFinal + "]");
-            arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoFinal));
-            Thread.Sleep(DelaySeg * 1000);
-            TimeSpan fin = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            TimeSpan duracion = fin - inicio;
-            Ejercicio.Duracion += duracion;
+            if (arduinoController != null && arduinoController.UltimaTension != null)
+            {
+                TimeSpan inicio = new TimeSpan(DateTime.Now.Hour,DateTime.Now.Minute,DateTime.Now.Second);
+                RepeticionesLabel.Dispatcher.Invoke(repetecionesLabelDelegate, (i));
+                EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Inicio repetición: " + (i));
+                Thread.Sleep(2 * 1000);
+                arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoInicial));
+                EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Inicial");
+                Thread.Sleep(DelaySeg * 1000);
+                EstadoLabel.Dispatcher.Invoke(estadoLabelDelegate, "Posicionando Estado Final");
+                arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(Token.Ejercicio.EstadoFinal));
+                Thread.Sleep(DelaySeg * 1000);
+                TimeSpan fin = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                TimeSpan duracion = fin - inicio;
+                Ejercicio.Duracion += duracion;
+            }
         }
 
-        private void IrAConfirmacion()
+        private void IrAConfirmacion(bool finConExito = false)
         {
             Cerrar();
 
-            Ejercicio.FinalizoConExito = true;
+            Ejercicio.FinalizoConExito = finConExito;
             
             Confirmacion win = new Confirmacion(Token, Sesion, Ejercicio, arduinoController.Tensiones, videoController);
             win.Show();
@@ -422,8 +446,9 @@ namespace AtaxiaVision.Pantallas
 
         private void IrAConfirmacion_Click(object sender, RoutedEventArgs e)
         {
-            IrAConfirmacion();
+            IrAConfirmacion(true);
         }
+
         private void Sensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
             using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
@@ -469,6 +494,10 @@ namespace AtaxiaVision.Pantallas
                 this.sensor.Dispose();
             }
         }
-        
+
+        private void SinExoesqueletoButton_Click(object sender, RoutedEventArgs e)
+        {
+            IrAConfirmacion();
+        }
     }
 }
