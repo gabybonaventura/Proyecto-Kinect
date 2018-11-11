@@ -18,6 +18,7 @@
     using System.Windows.Input;
     using System.ComponentModel;
     using System.Threading;
+    using AtaxiaVision.Desktop.Pantallas;
 
     /// <summary>
     /// Interaction logic for Principal.xaml
@@ -265,7 +266,18 @@
                 EstadoSnackBar("Kinect no lista.");
             }
 
-            arduinoController.Inicializar();
+            if (!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
+            {
+                if (null != this.sensor)
+                {
+                    this.sensor.Stop();
+                    this.sensor.Dispose();
+                }
+                arduinoController.CerrarPuerto();
+                var win = new Inicio("Arduino desconectada, conéctela e intente nuevamente");
+                win.Show();
+                Close();
+            }
             TensionesServosBG();
         }
 
@@ -451,7 +463,6 @@
             arduinoController.CerrarPuerto();
             Ejercicio.Duracion = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second) - Ejercicio.Duracion;
             Confirmacion win = new Confirmacion(RespuestaToken, Sesion, Ejercicio, arduinoController.Tensiones, videoController);
-            Console.WriteLine("cierra por acá");
             win.Show();
 
             this.Close();

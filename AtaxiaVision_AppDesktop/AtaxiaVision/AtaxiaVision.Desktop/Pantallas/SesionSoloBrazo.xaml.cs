@@ -65,7 +65,7 @@ namespace AtaxiaVision.Pantallas
         public int Repeticiones { get; set; }
         private RepeticionViewModel Ejercicio { get; set; }
         private SesionViewModel Sesion { get; set; }
-        ArduinoController arduinoController = new ArduinoController();
+        ArduinoController arduinoController;
 
         public delegate void EstadoLabelDelegate(string nombre);
         public EstadoLabelDelegate estadoLabelDelegate;
@@ -188,6 +188,7 @@ namespace AtaxiaVision.Pantallas
             Ejercicio = ejercicioVM;
             Ejercicio.Duracion = new TimeSpan(0, 0, 0);
             Token = token;
+            arduinoController = new ArduinoController();
             videoController = new VideoController();
 
         }
@@ -273,7 +274,14 @@ namespace AtaxiaVision.Pantallas
 
             LlenarComboBoxs();          // Lleno los combo boxs
             MostrarRepeticiones(0);      // Lleno el campo de repeticiones
-            arduinoController.Inicializar(ArduinoController.BRAZO_GB);
+            //Si no se logra iniciar el arduino se vuelve a inicio
+            if(!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
+            {
+                Cerrar();
+                var win = new Inicio("Arduino desconectada, conéctela e intente nuevamente");
+                win.Show();
+                Close();
+            }
             IniciarButton.Focus();
         }
 

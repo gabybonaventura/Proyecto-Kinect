@@ -39,7 +39,7 @@ namespace AtaxiaVision.Controllers
             _intentos = 0;
         }
 
-        public void Inicializar(string inicio = BRAZO_GB)
+        public bool Inicializar(string inicio = BRAZO_GB)
         {
             try
             {
@@ -49,11 +49,12 @@ namespace AtaxiaVision.Controllers
                 {
                     _serialPort.Write(inicio);
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return;
+                return false;
             }
         }
 

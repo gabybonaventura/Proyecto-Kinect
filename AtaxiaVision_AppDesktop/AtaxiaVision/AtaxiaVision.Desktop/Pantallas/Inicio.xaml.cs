@@ -109,6 +109,12 @@ namespace AtaxiaVision.Desktop.Pantallas
             // Test de grabacion json
             //ServerHelper.TestLeerArchivo();
         }
+        public Inicio(string mensaje)
+        {
+            InitializeComponent();
+            EstadoSnackBar(mensaje);
+            SincronizarDatos();
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
