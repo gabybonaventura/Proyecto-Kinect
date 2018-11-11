@@ -261,23 +261,35 @@
 
             if (null == this.sensor)
             {
-                Image.Source = new BitmapImage(
-                    new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
-                EstadoSnackBar("Kinect no lista.");
-            }
-
-            if (!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
-            {
+                //Image.Source = new BitmapImage(
+                //    new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
+                //EstadoSnackBar("Kinect no lista.");
                 if (null != this.sensor)
                 {
                     this.sensor.Stop();
                     this.sensor.Dispose();
                 }
                 arduinoController.CerrarPuerto();
-                var win = new Inicio("Arduino desconectada, conéctela e intente nuevamente");
+                var win = new Inicio("Kinect desconectada, para el ejercicio de reach se requiere una. Conéctela e intente nuevamente");
                 win.Show();
                 Close();
             }
+            else
+            {
+                if(!arduinoController.Inicializar(ArduinoController.BRAZO_GB))
+                {
+                    if (null != this.sensor)
+                    {
+                        this.sensor.Stop();
+                        this.sensor.Dispose();
+                    }
+                    arduinoController.CerrarPuerto();
+                    var win = new Inicio("Arduino desconectada, conéctela e intente nuevamente");
+                    win.Show();
+                    Close();
+                }
+            }
+
             TensionesServosBG();
         }
 
