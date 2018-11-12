@@ -415,14 +415,6 @@ namespace AtaxiaVision.Desktop.Pantallas
                 else
                     AtrasBtn_Click(sender, e);
             }   
-            if(e.Key == Key.I)
-            {
-                IniRehabBtn_Click(sender, e);
-            }
-            if (e.Key == Key.Add)
-            {
-                ListarEjercicioBtn_Click(sender, e);
-            }
         }
 
         private void ListarEjercicioBtn_Click(object sender, RoutedEventArgs e)

@@ -32,11 +32,6 @@ namespace AtaxiaVision.Pantallas
             DescripcionLabel.Content += Ejercicio.Descripcion;
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 

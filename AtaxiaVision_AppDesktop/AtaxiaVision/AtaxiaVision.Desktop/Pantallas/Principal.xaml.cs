@@ -546,6 +546,7 @@
                 try
                 {
                     this.ConfirmacionButton.IsEnabled = true;
+                    ConfirmacionButton.Focus();
                     //this.MensajesLabel.Content = "Angulos calculados";
                 }
                 catch (Exception)
@@ -642,14 +643,6 @@
             if (e.Key == Key.Escape)
             {
                 FinEjercicioBtn_Click(sender,e);
-            }
-            if(ConfirmacionButton.IsEnabled && (e.Key == Key.I || e.Key == Key.Enter))
-            {
-                ConfirmacionButton_Click(sender, e);
-            }
-            if(e.Key == Key.A)
-            {
-               CalcularAngulosFinales(puntos);
             }
         }
 

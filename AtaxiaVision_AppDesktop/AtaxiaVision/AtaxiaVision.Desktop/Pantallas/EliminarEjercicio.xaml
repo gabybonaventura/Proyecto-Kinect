@@ -55,15 +55,15 @@
             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
             Width="640" 
             Margin="188,350,188,0"
-            Height="360"
+            Height="280"
             Visibility="Visible">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="100" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="120" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
