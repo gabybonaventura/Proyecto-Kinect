@@ -1,5 +1,6 @@
 ﻿using AtaxiaVision.Helpers;
 using AtaxiaVision.Models;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace AtaxiaVision.Pantallas
     public partial class EliminarEjercicio : Window
     {
         public Exercise Ejercicio { get; set; }
+        public delegate void SnackBarDelegate(string msj);
+        public SnackBarDelegate snackBarDelegate;
 
         public EliminarEjercicio(Exercise exercise)
         {
@@ -32,6 +35,13 @@ namespace AtaxiaVision.Pantallas
             DescripcionLabel.Content += Ejercicio.Descripcion;
         }
 
+        private void EstadoSnackBar(string mensaje)
+        {
+            Snackbar.IsActive = false;
+            Snackbar.Message = new SnackbarMessage() { Content = mensaje };
+            Snackbar.IsActive = true;
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
@@ -39,15 +49,16 @@ namespace AtaxiaVision.Pantallas
 
         private void CerrarBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            NoBtn_Click(sender, e);
         }
 
         private void SiBtn_Click(object sender, RoutedEventArgs e)
         {
-            ServerHelper.EliminarEjercicio(Ejercicio.ID);
-            var win = new ListaEjercicios();
-            win.Show();
-            Close();
+            var result = ServerHelper.EliminarEjercicio(Ejercicio.ID);
+            if (result == ServerHelper.SERVER_OK)
+                NoBtn_Click(sender, e);
+            else
+                EstadoSnackBar("No hay conexión para guardar el ejercicio. Intente nuevamente en unos minutos.");
         }
 
         private void NoBtn_Click(object sender, RoutedEventArgs e)

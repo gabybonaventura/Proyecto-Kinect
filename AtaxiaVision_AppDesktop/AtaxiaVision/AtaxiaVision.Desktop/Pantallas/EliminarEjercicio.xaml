@@ -17,7 +17,6 @@
         WindowStyle="None" 
         WindowStartupLocation="CenterScreen" 
         WindowState="Maximized" 
-        KeyDown="Window_KeyDown"
         Loaded="Window_Loaded">
     <Grid>
         <!--Encabezado-->
@@ -135,5 +134,10 @@
             Width="300" 
             IsEnabled="True"
             VerticalAlignment="Top"/>
+        <!-- Snackbar -->
+        <materialDesign:Snackbar
+            x:Name="Snackbar"
+            Message="Test"
+            IsActive="False"/>
     </Grid>
 </Window>

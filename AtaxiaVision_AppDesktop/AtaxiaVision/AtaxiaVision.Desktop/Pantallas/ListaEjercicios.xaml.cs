@@ -28,6 +28,8 @@ namespace AtaxiaVision.Pantallas
         public ProgressBarDelegate progressBarDelegate;
         public delegate void EjerciciosDatGridDelegate(List<Exercise> exercises);
         public EjerciciosDatGridDelegate ejerciciosDatGridDelegate;
+        public delegate void SnackBarDelegate(string msj);
+        public SnackBarDelegate snackBarDelegate;
 
         private BackgroundWorker ejerciciosBG = new BackgroundWorker();
 
@@ -41,6 +43,12 @@ namespace AtaxiaVision.Pantallas
         {
             EjerciciosDatGrid.ItemsSource = exercises;
         }
+        private void EstadoSnackBar(string mensaje)
+        {
+            Snackbar.IsActive = false;
+            Snackbar.Message = new SnackbarMessage() { Content = mensaje };
+            Snackbar.IsActive = true;
+        }
 
         public void EjercicioTabla()
         {
@@ -48,7 +56,10 @@ namespace AtaxiaVision.Pantallas
             {
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Visible);
                 var ejercicios = ServerHelper.ObtenerEjercicios();
-                EjerciciosDatGrid.Dispatcher.Invoke(ejerciciosDatGridDelegate, ejercicios.Ejercicios);
+                if (ejercicios != null)
+                    EjerciciosDatGrid.Dispatcher.Invoke(ejerciciosDatGridDelegate, ejercicios.Ejercicios);
+                else
+                    EjerciciosDatGrid.Dispatcher.Invoke(snackBarDelegate, "No hay conexión a internet para obtener los ejercicios.");
                 ProgressBar.Dispatcher.Invoke(progressBarDelegate, Visibility.Hidden);
             };
         }
@@ -101,6 +112,7 @@ namespace AtaxiaVision.Pantallas
             EjercicioTabla();
             progressBarDelegate = new ProgressBarDelegate(EstadoProgressBar);
             ejerciciosDatGridDelegate = new EjerciciosDatGridDelegate(LlenarTabla);
+            snackBarDelegate = new SnackBarDelegate(EstadoSnackBar);
             if (!ejerciciosBG.IsBusy)
                 ejerciciosBG.RunWorkerAsync();
         }

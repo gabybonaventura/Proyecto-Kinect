@@ -399,8 +399,11 @@ namespace AtaxiaVision.Pantallas
             Ejercicio.Dificultad = DificultadRatingBar.Value;
             if (ValidarEjercicio())
             {
-                ServerHelper.EnviarEjercicio(Ejercicio);
-                CerrarBtn_Click(sender, e);
+                var result = ServerHelper.EnviarEjercicio(Ejercicio);
+                if (result == ServerHelper.SERVER_OK)
+                    CerrarBtn_Click(sender, e);
+                else
+                    EstadoSnackBar("No hay conexión para guardar el ejercicio. Intente nuevamente en unos minutos.");
             }
         }
 

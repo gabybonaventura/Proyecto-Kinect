@@ -501,6 +501,7 @@
 
         private void Cerrar(string msj = null)
         {
+            arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(ArduinoController.BRAZO_GB));
             if (null != this.sensor)
             {
                 this.sensor.Stop();

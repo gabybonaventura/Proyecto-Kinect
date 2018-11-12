@@ -489,6 +489,7 @@ namespace AtaxiaVision.Pantallas
 
         private void Cerrar()
         {
+            arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(ArduinoController.BRAZO_GB));
             //videoController.FinGrabacion = DateTime.Now.Ticks;
             arduinoController.CerrarPuerto();
             if (null != this.sensor)
