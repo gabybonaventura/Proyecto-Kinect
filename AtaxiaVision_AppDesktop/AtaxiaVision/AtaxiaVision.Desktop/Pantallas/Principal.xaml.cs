@@ -114,6 +114,10 @@
         private BackgroundWorker ExistenciaKinectExoesqueletoBackgroundWorker = new BackgroundWorker();
 
         VideoController videoController;
+        private long _objetoTomadoTiempo = long.MaxValue;
+        private bool _objetoTomado;
+        private long _vueltaPosicionInicialTiempo = long.MaxValue;
+        private bool _brazoMovido;
 
         #region Metodos Delegates
         private void SetConsumoHombroArribaAbajo(int consumo)
@@ -335,7 +339,6 @@
             Skeleton[] skeletons = new Skeleton[0];
 
             bool depthReceived = false;
-            bool colorReceived = false;
 
             using (DepthImageFrame framesDistancia = e.OpenDepthImageFrame())
             {
@@ -362,7 +365,6 @@
                 {
                     colorFrame.CopyPixelDataTo(this.colorPixels);
 
-                    colorReceived = true;
 
                     System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
 
@@ -475,16 +477,31 @@
                                 puntos = new Puntos(HombroDerecho, CodoDerecho, ManoDerecha, skelObjeto);
                                 CalcularAngulosFinales(puntos);
                             }
-                                
+
 
                             //Console.WriteLine($"Mano X Y Z {handRight.Position.X} {handRight.Position.Y} {handRight.Position.Z}");
                             //Console.WriteLine($"Objeto X Y Z {skelObjeto.X} {skelObjeto.Y} {skelObjeto.Z}");
-
-                            if (DistanceHelper.ObtenerDistancia(ManoDerecha, skelObjeto) < 0.2)
+                            #region FinalizacionDelEjercicio
+                            if (!_objetoTomado && DistanceHelper.ObtenerDistancia(ManoDerecha, skelObjeto) < 0.2)
                             {
+                                _objetoTomadoTiempo = DateTime.Now.AddSeconds(1).Ticks;
+                                _objetoTomado = true;
+
+                            }
+
+                            if (!_brazoMovido && _objetoTomadoTiempo < DateTime.Now.Ticks)
+                            {
+                                _vueltaPosicionInicialTiempo = DateTime.Now.AddSeconds(1).Ticks;
+                                arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(ArduinoController.BRAZO_GB));
+                                _brazoMovido = true;
+                            }
+                            if (_vueltaPosicionInicialTiempo < DateTime.Now.Ticks)
+                            {
+
                                 Ejercicio.FinalizoConExito = true;
                                 Cerrar();
                             }
+                            #endregion FinalizacionDelEjercicio
                         }
                     }
                 }
@@ -501,7 +518,8 @@
 
         private void Cerrar(string msj = null)
         {
-            arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(ArduinoController.BRAZO_GB));
+            
+            //arduinoController.EnviarAngulosFromAngulosServos(new AngulosServos(ArduinoController.BRAZO_GB));
             if (null != this.sensor)
             {
                 this.sensor.Stop();
