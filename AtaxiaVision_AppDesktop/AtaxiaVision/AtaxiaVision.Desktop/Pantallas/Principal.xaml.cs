@@ -118,6 +118,8 @@
         private bool _objetoTomado;
         private long _vueltaPosicionInicialTiempo = long.MaxValue;
         private bool _brazoMovido;
+        private long _ultimoFrameTomado = DateTime.Now.Ticks;
+        private int _ultimaCantidadTensionesSensada = -1;
 
         #region Metodos Delegates
         private void SetConsumoHombroArribaAbajo(int consumo)
@@ -195,25 +197,47 @@
         private void ReviarFaltaDeKinectOExoesqueleto()
         {
             // No hay kinect
-            if (sensor == null)
+            if (_ultimoFrameTomado < DateTime.Now.Ticks - 1000000)
             {
                 Image.Source = new BitmapImage(
                     new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
                 InformarFinDeEjercicio("Se perdió la conexión con la Kinect, Por favor finalizar el ejercicio.");
             }
-            // No hay exoesqueleto
-            if (arduinoController == null || arduinoController.UltimaTension == null)
+            else
             {
-                InformarFinDeEjercicio("Se perdió la conexión con el exoesqueleto, Por favor finalizar el ejercicio.");
+                if (arduinoController.Tensiones.Count == _ultimaCantidadTensionesSensada)
+                {
+                    InformarFinDeEjercicio("Se perdió la conexión con el exoesqueleto, Por favor finalizar el ejercicio.");
+                }
+                else
+                {
+                    _ultimaCantidadTensionesSensada = arduinoController.Tensiones.Count;
+                    InformarFinDeEjercicio("");
+                }
+                // No hay exoesqueleto
             }
         }
 
         private void InformarFinDeEjercicio(string msj)
         {
-            IrAConfirmacion.Visibility = Visibility.Visible;
-            ConfirmacionButton.Visibility = Visibility.Hidden;
-            PacienteCard.Visibility = Visibility.Visible;
-            EstadoLabel.Content = msj;
+            if(!string.IsNullOrEmpty(msj))
+            {
+                IrAConfirmacion.Visibility = Visibility.Visible;
+                ConfirmacionButton.Visibility = Visibility.Hidden;
+                PacienteCard.Visibility = Visibility.Visible;
+                EstadoLabel.Visibility = Visibility.Visible;
+                EstadoLabel.Content = msj;
+            }
+            else
+            {
+                IrAConfirmacion.Visibility = Visibility.Hidden;
+
+                ConfirmacionButton.Visibility = Visibility.Visible;
+                PacienteCard.Visibility = Visibility.Hidden;
+                EstadoLabel.Visibility = Visibility.Collapsed;
+                PacienteCard.Visibility = Visibility.Collapsed;
+
+            }
         }
         #endregion
 
@@ -339,6 +363,8 @@
             Skeleton[] skeletons = new Skeleton[0];
 
             bool depthReceived = false;
+
+            _ultimoFrameTomado = DateTime.Now.Ticks;
 
             using (DepthImageFrame framesDistancia = e.OpenDepthImageFrame())
             {
