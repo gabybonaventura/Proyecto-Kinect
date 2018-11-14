@@ -260,6 +260,8 @@ namespace AtaxiaVision.Pantallas
             if (FrameInicioBoomerang >= FrameFinBoomerang)
                 return;
             CurrentFrameNo = FrameInicioBoomerang;
+            if (FPS == 0)
+                FPS = 30;
 
             try
             {

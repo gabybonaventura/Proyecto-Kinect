@@ -97,6 +97,7 @@ namespace AtaxiaVision.Pantallas
         private BackgroundWorker TensionesServosBackgroundWorker = new BackgroundWorker();
         private BackgroundWorker ArduinoActivoBackgroundWorker = new BackgroundWorker();
         private bool _grabando = false;
+        private int _ultimaCantidadTensionesSensada = -1;
         #endregion
 
         #region Metodos Delegates
@@ -182,11 +183,18 @@ namespace AtaxiaVision.Pantallas
                 while (true)
                 {
                     Thread.Sleep(1000);
-                    if (arduinoController == null || arduinoController.UltimaTension == null)
+                    if (arduinoController.Tensiones.Count == _ultimaCantidadTensionesSensada)
                     {
+
                         Snackbar.Dispatcher.Invoke(snackBarDelegate, "Exoesqueleto no detectado.");
                         Snackbar.Dispatcher.Invoke(seCortoExoesqueletoDelegate, null);
                     }
+                    else
+                    {
+                        _ultimaCantidadTensionesSensada = arduinoController.Tensiones.Count;
+
+                    }
+
                 }
             };
             if (!bg.IsBusy)
@@ -294,7 +302,6 @@ namespace AtaxiaVision.Pantallas
             consumoCodoDerechaIzquierdaDelegate = new ConsumoCodoDerechaIzquierda(SetConsumoCodoDerechaIzquierda);
             reportesButtonDelegate = new ReportesButtonDelegate(VisibilidadReportesButton);
             TensionesServosBG();
-            ArduinoActivoBG();
             EjecutarEjercicioManualBG();   // Preparo ejercicio manual
 
             LlenarComboBoxs();          // Lleno los combo boxs
@@ -354,6 +361,8 @@ namespace AtaxiaVision.Pantallas
 
         private void EjecutarEjercicio()
         {
+            ArduinoActivoBG();
+
             if (RepeticionAutomatica)
                 EjecutarEjercicioAutomatico();
             else
