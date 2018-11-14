@@ -103,7 +103,7 @@
             Width="164" FontWeight="Bold" 
             />
         <Label Name="RepeticionesLabel"
-            Content="1/5" 
+            Content="-/-" 
             FontSize="25"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top"

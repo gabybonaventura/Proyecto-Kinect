@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -259,6 +260,11 @@ namespace AtaxiaVision.Desktop.Pantallas
                 IniRehabBtn.IsEnabled = state;
                 IniRehabBtn.Focus();
             }
+            else
+            {
+                IniRehabBtn.Visibility = Visibility.Hidden;
+                IniRehabBtn.IsEnabled = state;
+            }
         }
 
         private void SincronizarDatos()
@@ -346,6 +352,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                         DificultadRatingBar.Dispatcher.Invoke(ratingBarDelegate, Visibility.Hidden);
                         SinConexiónTextBlock.Dispatcher.Invoke(sinConexionTextBlockDelegate, Visibility.Visible);
                         SinConexionCard.Dispatcher.Invoke(sinConexionCardDelegate, Visibility.Visible);
+                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, true);
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_INVALIDO:
@@ -354,6 +361,7 @@ namespace AtaxiaVision.Desktop.Pantallas
                         TokenInvalidoTextBlock.Dispatcher.Invoke(tokenInvalidoTextBlockDelegate, Visibility.Visible);
                         SinConexionCard.Dispatcher.Invoke(sinConexionCardDelegate, Visibility.Visible);
                         EstadoVentanaLabel.Dispatcher.Invoke(estadoGeneralDelegate, "Token rechazado");
+                        IniRehabBtn.Dispatcher.Invoke(iniRehabBtnDelegate, false);
                         Sesion.TokenValido = false;
                         break;
                     case ServerHelper.TOKEN_VALIDO:
@@ -434,6 +442,11 @@ namespace AtaxiaVision.Desktop.Pantallas
             EstadoRatingBar(Visibility.Hidden);
             EstadoGeneral("Ingrese los datos de la sesión");
             DNITextBox.Focus();
+        }
+
+        private void AbrirLibreriaBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(@"C:\Users\Public\Videos");
         }
     }
 }
