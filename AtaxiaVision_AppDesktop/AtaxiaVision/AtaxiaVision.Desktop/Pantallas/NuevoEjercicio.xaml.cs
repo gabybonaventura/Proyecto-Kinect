@@ -409,7 +409,22 @@ namespace AtaxiaVision.Pantallas
 
         private void DestinoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if(DestinoComboBox.SelectedValue.ToString() == Destino.FirstOrDefault())
+            {
+                // Ejercicio generico
+                NombreEjercicioTextBox.IsEnabled = true;
+                DificultadRatingBar.IsEnabled = true;
+                DescripcionEjercicioTextBox.IsEnabled = false;
 
+            }
+            else
+            {
+                // Ejercicio personalizado
+                NombreEjercicioTextBox.IsEnabled = false;
+                DificultadRatingBar.IsEnabled = false;
+                DescripcionEjercicioTextBox.IsEnabled = false;
+
+            }
         }
     }
 }
