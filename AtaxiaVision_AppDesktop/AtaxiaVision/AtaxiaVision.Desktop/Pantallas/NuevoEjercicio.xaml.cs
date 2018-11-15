@@ -414,7 +414,7 @@ namespace AtaxiaVision.Pantallas
                 // Ejercicio generico
                 NombreEjercicioTextBox.IsEnabled = true;
                 DificultadRatingBar.IsEnabled = true;
-                DescripcionEjercicioTextBox.IsEnabled = false;
+                DescripcionEjercicioTextBox.IsEnabled = true;
 
             }
             else
