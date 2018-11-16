@@ -18,6 +18,7 @@ namespace AtaxiaVision.Helpers
         private const string API_SESSION = "session/";
         private const string API_TOKEN = "token/";
         private const string API_EJERCICIOS = "exercise/";
+        private const string API_EJERCICIOSPERSONALIZADO = "custom/";
         private const string API_PACIENTES = "patient/";
         private const string METHOD_POST = "POST";
         private const string METHOD_GET = "GET";
@@ -239,7 +240,7 @@ namespace AtaxiaVision.Helpers
             return ejerciciosServer;
         }
 
-        public static int EnviarEjercicio(Exercise ejercicio)
+        public static int EnviarEjercicio(Exercise ejercicio, string patientId)
         {
             var datos = JsonConvert.SerializeObject(ejercicio.ConvertToModelServer());
             // Si el ejercicio viene con un ID, es porque es un update, sino, es un new.
@@ -251,9 +252,22 @@ namespace AtaxiaVision.Helpers
             }
             else
             {
-                var result = Enviar(API_EJERCICIOS + ejercicio.ID, METHOD_PUT, datos);
-                if (!RequestNoValida(result))
-                    return SERVER_OK;
+                if (String.IsNullOrEmpty(patientId))
+                {
+                    var result = Enviar(API_EJERCICIOS + ejercicio.ID, METHOD_PUT, datos);
+                    if (!RequestNoValida(result))
+                        return SERVER_OK;
+                }
+                else
+                {
+                   var result = Enviar(
+                        API_EJERCICIOSPERSONALIZADO
+                        + ejercicio.ID
+                        + "/"
+                        + patientId, METHOD_POST, datos);
+                    if (!RequestNoValida(result))
+                        return SERVER_OK;
+                }
             }
             return SERVER_ERROR;
         }
@@ -298,6 +312,33 @@ namespace AtaxiaVision.Helpers
             return SERVER_OK;
         }
 
+        public static Exercise ObtenerEjercicioPersonalizado(Patient patient, Exercise exercise)
+        {
+            //Es /custom/idejercicio/idpaciente
+            var resultGet = Enviar(
+                API_EJERCICIOSPERSONALIZADO
+                + exercise.ID
+                + "/"
+                + patient.PacienteId, METHOD_GET, null);
+            if (RequestNoValida(resultGet))
+                return null;
+            var json = resultGet.exercise;
+            ExerciseCustomModelServer datos = new ExerciseCustomModelServer
+            {
+                intialState = json.intialState,
+                endingState = json.endingState
+            };
+            return new Exercise
+            {
+                EstadoInicial = datos.intialState,
+                EstadoFinal = datos.endingState,
+                ID = exercise.ID,
+                Descripcion = exercise.Descripcion,
+                Dificultad = exercise.Dificultad,
+                Nombre = exercise.Nombre
+            };
+        }
+
         #region Test
         // Test para probar como guardar el archivo
         public static void TestInicializarArchivo()
@@ -305,7 +346,7 @@ namespace AtaxiaVision.Helpers
             EliminarArchivoDatosOffile();
             ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
-                Token = "38662776_1",
+                Token = "39756665_1",
                 Ejercicio = 1,
                 FinalizoConExito = true,
                 Desvios = 4,
@@ -314,7 +355,7 @@ namespace AtaxiaVision.Helpers
             });
             ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
-                Token = "38662776_1",
+                Token = "39756665_1",
                 Ejercicio = 2,
                 FinalizoConExito = false,
                 Desvios = 21,
@@ -323,7 +364,7 @@ namespace AtaxiaVision.Helpers
             });
             ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
-                Token = "38662776_2",
+                Token = "39756665_2",
                 Ejercicio = 1,
                 FinalizoConExito = true,
                 Desvios = 2,
@@ -332,7 +373,7 @@ namespace AtaxiaVision.Helpers
             });
             ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
-                Token = "38662776_2",
+                Token = "39756665_2",
                 Ejercicio = 2,
                 FinalizoConExito = true,
                 Desvios = 21,
@@ -341,7 +382,7 @@ namespace AtaxiaVision.Helpers
             });
             ServerHelper.AgregarEjercicioDatosOffile(new RepeticionViewModel
             {
-                Token = "38662776_2",
+                Token = "39756665_2",
                 Ejercicio = 3,
                 FinalizoConExito = false,
                 Desvios = 7,

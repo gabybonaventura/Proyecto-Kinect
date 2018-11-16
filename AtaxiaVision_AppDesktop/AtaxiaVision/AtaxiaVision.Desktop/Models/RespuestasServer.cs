@@ -93,6 +93,7 @@ namespace AtaxiaVision.Models
             };
         }
     }
+
     public class ExerciseModelServer
     {
         public string description;
@@ -100,6 +101,12 @@ namespace AtaxiaVision.Models
         public string endingState;
         public string initialState;
         public string name;
+    }
+
+    public class ExerciseCustomModelServer
+    {
+        public string endingState;
+        public string intialState;
     }
 
     public class Comments

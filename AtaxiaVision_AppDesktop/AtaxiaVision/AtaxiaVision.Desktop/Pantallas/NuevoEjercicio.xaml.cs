@@ -26,12 +26,11 @@ namespace AtaxiaVision.Pantallas
     /// </summary>
     public partial class NuevoEjercicio : Window
     {
-
-
         public ArduinoController Arduino { get; set; }
         public AngulosServos Angulos { get; set; }
         public AngulosServos AngulosDefault { get; set; }
         public Exercise Ejercicio { get; set; }
+        public Exercise EjercicioGenerico { get; set; }
         public List<int> AngulosDisponibles {
             get
             {
@@ -152,13 +151,17 @@ namespace AtaxiaVision.Pantallas
                 Ejercicio = new Exercise();
             }
         }
+        public void SetEjercicioGenerico(Exercise ejercicio)
+        {
+            EjercicioGenerico = ejercicio;
+        }
         private void InicializarArduino()
         {
             AngulosDefault = new AngulosServos(ArduinoController.BRAZO_GB);
             try
             {
                 Arduino = new ArduinoController();
-                if(String.IsNullOrEmpty(Ejercicio.EstadoInicial))
+                if (String.IsNullOrEmpty(Ejercicio.EstadoInicial))
                     Angulos = new AngulosServos(AngulosDefault.ToString());
                 else
                     Angulos = new AngulosServos(Ejercicio.EstadoInicial);
@@ -188,8 +191,8 @@ namespace AtaxiaVision.Pantallas
                 if (!String.IsNullOrEmpty(Ejercicio.EstadoFinal))
                     VerEstadoFinalBtn.IsEnabled = true;
             }
-
         }
+
         public void SetAngulos()
         {
             AnguloHombroArribaAbajoComboBox.SelectedValue = Angulos.HomroArribaAbajo;
@@ -246,9 +249,11 @@ namespace AtaxiaVision.Pantallas
             TensionesServosBG();
             ArduinoActivoBG();
             #endregion
-
+            
             AsignarListasAngulos();     // Asigna los 180 grados de las listas
             SetEjercicio(Ejercicio);    // Setea el EjercicioViewModel
+            if (Ejercicio != null)
+                SetEjercicioGenerico(Ejercicio);
             InicializarArduino();       // Envia los datos iniciales al exoesqueleto
             LlenarCampos();             // Llena campos en base al EjercicioViewModel
             SetAngulos();               // Setea los grados a la vista y al exoesqueleto
@@ -399,23 +404,42 @@ namespace AtaxiaVision.Pantallas
             Ejercicio.Dificultad = DificultadRatingBar.Value;
             if (ValidarEjercicio())
             {
-                var result = ServerHelper.EnviarEjercicio(Ejercicio);
-                if (result == ServerHelper.SERVER_OK)
-                    CerrarBtn_Click(sender, e);
+                var selectedValue = DestinoComboBox.SelectedValue.ToString();
+                if (selectedValue == Destino.FirstOrDefault())
+                {
+                    var result = ServerHelper.EnviarEjercicio(Ejercicio,null);
+                    if (result == ServerHelper.SERVER_OK)
+                        CerrarBtn_Click(sender, e);
+                    else
+                        EstadoSnackBar("No hay conexión para guardar el ejercicio. Intente nuevamente en unos minutos.");
+                }
                 else
-                    EstadoSnackBar("No hay conexión para guardar el ejercicio. Intente nuevamente en unos minutos.");
+                {
+                    var PacienteSeleccionado =
+                    Pacientes.Pacientes.FirstOrDefault(
+                        x => x.Nombre == selectedValue);
+                    var result = ServerHelper.EnviarEjercicio(Ejercicio, PacienteSeleccionado.PacienteId + "");
+                    if (result == ServerHelper.SERVER_OK)
+                        CerrarBtn_Click(sender, e);
+                    else
+                        EstadoSnackBar("No hay conexión para guardar el ejercicio. Intente nuevamente en unos minutos.");
+                }
             }
         }
 
         private void DestinoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(DestinoComboBox.SelectedValue.ToString() == Destino.FirstOrDefault())
+            var selectedValue = DestinoComboBox.SelectedValue.ToString();
+            if (selectedValue == Destino.FirstOrDefault())
             {
                 // Ejercicio generico
                 NombreEjercicioTextBox.IsEnabled = true;
                 DificultadRatingBar.IsEnabled = true;
                 DescripcionEjercicioTextBox.IsEnabled = true;
-
+                // Seteo de nuevo angulos ejercicio generico
+                Ejercicio = EjercicioGenerico;
+                Angulos = new AngulosServos(Ejercicio.EstadoInicial);
+                SetAngulos();
             }
             else
             {
@@ -423,7 +447,15 @@ namespace AtaxiaVision.Pantallas
                 NombreEjercicioTextBox.IsEnabled = false;
                 DificultadRatingBar.IsEnabled = false;
                 DescripcionEjercicioTextBox.IsEnabled = false;
-
+                // Busco ejercicio personalizado en el servidor
+                var PacienteSeleccionado = Pacientes.Pacientes.FirstOrDefault(x => x.Nombre == selectedValue);
+                var ejercicio = ServerHelper.ObtenerEjercicioPersonalizado(PacienteSeleccionado, Ejercicio);
+                if(ejercicio != null)
+                {
+                    Ejercicio = ejercicio;
+                    Angulos = new AngulosServos(ejercicio.EstadoInicial);
+                    SetAngulos();
+                }
             }
         }
     }
