@@ -17,7 +17,7 @@ namespace AtaxiaVision.Models
 
         public AngulosServos(string angulos)
         {
-            if(angulos.Length == 13)
+            if(angulos != null && angulos.Length == 13)
             {
                 try
                 {
