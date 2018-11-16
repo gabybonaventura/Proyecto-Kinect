@@ -252,8 +252,7 @@ namespace AtaxiaVision.Pantallas
             
             AsignarListasAngulos();     // Asigna los 180 grados de las listas
             SetEjercicio(Ejercicio);    // Setea el EjercicioViewModel
-            if (Ejercicio != null)
-                SetEjercicioGenerico(Ejercicio);
+            SetEjercicioGenerico(Ejercicio);
             InicializarArduino();       // Envia los datos iniciales al exoesqueleto
             LlenarCampos();             // Llena campos en base al EjercicioViewModel
             SetAngulos();               // Setea los grados a la vista y al exoesqueleto
