@@ -437,9 +437,12 @@ namespace AtaxiaVision.Pantallas
                 DificultadRatingBar.IsEnabled = true;
                 DescripcionEjercicioTextBox.IsEnabled = true;
                 // Seteo de nuevo angulos ejercicio generico
-                Ejercicio = EjercicioGenerico;
-                Angulos = new AngulosServos(Ejercicio.EstadoInicial);
-                SetAngulos();
+                if (!String.IsNullOrEmpty(EjercicioGenerico.EstadoInicial))
+                {
+                    Ejercicio = EjercicioGenerico;
+                    Angulos = new AngulosServos(Ejercicio.EstadoInicial);
+                    SetAngulos();
+                }
             }
             else
             {
