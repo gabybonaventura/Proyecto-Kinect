@@ -119,7 +119,7 @@ namespace AtaxiaVision.Helpers
                         return rta.data;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
             return SERVER_ERROR;
@@ -325,7 +325,7 @@ namespace AtaxiaVision.Helpers
             var json = resultGet.exercise;
             ExerciseCustomModelServer datos = new ExerciseCustomModelServer
             {
-                intialState = json.intialState,
+                intialState = json.initialState,
                 endingState = json.endingState
             };
             return new Exercise
