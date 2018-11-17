@@ -303,7 +303,6 @@ namespace AtaxiaVision.Pantallas
             catch (Exception e)
             {
 
-                throw;
             }
         }
         

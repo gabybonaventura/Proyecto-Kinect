@@ -77,5 +77,10 @@ namespace AtaxiaVision.Controllers
                 //this.framesBmp = new List<Bitmap>();
             }
         }
+        public void ForzarReinicioDeVideo()
+        {
+            this.framesBmp = new List<Bitmap>();
+            this._inicioGrabacion = DateTime.Now.Ticks;
+        }
     }
 }

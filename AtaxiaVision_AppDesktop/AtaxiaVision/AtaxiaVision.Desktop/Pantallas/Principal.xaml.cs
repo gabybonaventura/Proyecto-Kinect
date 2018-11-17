@@ -197,7 +197,7 @@
         private void ReviarFaltaDeKinectOExoesqueleto()
         {
             // No hay kinect
-            if (_ultimoFrameTomado < DateTime.Now.Ticks - 1000000)
+            if (_ultimoFrameTomado < DateTime.Now.AddSeconds(-2).Ticks)
             {
                 Image.Source = new BitmapImage(
                     new Uri("pack://application:,,,/AtaxiaVision;component/Imagenes/KinectAV.png"));
@@ -395,8 +395,12 @@
                     System.Drawing.Bitmap bmp = EmguCVHelper.ImageToBitmap(colorFrame);
 
                     videoController.InicioGrabacion = DateTime.Now.Ticks;
-
-                    videoController.framesBmp.Add(bmp);
+                    if (videoController.framesBmp.Count < 2000)
+                        videoController.framesBmp.Add(bmp);
+                    else
+                    {
+                        videoController.ForzarReinicioDeVideo();
+                    }
 
                     Image<Hsv, Byte> currentFrameHSV = new Image<Hsv, byte>(bmp);
 
